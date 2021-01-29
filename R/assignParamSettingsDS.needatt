@@ -1,5 +1,5 @@
 
-.has.correct.data <- function()
+has.correct.data <- function()
 {
   encrypted.exists <- FALSE
 
@@ -12,7 +12,7 @@
   return(encrypted.exists)
 }
 
-.generate.ratios <- function(no.elements = 0, coordinate = 0)
+generate.ratios <- function(no.elements = 0, coordinate = 0)
 {
   stop    <-  no.elements == 0 & coordinate == 0
 
@@ -27,7 +27,7 @@
   return(outcome)
 }
 
-.init.coordinates.ratios <- function(param_names, sharing)
+init.coordinates.ratios <- function(param_names, sharing)
 {
   if(is.list(sharing))
   {
@@ -49,7 +49,7 @@
   }
 }
 
-.is.outcome.valid <- function(sharing, expected.fields)
+is.outcome.valid <- function(sharing, expected.fields)
 {
   correct <- FALSE
 
@@ -64,7 +64,7 @@
   return(correct)
 }
 
-.create.vector <- function (param_names = "")
+create.vector <- function (param_names = "")
 {
   outcome <- c()
   if(is.character(param_names))
@@ -75,16 +75,16 @@
   return(outcome)
 }
 
-.assignParamSettings <- function(param_names = "", settings)
+assignParamSettings <- function(param_names = "", settings)
 {
   outcome <-FALSE
-  params <- .create.vector(param_names)
-  if (.has.correct.data())
+  params <- create.vector(param_names)
+  if (has.correct.data())
   {
     sharing         <- get(settings$name.struct, pos = 1)
-    sharing         <-.init.coordinates.ratios(params, sharing)
+    sharing         <-init.coordinates.ratios(params, sharing)
     expected.fields <- c(settings$index_x, settings$index_y, settings$param_names)
-    outcome         <- .is.outcome.valid(sharing,expected.fields)
+    outcome         <- is.outcome.valid(sharing,expected.fields)
 
     if(outcome)
     {
@@ -112,7 +112,7 @@ assignParamSettingsDS <- function(param_names = "")
 
     if(are.params.created(param_names.decoded))
     {
-      outcome <- .assignParamSettings(param_names, settings)
+      outcome <- assignParamSettings(param_names, settings)
 
       return(outcome)
     }

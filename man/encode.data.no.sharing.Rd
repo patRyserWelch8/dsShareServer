@@ -15,6 +15,3 @@ a "decoy", if an error has occurred in the process.
 This is a helper function. It cannot be called directly from any client-side
 function.
 }
-\seealso{
-\link[dsShareServer]{getDataDS} \link[dsShareServer]{getCoordinatesDS},[dsShareServer]{encode.data.no.sharing}
-}

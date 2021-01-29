@@ -20,15 +20,15 @@ test_that("everything is incorrect",
 context("assignParamSettingsDS::expt::.has.correct.data")
 test_that("everyting is not correct",
 {
-    expect_error(.has.correct.data())
+    expect_error(has.correct.data())
 })
 
 context("assignParamSettingsDS::expt::.init.coordinates.ratios")
 test_that("everyting is incorrect",
 {
-  expect_equal(.init.coordinates.ratios(param_names = c("first_var"), NULL), list())
-  expect_equal(.init.coordinates.ratios(param_names = c("first_var", "second_var"), 3),list())
-  expect_equal(.init.coordinates.ratios(param_names = c("first_var", "second_var","third_var"), "HELLO"),list())
+  expect_equal(init.coordinates.ratios(param_names = c("first_var"), NULL), list())
+  expect_equal(init.coordinates.ratios(param_names = c("first_var", "second_var"), 3),list())
+  expect_equal(init.coordinates.ratios(param_names = c("first_var", "second_var","third_var"), "HELLO"),list())
 })
 
 
@@ -57,7 +57,7 @@ test_that("not allowed sharingt",
 context("assignParamSettingsDS::expt::.has.correct.data")
 test_that("not allowed sharing",
 {
-  expect_equal(.has.correct.data(), FALSE)
+  expect_equal(has.correct.data(), FALSE)
 
 })
 
@@ -77,9 +77,9 @@ test_that("not allowed sharing",
 context("assignParamSettingsDS::expt::.init.coordinates.ratios")
 test_that("everyting is incorrect",
 {
-  expect_equal(.init.coordinates.ratios(param_names = c("first_var"), NULL), list())
-  expect_equal(.init.coordinates.ratios(param_names = c("first_var", "second_var"), 3),list())
-  expect_equal(.init.coordinates.ratios(param_names = c("first_var", "second_var","third_var"), "HELLO"),list())
+  expect_equal(init.coordinates.ratios(param_names = c("first_var"), NULL), list())
+  expect_equal(init.coordinates.ratios(param_names = c("first_var", "second_var"), 3),list())
+  expect_equal(init.coordinates.ratios(param_names = c("first_var", "second_var","third_var"), "HELLO"),list())
 })
 
 options(param.name.struct = "sharing")

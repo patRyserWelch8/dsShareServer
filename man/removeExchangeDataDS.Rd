@@ -10,6 +10,7 @@ removeExchangeDataDS()
 TRUE if the settings and sharing variables have been deleted. Otherwise, FALSE
 }
 \description{
-This server function deletes the data used in the exchange of the parameters from a DataSHIELD server. The settings and sharing data structure are deleted. 
-This function is important, to keep temporary data being analysed by other processes.
+This server function deletes the data used in the exchange of the parameters from a DataSHIELD server.
+The settings and sharing data structure are deleted. This function is important, to keep temporary
+data being analysed by other processes.
 }

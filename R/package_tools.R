@@ -9,12 +9,8 @@
 #'
 is.sharing.allowed <- function()
 {
-  outcome <- FALSE
-  if (exists("settings",where = 1))
-  {
-    outcome <- settings$sharing.allowed
-  }
-  return(outcome)
+  settings <- get.settings()
+  return(settings$sharing.allowed)
 }
 
 #'@name encode.data.with.sharing
@@ -26,8 +22,10 @@ is.sharing.allowed <- function()
 #'@param index - A random number related to the data
 #'@details This is a helper function. It cannot be called directly from any client-side
 #'function.
-#'@seealso \link[dsShareServer]{getDataDS}, \link[dsShareServer]{getCoordinatesDS},
-#'\link[dsShareServer]{encode.data.no.sharing}
+#'
+#ADD THIS IN DOC
+#@seealso \link[dsShareServer]{getDataDS}, \link[dsShareServer]{getCoordinatesDS},
+#\link[dsShareServer]{encode.data.no.sharing}
 encode.data.with.sharing <- function(encrypted.data, length, index)
 {
   #remove conversion once new parsers is available
@@ -50,12 +48,12 @@ encode.data.with.sharing <- function(encrypted.data, length, index)
 #'@description This server-side function generates some random data to be made available to a client-side
 #'function. Its purpose is to mimick the same behaviour as [dsServerParameter]{encode.data.with.sharing}. It aims a
 #'a "decoy", if an error has occurred in the process.
-#'
 #'@details This is a helper function. It cannot be called directly from any client-side
 #'function.
-#'@seealso \link[dsShareServer]{getDataDS} \link[dsShareServer]{getCoordinatesDS},[dsShareServer]{encode.data.no.sharing}
+#@seealso \link[dsShareServer]{getDataDS} \link[dsShareServer]{getCoordinatesDS},[dsShareServer]{encode.data.no.sharing}
 encode.data.no.sharing <- function()
 {
+  settings      <- get.settings()
   header        <- ""
   data          <- as.character(paste(stats::runif(11 *13, 100000, 400000),sep="", collapse=";"))
   size          <- as.numeric(utils::object.size(data))
@@ -183,4 +181,60 @@ are.arg.and.settings.suitable <- function(data.encoded)
     stop("SERVER::ERR:SHARE::002")
   }
   return(outcome)
+}
+
+#'@name get.sharing.name
+#'@title retrieve the name of the sharing object
+#'@description This function uses the option "dsSS_settings" to retrieve this information and the global env
+#'@param envir the environment set by default to globalenv
+get.sharing.name <-  function(envir = globalenv())
+{
+  settings           <- get.settings(envir)
+  name.struct.exists <- any("name.struct.sharing" %in% names(settings))
+  if (name.struct.exists)
+  {
+    return(settings$name.struct.sharing)
+  }
+  else if (!is.null(getOption("dsSS_sharing_param.name.struct")))
+  {
+    return(getOption("dsSS_sharing_param.name.struct"))
+  }
+  else
+  {
+    return("no_sharing")
+  }
+}
+
+#'@name get.settings.name
+#'@title retrieve the name of the settings object
+#'@description This function uses the option "dsSS_settings" to retrieve this information
+#'
+get.settings.name <-  function()
+{
+  if(!is.null(getOption("dsSS_settings")))
+  {
+    return(getOption("dsSS_settings"))
+  }
+  else
+  {
+    return(".settings_ds_share")
+  }
+}
+
+#'@name get.settings
+#'@title retrieve the settings for the package
+#'@description This function uses the option "dsSS_settings" and the global enviroment
+#'to retrieve the settings
+#'@param envir the environment set by default to globalenv
+get.settings <- function(envir = globalenv())
+{
+    settings.name <- get.settings.name()
+    if(exists(settings.name, envir = envir))
+    {
+      return(get(settings.name,envir = envir))
+    }
+    else
+    {
+      stop("SERVER:ERR:021")
+    }
 }

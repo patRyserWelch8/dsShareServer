@@ -1,4 +1,5 @@
 
+if(getRversion() >= "3.1.0") utils::suppressForeignCheck("localvariable")
 
 
 #'@name assignSharingSettingsDS
@@ -14,7 +15,7 @@ assignSharingSettingsDS <- function()
                       sharing.near.equal.limit = 1000,
                       encoded.data             = FALSE,
                       encoded.data.name        = "no_name",
-                      name.struct              = "sharing",
+                      name.struct.sharing      = "sharing",
                       name.struct.transfer     = "transfer",
                       current_row              = "current_row",
                       masking                  = "masking",
@@ -34,31 +35,33 @@ assignSharingSettingsDS <- function()
                       max_columns              = 23,#23,
                       min_value                = 1)
 
-      if (!is.null(getOption("param.name.struct")))
+     settings.name <- ".settings_ds_share"
+
+      if (!is.null(getOption("dsSS_sharing_param.name.struct")))
       {
-        if(is.character(getOption("param.name.struct")) &
-           !identical(getOption("param.name.struct"), ""))
+        if(is.character(getOption("dsSS_sharing_param.name.struct")) &
+           !identical(getOption("dsSS_sharing_param.name.struct"), ""))
         {
-          settings$name.struct <- getOption("param.name.struct")
+          settings$name.struct <- getOption("dsSS_sharing_param.name.struct")
         }
       }
 
-    if (!is.null(getOption("transfer.name.struct")))
+    if (!is.null(getOption("dsSS_transfer.name.struct")))
     {
-      if(is.character(getOption("transfer.name.struct")) &
-         !identical(getOption("transfer.name.struct"), ""))
+      if(is.character(getOption("dsSS_transfer.name.struct")) &
+         !identical(getOption("dsSS_transfer.name.struct"), ""))
       {
-        settings$name.struct.transfer <- getOption("transfer.name.struct")
+        settings$name.struct.transfer <- getOption("dsSS_transfer.name.struct")
       }
     }
 
-      if(!is.null(getOption("sharing.allowed")))
+      if(!is.null(getOption("dsSS_sharing.allowed")))
       {
-        if (getOption("sharing.allowed") == 0)
+        if (getOption("dsSS_sharing.allowed") == 0)
         {
           settings$sharing.allowed <- FALSE
         }
-        else if (getOption("sharing.allowed") == 1)
+        else if (getOption("dsSS_sharing.allowed") == 1)
         {
           settings$sharing.allowed <- TRUE
         }
@@ -68,17 +71,20 @@ assignSharingSettingsDS <- function()
         }
       }
 
-      if(!is.null(getOption("sharing.near.equal.limit")))
+      if(!is.null(getOption("dsSS_sharing.near.equal.limit")))
       {
-        settings$sharing.near.equal.limit <- getOption("sharing.near.equal.limit")
+        settings$sharing.near.equal.limit <- getOption("dsSS_sharing.near.equal.limit")
       }
 
-      print(environment())
-      print(environmentName(environment()))
-      print(current_env())
-      print(current_env() == Globalenv())
+      if(is.null(getOption("dsSS_settings"))) #settings name  have not been set as an option (see onload and description)
+      {
+        options(settings = get.settings.name())
+      }
 
-
-      assign("settings",settings,pos=1)
-      return(exists("settings",where=1))
+      env <- globalenv()
+      assign(get.settings.name(),settings,envir = env)
+      return(exists(settings.name,envir = env))
 }
+
+
+

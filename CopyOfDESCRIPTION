@@ -19,8 +19,21 @@ Suggests:
     knitr, 
     rmarkdown
 AggregateMethods:
+  assignCoordinatesDS,
+  assignDataDS,
   assignParamSettingsDS,
-  removeExchangeDataDS
+  getDataDS,
+  getCoordinatesDS,
+  assignSharingSettingsDS,
+  decryptDataDS,
+  encryptDataDS,
+  decryptParamDS,
+  encryptParamDS,
+  removeEncryptingDataDS,
+  removeExchangeDataDS,
+  isDataEncodedDS,
+  nextDS,
+  isEndOfDataDS
 Options:
  dsSS_settings = ""
  dsSS_sharing_param.name.struct="sharing",
