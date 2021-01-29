@@ -55,6 +55,8 @@ assignSharingSettingsDS <- function()
       }
     }
 
+    if(FALSE) #may have some conversion issues on opal server
+    {
       if(!is.null(getOption("dsSS_sharing.allowed")))
       {
         if (getOption("dsSS_sharing.allowed") == 0)
@@ -70,7 +72,7 @@ assignSharingSettingsDS <- function()
           settings$sharing.allowed <- FALSE
         }
       }
-
+    }
       if(!is.null(getOption("dsSS_sharing.near.equal.limit")))
       {
         settings$sharing.near.equal.limit <- getOption("dsSS_sharing.near.equal.limit")
