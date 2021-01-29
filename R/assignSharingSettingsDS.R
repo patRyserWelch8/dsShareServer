@@ -36,7 +36,7 @@ assignSharingSettingsDS <- function()
                       min_value                = 1)
 
 
-
+    if(FALSE) #may have some conversion issues on opal server
       if (!is.null(getOption("dsSS_sharing_param.name.struct")))
       {
         if(is.character(getOption("dsSS_sharing_param.name.struct")) &
@@ -55,7 +55,7 @@ assignSharingSettingsDS <- function()
       }
     }
 
-    if(FALSE) #may have some conversion issues on opal server
+
     {
       if(!is.null(getOption("dsSS_sharing.allowed")))
       {
@@ -72,7 +72,7 @@ assignSharingSettingsDS <- function()
           settings$sharing.allowed <- FALSE
         }
       }
-    }
+
       if(!is.null(getOption("dsSS_sharing.near.equal.limit")))
       {
         settings$sharing.near.equal.limit <- getOption("dsSS_sharing.near.equal.limit")
@@ -83,9 +83,11 @@ assignSharingSettingsDS <- function()
         options(dsSS_settings = get.settings.name())
       }
 
+    }
+
       env <- globalenv()
-      assign(getOption("dsSS_settings"),settings,envir = env)
-      return(exists(getOption("dsSS_settings"),envir = env))
+      assign(".settings_ds_share",settings,envir = env)
+      return(exists(".settings_ds_share",envir = env))
 }
 
 
