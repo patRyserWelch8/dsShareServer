@@ -35,7 +35,7 @@ assignSharingSettingsDS <- function()
                       max_columns              = 23,#23,
                       min_value                = 1)
 
-     settings.name <- ".settings_ds_share"
+
 
       if (!is.null(getOption("dsSS_sharing_param.name.struct")))
       {
@@ -78,12 +78,12 @@ assignSharingSettingsDS <- function()
 
       if(is.null(getOption("dsSS_settings"))) #settings name  have not been set as an option (see onload and description)
       {
-        options(settings = get.settings.name())
+        options(dsSS_settings = get.settings.name())
       }
 
       env <- globalenv()
-      assign(get.settings.name(),settings,envir = env)
-      return(exists(settings.name,envir = env))
+      assign(getOption("dsSS_settings"),settings,envir = env)
+      return(exists(getOption("dsSS_settings"),envir = env))
 }
 
 
