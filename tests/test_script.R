@@ -1,0 +1,40 @@
+options(sharing.near.equal.limit = 1000)
+options(sharing.allowed = 1)
+
+#vector_A <- c(1:71)
+#vector_B <- vector_A * 100000
+#vector_C <- vector_A + 1
+
+#df_A     <- data.frame(vector_A,vector_B, list_C)
+#df_B     <- data.frame(vector_A * -10000000 , vector_B * -10000000, vector_C * -10000000)
+#df_C     <- data.frame(vector_A + 1, vector_B + 1, vector_C + 1)
+
+
+#assign("all.data", rbind(get("D", pos = 1), get("E", pos = 1), get("F", pos = 1)) , pos = 1)
+#all.data <- get("all.data", pos= 1)
+#print(dim(all.data))
+
+# step 1 - set settings
+assignSharingSettingsDS()
+print(get("settings", pos = 1))
+
+if (FALSE)
+{
+print(get("settings", pos = 1))
+
+# step 2 - check encodedDataDS
+data.encoded <- isDataEncodedDS(data.server = "vector_A", data.encoded = "df_B", data.held.in.server = "all.data")
+print(get("settings", pos = 1))
+print(data.encoded)
+
+# step 3 - iterate through
+
+
+EOF <- isEndOfDataDS(data_encoded = "df_B")
+while(!EOF)
+{
+  data.transfer <- nextDS("df_B",10)
+  EOF <- isEndOfDataDS(data_encoded = "df_B")
+}
+
+}
