@@ -21,7 +21,3 @@ format the data prior its transfer to a client-side function.
 This is a helper function. It cannot be called directly from any client-side
 function.
 }
-\seealso{
-\link[dsShareServer]{getDataDS}, \link[dsShareServer]{getCoordinatesDS},
-\link[dsShareServer]{encode.data.no.sharing}
-}

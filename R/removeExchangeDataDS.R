@@ -1,30 +1,32 @@
-.remove.sharing <- function()
-{
-  name.struct.exists <- any("name.struct" %in% names(get("settings", pos = 1)))
-  if (name.struct.exists)
-  {
-    sharing <- settings$name.struct
-    if(exists(sharing, where = 1))
-    {
-      remove(sharing,pos = 1)
-    }
-  }
-}
+
 
 #'@name removeExchangeDataDS
 #'@title Remove data used to exchange some parameters from a DataSHIELD server
-#'@description This server function deletes the data used in the exchange of the parameters from a DataSHIELD server. The settings and sharing data structure are deleted. 
-#'This function is important, to keep temporary data being analysed by other processes. 
+#'@description This server function deletes the data used in the exchange of the parameters from a DataSHIELD server.
+#'The settings and sharing data structure are deleted. This function is important, to keep temporary
+#'data being analysed by other processes.
 #'@return TRUE if the settings and sharing variables have been deleted. Otherwise, FALSE
 #'@export
 removeExchangeDataDS <- function()
 {
-  
-  sharing <- "no_settings"
-  if(exists("settings", where = 1))
+  #ini variables. Error are thrown is some settings
+  env           <- globalenv()
+  settings      <- get.settings(envir = env)
+  settings.name <- get.settings.name()
+  sharing.name  <- get.sharing.name(envir = env)
+
+  #remove sharing data
+  if(exists(sharing.name, where = env))
   {
-    .remove.sharing()
-    remove("settings", pos = 1)
+    remove(list = sharing.name, envir = env)
   }
-  return(!exists(sharing, where = 1) & !exists("settings", where = 1))
+
+  # remove settings
+  if(exists(settings.name, envir = env))
+  {
+    remove(list = settings.name, envir = env)
+  }
+
+  return(!exists(sharing.name, envir = env) &
+         !exists(settings.name, envir = env))
 }
