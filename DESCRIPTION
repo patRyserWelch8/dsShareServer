@@ -19,7 +19,7 @@ Suggests:
     knitr, 
     rmarkdown
 AggregateMethods:
-  assignParamSettingsDS,
+ assignSharingSettingsDS,
   removeExchangeDataDS
 Options:
  dsSS_settings = .settings_ds_share,
