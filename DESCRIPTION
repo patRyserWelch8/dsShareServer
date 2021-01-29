@@ -22,7 +22,7 @@ AggregateMethods:
   assignParamSettingsDS,
   removeExchangeDataDS
 Options:
- dsSS_settings = ""
+ dsSS_settings = "",
  dsSS_sharing_param.name.struct="sharing",
  dsSS_transfer.name.struct="transfer",
  dsSS_sharing.allowed=1,
