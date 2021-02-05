@@ -95,7 +95,7 @@ edds.createMatrixRUnif <- function(settings, no.rows = 0 , no.columns = 0, min.v
 
 edds.encrypt.concealed.data <- function(settings, sharing, master_mode = TRUE)
 {
-  outcome <- sharing
+  outcome        <- sharing
   values.exists  <- all(c(settings$concealing,settings$masking) %in% names(sharing))
 
   if(values.exists)
@@ -188,10 +188,10 @@ edds.is.encrypted.valid <- function(sharing, expected.fields)
 
   if (is.list(sharing) & is.vector(expected.fields))
   {
-    list.attributes <- names(sharing)
+    list.attributes  <- names(sharing)
     attributes.exist <- list.attributes %in% expected.fields
-    total.correct = sum(attributes.exist == TRUE)
-    correct <- total.correct == length(expected.fields)
+    total.correct    <-  sum(attributes.exist == TRUE)
+    correct          <- (total.correct == length(expected.fields))
    }
 
   return(correct)
@@ -331,11 +331,10 @@ encryptDataDS <- function(master_mode = TRUE, preserve_mode = FALSE)
      if(is.sharing.allowed())
      {
        env           <- globalenv()
-       print(2)
        settings      <- get.settings(envir = env)
        expected.list <- edds.encrypt.data(settings, master_mode, preserve_mode, env)
-       outcome       <- edds.is.encrypted.valid(sharing, expected.list) &
-                        exists(get.sharing.name(), where=1)
+       outcome       <- edds.is.encrypted.valid(get.sharing(), expected.list) &
+                        exists(get.sharing.name(), where = env)
        return(outcome)
      }
      else
