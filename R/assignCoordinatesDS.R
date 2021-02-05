@@ -1,15 +1,14 @@
-
-.save.coordinates <- function(received.data = NULL, no.params)
+# save coordinates to the sharing RObject on the server.
+acds.save.coordinates <- function(settings, received.data = NULL, no.params, env = globalenv())
 {
-  #if(exists("settings", where =1))
-  #{
     if (is.vector(received.data))
     {
-      sharing <- list()
-      if (exists("sharing", where=1))
-      {
-        sharing = get("sharing", pos = 1)
-      }
+      # retrieves sharing object or an empty list
+      sharing <- get.sharing()
+      #if (exists(get.sharing.name(), where = env))
+      #{
+      #  sharing = get(get.sharing.name(), pos = env)
+      #}
 
       no.values <- length(received.data)
 
@@ -17,13 +16,13 @@
       {
         sharing[[settings$index_x]] <- received.data[1:no.params]
         sharing[[settings$index_y]] <- received.data[(no.params+1):no.values]
-        assign(settings$name.struct, sharing, pos = 1)
+        assign(get.sharing.name(), sharing, pos = env)
       }
     }
-  #}
 }
 
-.create.data <- function(data = NULL,  no.params = 1)
+# decode the coordinateas from the encoded data
+acds.create.data <- function(data = NULL,  no.params = 1)
 {
   received.data <- rep(0,4)
   if (is.character(data) & is.numeric(no.params))
@@ -44,37 +43,28 @@
   }
   return(received.data)
 }
-
-.is.assigned.coordinates.correct <- function()
+# checks the coordinates are correct.
+acds.is.assigned.coordinates.correct <- function(settings, env = globalenv())
 {
   outcome <- FALSE
-  if(exists("settings", where =1))
+  # retrieves sharing object or an empty list
+  sharing <- get.sharing()
+
+  # sets the expected elements for coordinates
+  structure     <- c(settings$index_x,settings$index_y)
+
+  # check expected structure exists
+  total.correct <- sum(structure %in% names(sharing))
+  value.exists  <- length(structure) ==  total.correct
+
+  # check data type of created coordinates
+  if (value.exists)
   {
-      if (exists(settings$name.struct,where=1))
-      {
-        sharing       <- get(settings$name.struct,pos=1)
-        structure     <- c(settings$index_x,settings$index_y)
-
-        total.correct <- sum(structure %in% names(sharing))
-        value.exists  <- length(structure) ==  total.correct
-
-        if (value.exists)
-        {
-          outcome <- is.vector(sharing[[settings$index_x]]) & is.vector(sharing[[settings$index_y]])
-        }
-      }
+    outcome <- is.vector(sharing[[settings$index_x]]) & is.vector(sharing[[settings$index_y]])
   }
+
   return(outcome)
 }
-
-.assignCoordinates <- function(header = "", payload = "", property.a = 0,
-                               property.b = 0, property.c = 0.0, property.d = 0.0)
-{
-  received.data  <- .create.data(payload,property.b)
-  .save.coordinates(received.data, property.b)
-  outcome          <- .is.assigned.coordinates.correct()
-}
-
 
 
 #'@name assignCoordinatesDS
@@ -105,7 +95,18 @@ assignCoordinatesDS <- function(header = "", payload = "", property.a = 0,
           if (nchar(header) > 0 & nchar(payload) > 0 & property.a > 0
              & property.b > 0 & property.c > 0 & property.d > 0)
             {
-               return(.assignCoordinates(header,payload,property.a, property.b, property.c, property.d))
+                # set environment and retrieve settings
+                env            <- globalenv()
+                settings       <- get.settings(envir = env)
+
+                # decode receive coordinates
+                received.data  <- acds.create.data(payload, no.params = property.b)
+
+                # assign coordinates to sharing R object
+                acds.save.coordinates(received.data, property.b, env)
+
+                # verify coordinates exists and have been created successfully
+                return(acds.is.assigned.coordinates.correct(env))
             }
             else
             {

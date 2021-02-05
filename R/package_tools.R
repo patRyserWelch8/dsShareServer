@@ -205,6 +205,25 @@ get.sharing.name <-  function(envir = globalenv())
   }
 }
 
+#'@name get.sharing
+#'@title retrieve the sharing R object
+#'@description This function uses the option "dsSS_settings" and the global enviroment
+#'to retrieve the sharing of the data
+#'@param envir the environment set by default to globalenv
+#'@return the sharing R object if it has been created. Otherwise an empty list.
+get.sharing <- function(envir = globalenv())
+{
+  sharing.name <- get.sharing.name()
+  if(exists(sharing.name, envir = envir))
+  {
+    return(get(sharing.name,envir = envir))
+  }
+  else
+  {
+    return(list())
+  }
+}
+
 #'@name get.settings.name
 #'@title retrieve the name of the settings object
 #'@description This function uses the option "dsSS_settings" to retrieve this information

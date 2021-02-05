@@ -35,11 +35,11 @@ test_that("parameters",
 
 })
 
-context("assignCoordinatesDS::expt::.save_coordinates::no_coordinates")
+context("assignCoordinatesDS::expt::acds.save_coordinates::no_coordinates")
 test_that("no_coordinates",
 {
   expect_equal(exists("sharing",where = 1), FALSE)
-  .save.coordinates()
+  acds.save.coordinates()
   expect_equal(exists("sharing",where = 1), FALSE)
 
 })
@@ -48,16 +48,10 @@ test_that("no_coordinates",
 context("assignCoordinatesDS::expt::.create.data::no_coordinates")
 test_that("no_coordinates",
 {
-   result <- .create.data()
+   result <- acds.create.data()
    expect_equal(rep(0,4),result)
 })
 
-context("assignCoordinatesDS::expt::.is.assigned.coordinates.correct::no_coordinates")
-test_that("no_coordinates",
-{
-  expect_equal(.is.assigned.coordinates.correct(),FALSE)
-
-})
 
 rm(list=ls(),pos=1)
 
@@ -133,7 +127,7 @@ context("assignCoordinatesDS::expt::.save_coordinates::with_coordinates")
 test_that("with_coordinates",
 {
   expect_equal(exists("sharing",where = 1), TRUE)
-  .save.coordinates(c(0.5, 0.5,0.5,0.5),2)
+  acds.save.coordinates(c(0.5, 0.5,0.5,0.5),2)
   expect_equal(exists("sharing",where = 1), TRUE)
   list.fields <- names(sharing)
   expect_equal(settings$index_x %in% list.fields, TRUE)
@@ -146,30 +140,30 @@ test_that("with_coordinates",
 context("assignCoordinatesDS::expt::.create.data::with_coordinates")
 test_that("with_coordinates",
 {
-  result <- .create.data()
+  result <- acds.create.data()
   expect_equal(rep(0,4),result)
 
-  result <- .create.data(c(0.5,0.5,0.5,0.5),2)
+  result <- acds.create.data(c(0.5,0.5,0.5,0.5),2)
   expect_equal(rep(0,4),result)
 
-  result <- .create.data(c(0.5,0.5,0.5,0.5),"a")
+  result <- acds.create.data(c(0.5,0.5,0.5,0.5),"a")
   expect_equal(rep(0,4),result)
 
-  result <- .create.data("a;b;c;d",2)
+  result <- acds.create.data("a;b;c;d",2)
   expect_equal(rep(0,4),result)
 
-  result <- .create.data("0.5;",1)
+  result <- acds.create.data("0.5;",1)
   expect_equal(rep(0,4),result)
 
 
-  result <- .create.data("0.5;0.5;0.5;0.5",2)
+  result <- acds.create.data("0.5;0.5;0.5;0.5",2)
   expect_equal(c(0.5,0.5,0.5,0.5),result)
 })
 
 context("assignCoordinatesDS::expt::.is.assigned.coordinates.correct::with_coordinates")
 test_that("with_coordinates",
 {
-  expect_equal(.is.assigned.coordinates.correct(),TRUE)
+  expect_equal(acds.is.assigned.coordinates.correct(),TRUE)
 })
 
 

@@ -41,7 +41,7 @@ assignSharingSettingsDS <- function()
         if(is.character(getOption("dsSS_sharing_param.name.struct")) &
            !identical(getOption("dsSS_sharing_param.name.struct"), ""))
         {
-          settings$name.struct <- getOption("dsSS_sharing_param.name.struct")
+          settings$name.struct.sharing <- getOption("dsSS_sharing_param.name.struct")
         }
       }
 
