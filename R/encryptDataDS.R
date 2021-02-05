@@ -1,16 +1,5 @@
-.get_sharing <- function()
-{
-  outcome <- list()
 
-  if(exists(settings$name.struct, where =1))
-  {
-    outcome <- get(settings$name.struct, pos=1)
-
-  }
-  return(outcome)
-}
-
-.conceal.data <- function(concealing.matrix, data, columns)
+edds.conceal.data <- function(concealing.matrix, data, columns)
 {
 
   if(is.matrix(concealing.matrix) & is.list(data) & is.vector(columns))
@@ -38,7 +27,7 @@
 }
 
 
-.define_no_rows <- function()
+edds.define_no_rows <- function(settings)
 {
   no.rows <- 2
   continue <- TRUE
@@ -54,7 +43,7 @@
   return(no.rows)
 }
 
-.define_no_columns <- function(no.rows = 2)
+edds.define_no_columns <- function(settings, no.rows = 2)
 {
   if (is.numeric(no.rows))
   {
@@ -78,20 +67,24 @@
   }
 }
 
-.createMatrixRUnif <- function(no.rows = settings$min_rows, no.columns = settings$min_columns, min.value=0, max.value=1)
+edds.createMatrixRUnif <- function(settings, no.rows = 0 , no.columns = 0, min.value= 0, max.value = 1)
 {
   result <- matrix(c(0),settings$min_rows,settings$min_columns)
-
 
   if (is.numeric(no.rows) && is.numeric(no.columns)
       && length(no.rows)  ==  1 && length(no.columns) == 1)
   {
-    if (no.rows < settings$min_rows || no.columns < settings$min_columns)
+    if (no.rows < settings$min_rows)
     {
       no.rows    <- settings$min_rows
+    }
+
+    if (no.columns < settings$min_columns)
+    {
       no.columns <- settings$min_columns
     }
-    random.numbers <- runif(no.rows * no.columns, min = min.value, max = max.value)
+
+    random.numbers <- stats::runif(no.rows * no.columns, min = min.value, max = max.value)
     result         <-  matrix(random.numbers,no.rows,no.columns)
 
   }
@@ -100,7 +93,7 @@
 }
 
 
-.encrypt.concealed.data <- function(sharing, master_mode = TRUE)
+edds.encrypt.concealed.data <- function(settings, sharing, master_mode = TRUE)
 {
   outcome <- sharing
   values.exists  <- all(c(settings$concealing,settings$masking) %in% names(sharing))
@@ -148,12 +141,11 @@
 #This helper function create a concealing.matrix and a master matrix. No data has yet to created.
 #The number of rows and columns is defined randomly. The index_y is set. When encrypted the matrix is transposed and
 #the chosen column becomes a row.
-.create.structure.master <- function(min, max,no.rows, no.columns)
+edds.create.structure.master <- function(settings, min, max,no.rows, no.columns)
 {
-
     outcome                         <- list()
-    outcome[[settings$concealing]]  <- .createMatrixRUnif(no.rows, no.columns, min, max)
-    outcome[[settings$masking]]     <- .createMatrixRUnif(no.columns, no.columns, min, max)
+    outcome[[settings$concealing]]  <- edds.createMatrixRUnif(settings, no.rows, no.columns, min, max)
+    outcome[[settings$masking]]     <- edds.createMatrixRUnif(settings, no.columns, no.columns, min, max)
     outcome[[settings$no_columns]]  <- no.columns
     outcome[[settings$no_rows]]     <- no.rows
 
@@ -163,31 +155,34 @@
 #This helper function creates the concealing matrix. The matrix dimension uses again the dimension of the received matrix.
 #The number of rows for the concealing matrix is the number of columns from the received.matrix. The number of columns
 #for the concealing matrix is the number of rows from the received.matrix.  The masking matrix becomes the received matrix.
-.create.structure.receiver <- function(min, max)
+edds.create.structure.receiver <- function(settings, sharing, min, max, envir)
 {
   outcome <- list()
-  if(exists(settings$name.struct,where=1))
-  {
-    received.data    <-  get(settings$name.struct, pos = 1)
-    value.exists     <- settings$received %in% names(sharing)
+  #if(exists(get.sharing.name(),envir = envir))
+  #{
+    #received.data    <- get(get.sharing.name(), envir - envir)
+    # get sharing data - states of the search
+    received.data    <- sharing
+    # check received data exist
+    value.exists     <- settings$received %in% names(received.data)
     if (value.exists)
     {
       #transpose is required counter the transpose in master
-      no.rows.received               <- nrow(t(received.data[[settings$received]]))
-      no.columns.received            <- ncol(t(received.data[[settings$received]]))
+      no.rows.received                <- nrow(t(received.data[[settings$received]]))
+      no.columns.received             <- ncol(t(received.data[[settings$received]]))
 
-      outcome[[settings$concealing]] <- .createMatrixRUnif(no.rows.received, no.columns.received, min, max)
+      outcome[[settings$concealing]]  <- edds.createMatrixRUnif(no.rows.received, no.columns.received, min, max)
 
       outcome[[settings$masking]]     <- received.data[[settings$received]]
       outcome[[settings$no_columns]]  <- no.columns.received
       outcome[[settings$no_rows]]     <- no.rows.received
     }
-  }
+  #}
   return(outcome)
 }
 
 
-.is.encrypted.valid <- function(sharing, expected.fields)
+edds.is.encrypted.valid <- function(sharing, expected.fields)
 {
   correct <- FALSE
 
@@ -202,7 +197,7 @@
   return(correct)
 }
 
-.preserve.info <- function(sharing)
+edds.preserve.info <- function(settings, sharing)
 {
 
   outcome      <- list()
@@ -245,7 +240,7 @@
   return(outcome)
 }
 
-.encrypt.data <- function(master_mode, preserve_mode)
+edds.encrypt.data <- function(settings, master_mode, preserve_mode, envir)
 {
   #init variables
   MIN            <- stats::runif(1, min=settings$min_value, max  = settings$min_value + 20)
@@ -253,15 +248,15 @@
   data           <- NULL
 
   expected.list  <- c()
-  no.rows        <- .define_no_rows()
-  no.columns     <- .define_no_columns(no.rows)
-  sharing        <- .get_sharing()
+  no.rows        <- edds.define_no_rows(settings = settings)
+  no.columns     <- edds.define_no_columns(settings = settings, no.rows = no.rows)
+  sharing        <- get.sharing(envir = envir)
   saved.info     <- list()
 
   #preserve the data from previous exchange, if it is required.
   if(preserve_mode) #steps 6 and 8
   {
-    saved.info    <- .preserve.info(sharing)
+    saved.info    <-  edds.preserve.info(settings, sharing)
     no.rows       <-  sharing[[settings$no_rows]]
     no.columns    <-  sharing[[settings$no_columns]]
   }
@@ -271,7 +266,7 @@
   if (master_mode)
   {
     #master_mode is in steps 1 and 6 of the exchange
-    sharing <- .create.structure.master(MIN, MAX,
+    sharing <- edds.create.structure.master(settings, MIN, MAX,
                                         no.rows = no.rows,
                                         no.columns = no.columns)
     expected.list <- c(settings$concealing,settings$masking,
@@ -280,7 +275,7 @@
   else
   {
     # not master mode: steps 3 and 8
-    sharing <- .create.structure.receiver(MIN, MAX)
+    sharing <- edds.create.structure.receiver(settings, sharing, MIN, MAX, envir)
     expected.list <- c(settings$concealing,settings$masking,settings$encrypted,settings$no_columns, settings$no_rows)
   }
 
@@ -289,12 +284,12 @@
     if(master_mode) #step 6
     {
 
-      sharing[[settings$concealing]] <- .conceal.data(sharing[[settings$concealing]],
+      sharing[[settings$concealing]] <- edds.conceal.data(sharing[[settings$concealing]],
                                                       saved.info[[settings$data]],saved.info[["rows"]])
     }
     else #step 8
     {
-      sharing[[settings$concealing]] <- .conceal.data(sharing[[settings$concealing]],
+      sharing[[settings$concealing]] <- edds.conceal.data(sharing[[settings$concealing]],
                                                       saved.info[[settings$data]],saved.info[["columns"]])
     }
     sharing[[settings$index_x]]    <-  saved.info[[settings$index_x]]
@@ -305,14 +300,14 @@
   }
 
 
-  sharing     <- .encrypt.concealed.data(sharing, master_mode)
-  assign(settings$name.struct, sharing, pos = 1)
+  sharing     <- edds.encrypt.concealed.data(settings, sharing, master_mode)
+  assign(get.sharing.name(), sharing, envir = envir)
   return(expected.list)
 
 }
 
 #'@name encryptDataDS
-#'@title  encrypt some data on the server
+#'@title  encrypt some data on the server for sharing some parameters
 #'@description This server function uses some matrices operations to encrypts some data required to exchange a parameter securely between two DataSHIELD server.
 #'@details This function encrypts data in four different ways; each of them are defined by the combination of argument values.
 #'\itemize{
@@ -326,6 +321,7 @@
 #'}
 #'@param master_mode Boolean argument. It indicates the mode of encryption. By default, set to TRUE.
 #'@param preserve_mode  Boolean argument. It indicates to presever some data exchanged previously between servers. By default, set to FALSE.
+#'@importFrom stats runif
 #'@export
 encryptDataDS <- function(master_mode = TRUE, preserve_mode = FALSE)
 {
@@ -334,9 +330,12 @@ encryptDataDS <- function(master_mode = TRUE, preserve_mode = FALSE)
 
      if(is.sharing.allowed())
      {
-       expected.list <- .encrypt.data(master_mode, preserve_mode)
-       outcome       <- .is.encrypted.valid(sharing, expected.list) &
-                        exists(settings$name.struct, where=1)
+       env           <- globalenv()
+       print(2)
+       settings      <- get.settings(envir = env)
+       expected.list <- edds.encrypt.data(settings, master_mode, preserve_mode, env)
+       outcome       <- edds.is.encrypted.valid(sharing, expected.list) &
+                        exists(get.sharing.name(), where=1)
        return(outcome)
      }
      else

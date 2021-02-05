@@ -41,35 +41,34 @@ test_that("not_allowed_to_take_part",
 
 set.default.options.not.restrictive()
 assignSharingSettingsDS()
+settings <- get.settings()
 
-context("encryptDataDS::expt::.define_no_rows")
+context("encryptDataDS::expt::edds.define_no_rows")
 test_that("define.no.rows",
 {
   #numeric and odd number
-  expect_equal(is.integer(.define_no_rows()),TRUE)
-  expect_equal(.define_no_rows() %% 2 == 1, TRUE)
-  expect_equal(.define_no_rows() %% 2 == 0, FALSE)
+  expect_equal(is.integer(edds.define_no_rows(settings)),TRUE)
+  expect_equal(edds.define_no_rows(settings) %% 2 == 1, TRUE)
+  expect_equal(edds.define_no_rows(settings) %% 2 == 0, FALSE)
 
   #correct range
-  no.rows <- .define_no_rows()
+  no.rows <- edds.define_no_rows(settings)
   expect_equal((no.rows >= 11 & no.rows <= 21),TRUE)
 
 })
 assignSharingSettingsDS()
-settings <- get("settings", pos = 1)
+settings <- get.settings()
 
 context("encryptDataDS::expt::.define_no_columns")
 test_that("numeric and odd number",
 {
-
-  expect_equal(is.integer(.define_no_columns()),TRUE)
-  expect_equal(.define_no_columns() %% 2 == 1, TRUE)
+  expect_equal(is.integer(edds.define_no_columns(settings)),TRUE)
+  expect_equal(edds.define_no_columns(settings) %% 2 == 1, TRUE)
 })
 
 test_that("correct range",
 {
-
-  no.columns <- .define_no_columns()
+  no.columns <- edds.define_no_columns(settings)
   expect_equal((no.columns >= 13 & no.columns <= 23),TRUE)
 })
 
@@ -77,20 +76,20 @@ test_that("correct range",
 {
   no.rows = 15
   #numeric and odd number
-  expect_equal(is.integer(.define_no_columns(no.rows = no.rows)),TRUE)
-  expect_equal(.define_no_columns(no.rows = no.rows) %% 2 == 1, TRUE)
+  expect_equal(is.integer(edds.define_no_columns(settings, no.rows = no.rows)),TRUE)
+  expect_equal(edds.define_no_columns(settings, no.rows = no.rows) %% 2 == 1, TRUE)
 })
 
 test_that("incorrect input",
 {
   no.rows = "a"
-  expect_error(.define_no_columns(no.rows = no.rows))
+  expect_error(edds.define_no_columns(settings, no.rows = no.rows))
 })
 
 context("encryptDataDS::expt::.createMatrixRUnif")
 test_that("no argument",
 {
-  createdMatrix <- .createMatrixRUnif()
+  createdMatrix <- edds.createMatrixRUnif(settings)
   expect_equal(nrow(createdMatrix) == settings$min_rows, TRUE)
   expect_equal(ncol(createdMatrix) == settings$min_columns, TRUE)
   expect_equal(all(createdMatrix <= 1, TRUE),TRUE)
@@ -98,7 +97,7 @@ test_that("no argument",
 
 test_that("no row",
 {
-  createdMatrix <- .createMatrixRUnif(no.rows = 10)
+  createdMatrix <- edds.createMatrixRUnif(settings, no.rows = 10)
   expect_equal(nrow(createdMatrix) == 11, TRUE)
   expect_equal(ncol(createdMatrix) == 13, TRUE)
   expect_equal(all(createdMatrix <= 1, TRUE),TRUE)
@@ -106,8 +105,8 @@ test_that("no row",
 
 test_that("no row correct",
 {
-
-  createdMatrix <- .createMatrixRUnif(no.rows = 12)
+  createdMatrix <- edds.createMatrixRUnif(settings = settings, no.rows = 12)
+  print(nrow(createdMatrix))
   expect_equal(nrow(createdMatrix) == 12, TRUE)
   expect_equal(ncol(createdMatrix) == 13, TRUE)
   expect_equal(all(createdMatrix <= 1, TRUE),TRUE)
@@ -115,15 +114,15 @@ test_that("no row correct",
 
 test_that("no column incorrect",
 {
-  createdMatrix <- .createMatrixRUnif(no.rows = 13, no.columns =11)
-  expect_equal(nrow(createdMatrix) == 11, TRUE)
+  createdMatrix <- edds.createMatrixRUnif(settings, no.rows = 13, no.columns = 11)
+  expect_equal(nrow(createdMatrix) == 13, TRUE)
   expect_equal(ncol(createdMatrix) == 13, TRUE)
   expect_equal(all(createdMatrix <= 1, TRUE),TRUE)
 })
 
 test_that("no row  and columns correct",
 {
-  createdMatrix <- .createMatrixRUnif(no.rows = 15, no.columns = 17)
+  createdMatrix <- edds.createMatrixRUnif(settings, no.rows = 15, no.columns = 17)
   expect_equal(nrow(createdMatrix) == 15, TRUE)
   expect_equal(ncol(createdMatrix) == 17, TRUE)
   expect_equal(all(createdMatrix <= 1, TRUE),TRUE)
@@ -132,14 +131,15 @@ test_that("no row  and columns correct",
 
 test_that("no row  and columns, min value correct",
 {
-  expect_warning(.createMatrixRUnif(no.rows = 15, no.columns = 17, min.value = 15))
+  expect_warning(edds.createMatrixRUnif(settings, no.rows = 15, no.columns = 17, min.value = 15))
 
 })
 
 test_that("no row  and columns, min value incorrect",
 {
 
-  createdMatrix <- .createMatrixRUnif(no.rows = settings$min_rows+1, no.columns = settings$min_columns+1, min.value = -12)
+  createdMatrix <- edds.createMatrixRUnif(settings, no.rows = settings$min_rows+1,
+                                          no.columns = settings$min_columns+1, min.value = -12)
   expect_equal(nrow(createdMatrix) == settings$min_rows+1, TRUE)
   expect_equal(ncol(createdMatrix) == settings$min_columns+1, TRUE)
   expect_equal(all(createdMatrix >= -12 & createdMatrix <= 1, TRUE),TRUE)
@@ -147,7 +147,7 @@ test_that("no row  and columns, min value incorrect",
 
 test_that("no row  and columns, min value, max value correct",
 {
-  createdMatrix <- .createMatrixRUnif(no.rows = 15, no.columns = 17, min.value = -12, max.value = 298)
+  createdMatrix <- edds.createMatrixRUnif(settings, no.rows = 15, no.columns = 17, min.value = -12, max.value = 298)
   expect_equal(nrow(createdMatrix) == 15, TRUE)
   expect_equal(ncol(createdMatrix) == 17, TRUE)
   expect_equal(all(createdMatrix >= -12 & createdMatrix <= 298, TRUE),TRUE)

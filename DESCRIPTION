@@ -17,9 +17,12 @@ LazyData: true
 Suggests: 
     testthat,
     knitr, 
-    rmarkdown
+    rmarkdown,
+    stats
 AggregateMethods:
- assignSharingSettingsDS,
+  assignSharingSettingsDS,
+  encryptDataDS,
+  assignCoordinatesDS,
   removeExchangeDataDS
 Options:
  dsSS_settings = .settings_ds_share,
