@@ -1,7 +1,7 @@
 source("definition_tests/def_getEncodedDataDS.R")
+source("options/options_definitions.R")
 
-rm("sharing", pos=1)
-rm("settings", pos=1)
+
 
 context("getDataDS::expt::no_settings")
 test_that("no_settings",
@@ -17,8 +17,8 @@ context("getDataDS::expt::no_sharing")
 test_that("no_sharing",
 {
   expect_error(getDataDS())
-  assign("sharing", list(), pos = 1)
-  expect_true(is.list(.encode.encrypted.data()))
+  assign("sharing", list(), pos = globalenv())
+  expect_true(is.list(encode.encrypted.data(settings = get.settings(envir = globalenv()))))
 })
 
 

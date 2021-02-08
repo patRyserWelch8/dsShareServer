@@ -1,7 +1,10 @@
 
-.encode.encrypted.data <- function(master_mode = TRUE)
+
+# encode encrypted data for in the R object named by
+# settings$name.struct.sharing
+encode.encrypted.data <- function(settings, master_mode = TRUE)
 {
-  sharing      <- get(settings$name.struct,pos = 1)
+  sharing      <- get(settings$name.struct.sharing,pos = 1)
 
   if(!("encrypted" %in% names(sharing)))
   {
@@ -37,13 +40,16 @@ getDataDS <- function(master_mode = TRUE)
 {
    if (is.sharing.allowed())
    {
-     if(!exists(settings$name.struct,where=1))
+     env      <- globalenv()
+     settings <- get.settings(envir = env)
+
+     if(!exists(settings$name.struct.sharing,where=1))
      {
        stop("SERVER::ERR::SHARING::003")
      }
      else
      {
-       encoded.data <- .encode.encrypted.data(master_mode)
+       encoded.data <- encode.encrypted.data(settings, master_mode)
        if(identical(encoded.data$header, "FM2"))
        {
          stop("SERVER::ERR::SHARING::004")

@@ -3,11 +3,11 @@ source('options/options_definitions.R')
 context("assignSharingSettingsDS::expt::correct_outcome")
 test_that("exists list",
 {
-   if (exists("settings",where = 1))
+   if (exists(".settings_ds_share", envir = globalenv()))
    {
-     rm("settings", pos=1)
+     rm(".settings_ds_share", envir = globalenv())
    }
-   expect_equal(exists("settings", where = 1), FALSE)
+   expect_equal(exists(".settings_ds_share", where = 1), FALSE)
    assignSharingSettingsDS()
    settings.name <- getOption("dsSS_settings")
    expect_equal(exists(settings.name, where = 1), TRUE)
@@ -18,8 +18,8 @@ test_that("correct fields",
    list.fields <- c("name.struct.sharing","name.struct.transfer", "masking", "concealing", "received", "encrypted", "decrypted",
                     "data", "index_x", "index_y", "no_columns", "no_rows", "min_rows","max_rows",
                     "min_columns", "max_columns", "min_value")
-   settings.name <- getOption("dsSS_settings")
-   settings <- get(settings.name, pos=1)
+
+   settings <- get.settings(envir = global.env())
    expect_equal(all(list.fields %in% names(settings)), TRUE)
 })
 

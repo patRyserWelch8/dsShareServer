@@ -149,7 +149,7 @@ are.arg.and.settings.suitable <- function(data.encoded)
   outcome <- FALSE
   if(is.sharing.allowed())
   {
-    settings  <- get("settings", pos = 1)
+    settings  <- get.settings()
 
     if(!is.character(data.encoded))
     {
