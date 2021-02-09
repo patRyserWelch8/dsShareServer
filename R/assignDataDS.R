@@ -1,77 +1,95 @@
-save.matrix <- function(received.matrix = NULL, master_mode)
+# save matrix into global env as an R object as specified in settings
+adds.save.matrix <- function(settings, received.matrix = NULL, master_mode, env = globalenv())
 {
     if (is.matrix(received.matrix))
     {
-      sharing <- list()
-      if (exists("sharing", where=1))
-      {
-        sharing = get("sharing", pos = 1)
-      }
+      sharing                      <- get.sharing(envir = env)
       sharing[[settings$received]] <- received.matrix
-      assign(settings$name.struct, sharing, pos = 1)
+      assign(get.sharing.name(), sharing, envir = env)
     }
 }
 
-create.matrix <- function(data = NULL,  no.columns = 1)
+# transform data in to a matrix
+adds.create.matrix <- function(data = NULL,  no.columns = 1)
 {
+  # intialise matrix to be returned. If payload cannot be
+  # decoded, then a 4 x 4 matrix made of 0 is returned.
   numbers         <- rep(x = 0, times=4)
   received.matrix <- matrix(as.numeric(numbers),2,2)
 
-
+  # checks appropriate data type or classes.
   if (is.character(data) & is.numeric(no.columns))
   {
+    # checks it can be converted to numerical values
     can.be.converted <- grepl('^-?[0-9.;e]+$', data)
+
     if(can.be.converted)
     {
+      # split character string into a list of elements
       data.list       <- strsplit(data,";")
-      length(data.list)
+      # ???? length(data.list) - remove
 
+      # check the split was suitable
       if (length(data.list[[1]]) > 1)
       {
-
+          # transform into a vector and remove potential blank caracters
           data.vector <- unlist(data.list)
           data.vector <- gsub(" ", "",data.vector)
+
+          # compute no rows
           no.rows     <- length(data.vector)/no.columns
 
-
+          # check it is not a scalar!
           if (no.rows > 1 & no.columns > 1)
           {
-
+              # transform vector as numeric values and then as a matrix
               data.numeric    <- as.numeric(x = data.vector)
               received.matrix <- matrix(data=data.numeric,nrow=no.rows, ncol= no.columns)
           }
-      }
-    }
-  }
+      } # length
+    } # converted
+  }# arguments
+
   return(received.matrix)
 }
 
-.is.assigned.values.correct <- function(master_mode)
+# check matrix has been assigned.
+adds.are.assigned.values.correct <- function(settings, master_mode, env = globalenv())
 {
   outcome <- FALSE
-  if (exists(settings$name.struct,where=1))
-  {
-    sharing       <- get(settings$name.struct,pos=1)
+  sharing <- get.sharing(envir = env)
+  #if (exists(settings$name.struct.sharing,where=1))
+  #{
+   # sharing       <- get(settings$name.struct,pos=1)
+    # set structure to verify
     structure     <- c(settings$received)
 
+    # count number of entries in
     total.correct <- sum(structure %in% names(sharing))
     value.exists  <- length(structure) ==  total.correct
 
+    # check class of matrix
     if (value.exists)
     {
       outcome <- is.matrix(sharing[[settings$received]])
     }
-  }
+  #}
   return(outcome)
 }
 
-.assignData <- function(master_mode = TRUE, header = "", payload = "", property.a = 0,
+adds.assign.data <- function(master_mode = TRUE, header = "", payload = "", property.a = 0,
               property.b = 0, property.c = 0.0, property.d = 0.0)
 {
+  #get settings and set environment to global env
+  env              <- globalenv()
+  settings         <- get.settings(envir = env)
 
-  received.matrix  <- create.matrix(payload,property.b)
-  save.matrix(received.matrix, master_mode)
-  return(.is.assigned.values.correct(master_mode))
+  #convert payload into a matrix and save it as an R object
+  received.matrix  <- adds.create.matrix(data = payload,no.columns = property.b)
+  adds.save.matrix(settings, received.matrix, master_mode, env)
+
+  # returns TRUE if correctly saved. Otherwise false
+  return(adds.are.assigned.values.correct(settings = settings, master_mode =  master_mode, env = env))
 }
 
 #'@name assignDataDS
@@ -101,7 +119,8 @@ assignDataDS <- function(master_mode = TRUE, header = "", payload = "", property
       if (nchar(header) > 0 & nchar(payload) > 0 & property.a > 0
           & property.b > 0 & property.c > 0 & property.d > 0)
       {
-        return(.assignData(master_mode,header, payload,property.a, property.b, property.c, property.d))
+
+        return(adds.assign.data(master_mode,header, payload,property.a, property.b, property.c, property.d))
       }
       else
       {

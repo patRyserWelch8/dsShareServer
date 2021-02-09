@@ -17,7 +17,7 @@ test_that("no_setting",
 })
 
 options(param.name.struct = "sharing")
-options(sharing.allowed = 0)
+options(dsSS_sharing.allowed = 0)
 assignSharingSettingsDS()
 
 context("assignDataDS::expt::not_allowed")
@@ -34,8 +34,8 @@ test_that("not_allowed",
 
 })
 
-options(param.name.struct = "sharing")
-options(sharing.allowed = 1)
+options(dsSS_sharing_param.name.struct = "sharing")
+options(dsSS_sharing.allowed = 1)
 assignSharingSettingsDS()
 
 context("assignDataDS::expt::incorrect parameters")
@@ -50,14 +50,13 @@ test_that("parameters",
   expect_error(assignDataDS("FM1","123,123",1,13,2.3,"INCORRECT"))
 })
 
-options(param.name.struct = "sharing")
-options(sharing.allowed = 1)
+options(dsSS_sharing_param.name.struct = "sharing")
+options(dsSS_sharing.allowed = 1)
 
 pi_value = 1000
 assignSharingSettingsDS()
-
-
 encryptDataDS(TRUE, FALSE)
+
 master.1 <- get("sharing",pos=1)
 
 data <- getDataDS(master_mode = TRUE)

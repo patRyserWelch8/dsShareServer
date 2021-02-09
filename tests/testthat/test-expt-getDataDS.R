@@ -1,7 +1,7 @@
 source("definition_tests/def_getEncodedDataDS.R")
 source("options/options_definitions.R")
 
-
+rm(list=ls(envir = globalenv()), envir = globalenv())
 
 context("getDataDS::expt::no_settings")
 test_that("no_settings",
@@ -9,8 +9,8 @@ test_that("no_settings",
   expect_error(getDataDS(master_mode = TRUE))
 })
 
-options(param.name.struct = "sharing")
-options(param.sharing.allowed = 0)
+options(dsSS_sharing_param.name.struct = "sharing")
+options(dsSS_sharing.allowed = 0)
 assignSharingSettingsDS()
 
 context("getDataDS::expt::no_sharing")
@@ -22,8 +22,9 @@ test_that("no_sharing",
 })
 
 
-options(param.name.struct = "sharing")
-options(param.sharing.allowed = 1)
+options(dsSS_sharing_param.name.struct = "sharing")
+options(dsSS_sharing.allowed = 1)
+assignSharingSettingsDS()
 
 #("Step 0")
 pi_value_1 = 100000
