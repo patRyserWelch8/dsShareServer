@@ -1,11 +1,9 @@
+rm(list=ls(pos = 1),pos=1)
+
 context("assignParamSettingsDS::smk::incorrect_outcome")
 test_that("everything is incorrect",
 {
-  if (exists("settings",where = 1))
-  {
-    rm("settings", pos=1)
-  }
-  expect_equal(exists("settings", where = 1), FALSE)
+  expect_equal(exists(".settings_ds_share", where = 1), FALSE)
   expect_error(assignParamSettingsDS())
   expect_error(assignParamSettingsDS(123))
   expect_equal(are.params.created(param_names = c("first_var")), FALSE)
@@ -23,25 +21,26 @@ test_that("everyting is not correct",
     expect_error(has.correct.data())
 })
 
-context("assignParamSettingsDS::expt::.init.coordinates.ratios")
+context("assignParamSettingsDS::expt::apds.init.coordinates.ratios")
 test_that("everyting is incorrect",
 {
-  expect_equal(init.coordinates.ratios(param_names = c("first_var"), NULL), list())
-  expect_equal(init.coordinates.ratios(param_names = c("first_var", "second_var"), 3),list())
-  expect_equal(init.coordinates.ratios(param_names = c("first_var", "second_var","third_var"), "HELLO"),list())
+  #settings and sharing should be null
+  settings <- NULL
+  sharing  <- NULL
+  expect_equal(apds.init.coordinates.ratios(settings, sharing, param_names = c("first_var")), list())
+  expect_equal(apds.init.coordinates.ratios(settings, sharing, param_names = c("first_var", "second_var")),list())
+  expect_equal(apds.init.coordinates.ratios(settings, sharing, param_names = c("first_var", "second_var","third_var")),list())
 })
 
 
-options(param.name.struct = "sharing_setting")
-options(param.sharing.allowed = 0)
-
+options(dsSS_sharing_param.name.struct = "sharing")
+options(dsSS_sharing.allowed = 0)
 assignSharingSettingsDS()
 
 context("assignParamSettingsDS::smk::not_allowed_sharing")
 test_that("not allowed sharingt",
 {
-
-  expect_equal(exists("settings", where = 1), TRUE)
+  expect_equal(exists(".settings_ds_share", where = 1), TRUE)
   expect_error(assignParamSettingsDS())
   expect_error(assignParamSettingsDS(123))
   expect_equal(are.params.created(param_names = c("first_var_X")), FALSE)
@@ -53,13 +52,6 @@ test_that("not allowed sharingt",
   expect_equal(are.params.created(param_names = TRUE),FALSE)
 })
 
-
-context("assignParamSettingsDS::expt::.has.correct.data")
-test_that("not allowed sharing",
-{
-  expect_equal(has.correct.data(), FALSE)
-
-})
 
 context("assignParamSettingsDS::expt::.are.params.created")
 test_that("not allowed sharing",
@@ -74,17 +66,10 @@ test_that("not allowed sharing",
   expect_equal(are.params.created(param_names = list()),FALSE)
 })
 
-context("assignParamSettingsDS::expt::.init.coordinates.ratios")
-test_that("everyting is incorrect",
-{
-  expect_equal(init.coordinates.ratios(param_names = c("first_var"), NULL), list())
-  expect_equal(init.coordinates.ratios(param_names = c("first_var", "second_var"), 3),list())
-  expect_equal(init.coordinates.ratios(param_names = c("first_var", "second_var","third_var"), "HELLO"),list())
-})
 
-options(param.name.struct = "sharing")
-options(param.sharing.allowed = 1)
 
+options(dsSS_sharing_param.name.struct = "sharing")
+options(dsSS_sharing.allowed = 1)
 assignSharingSettingsDS()
 
 assign("first_var",1, pos=1)
@@ -122,36 +107,31 @@ master.3 <- get("sharing",pos=1)
 context("assignParamSettingsDS::smk::correct_outcome")
 test_that("everything is correct",
 {
-  expect_equal(exists("settings", where = 1), TRUE)
+  expect_equal(exists(".settings_ds_share", where = 1), TRUE)
+  expect_equal(exists("first_var", where = 1), TRUE)
   expect_equal(assignParamSettingsDS("first_var"),TRUE)
   expect_true(assignParamSettingsDS("first_var;second_var"))
 
 })
 
-context("assignParamSettingsDS::expt::.has.correct.data")
-test_that("everyting is correct",
-{
-  expect_equal(.has.correct.data(), TRUE)
-  expect_equal(.has.correct.data(),TRUE)
-  expect_equal(.has.correct.data(),TRUE)
-})
 
 context("assignParamSettingsDS::expt::.init.coordinates.ratios")
 test_that("everyting is correct",
 {
-  sharing <- .init.coordinates.ratios(param_names = c("first_var"), get("sharing",pos = 1))
+  sharing <- apds.init.coordinates.ratios(get(".settings_ds_share", pos = 1), get("sharing", pos = 1), param_names = c("first_var"))
   expect_equal("index_x" %in% names(sharing), TRUE)
   expect_equal("index_y" %in% names(sharing), TRUE)
   expect_equal("param_names" %in% names(sharing), TRUE)
   expect_equal(length(sharing$index_x), 1)
 
-  sharing <- .init.coordinates.ratios(param_names = c("first_var","second_var"), get("sharing",pos = 1))
+  sharing <- apds.init.coordinates.ratios(get(".settings_ds_share", pos = 1), get("sharing", pos = 1), param_names = c("first_var","second_var"))
   expect_equal("index_x" %in% names(sharing), TRUE)
   expect_equal("index_y" %in% names(sharing), TRUE)
   expect_equal("param_names" %in% names(sharing), TRUE)
   expect_equal(length(sharing$index_x), 2)
 
-  sharing <- .init.coordinates.ratios(param_names = c("first_var","second_var","third_var"), get("sharing",pos = 1))
+  sharing <- apds.init.coordinates.ratios(get(".settings_ds_share", pos = 1), get("sharing", pos = 1),
+                                      param_names = c("first_var","second_var","third_var"))
   expect_equal("index_x" %in% names(sharing), TRUE)
   expect_equal("index_y" %in% names(sharing), TRUE)
   expect_equal("param_names" %in% names(sharing), TRUE)
@@ -164,18 +144,18 @@ test_that("everyting is correct",
 context("assignParamSettingsDS::expt::.create_vector")
 test_that("correct and incorrect arguments",
 {
-   outcome <- .create.vector(123)
+   outcome <- apds.create.vector(123)
 
-   outcome <- .create.vector("")
+   outcome <- apds.create.vector("")
    expect_equal(length(outcome),0)
 
-   outcome <- .create.vector("a")
+   outcome <- apds.create.vector("a")
    expect_equal(length(outcome),1)
 
-   outcome <-  outcome <- .create.vector("a;b")
+   outcome <-  outcome <- apds.create.vector("a;b")
    expect_equal(length(outcome),2)
 
-   outcome <- .create.vector("a;b;c;d;e")
+   outcome <- apds.create.vector("a;b;c;d;e")
    expect_equal(length(outcome),5)
 
 

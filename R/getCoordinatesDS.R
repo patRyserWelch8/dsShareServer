@@ -1,13 +1,14 @@
 
-.compute.coordinates <- function()
+gcds.compute.coordinates <- function(settings, env = globalenv())
 {
   return.value <- encode.data.no.sharing()
-  if(exists("settings",where = 1))
+  if(exists("settings", envir = env))
   {
     return.value <- encode.data.no.sharing()
-    if(exists(settings$name.struct,where=1))
-    {
-      sharing      <- get(settings$name.struct,pos = 1)
+    sharing      <- get.sharing()
+    #if(exists(settings$name.struct,where=1))
+    #{
+     # sharing      <- get(settings$name.struct,pos = 1)
       value.exists <- all(c(settings$index_x, settings$index_y) %in% names(sharing))
 
       if(value.exists)
@@ -21,7 +22,7 @@
         index <- stats::runif(1, min = 1, max= 100)
         return.value <- encode.data.with.sharing(encrypted.data, length(sharing[[settings$index_x]]), index)
       }
-    }
+    #}
   }
   return(return.value)
 }
@@ -39,13 +40,15 @@ getCoordinatesDS <- function()
 
   if (is.sharing.allowed())
   {
-    if(!exists(settings$name.struct,where=1))
+    env = globalenv()
+    settings = get.settings(envir = env)
+    if(!exists(settings$name.struct.sharing,where=1))
     {
       stop("SERVER::ERR::PARAM::003")
     }
     else
     {
-      encoded.data <- .compute.coordinates()
+      encoded.data <- gcds.compute.coordinates(settings, env = env)
       if(identical(encoded.data$header, "FM2"))
       {
           stop("SERVER::ERR::PARAM::004")

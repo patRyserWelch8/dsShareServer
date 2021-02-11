@@ -75,6 +75,7 @@ encode.data.no.sharing <- function()
 #'@param param_names names of params
 #'@details This is a helper function. It cannot be called directly from any client-side
 #'function.
+#'@return TRUE if parameters are created. Otherwise false
 are.params.created <- function(param_names = c())
 {
   params.exist <- FALSE
@@ -82,15 +83,17 @@ are.params.created <- function(param_names = c())
 
   if (length(param_names) > 0)
   {
-    if(length(param_names) >=1  & is.character(param_names) )
+    if(length(param_names) >= 1  & is.character(param_names))
     {
       list.var      <- ls(pos = 1)
       params.exist  <- all(param_names %in% list.var)
+
       if(params.exist)
       {
         #get the object and check for numerical values. mget checks for the existence and
         #retrieve object.
-        params      <-  mget(x = param_names, envir = as.environment(1))
+        env = globalenv()
+        params      <-  mget(x = param_names, envir = env)
         all.numeric <- all(sapply(params, is.numeric))
       }
     }
