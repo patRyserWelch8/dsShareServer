@@ -1,36 +1,25 @@
-#obsolete ....
-.get_received_data <- function()
-{
-  outcome <- list()
 
-  if(exists(settings$name.struct, where =1))
-  {
-    outcome <- get(settings$name.struct, pos=1)
-  }
 
-  return(outcome)
-}
-
-.is.received.data.valid <- function(received.data)
+ddds.is.received.data.valid <- function(settings, sharing)
 {
   correct       <- FALSE
   expected.list <- c(settings$received,settings$masking)
-  if (is.list(received.data))
+  if (is.list(sharing))
   {
-      attributes.exist <- names(received.data) %in% expected.list
+      attributes.exist <- names(sharing) %in% expected.list
       total.correct    <- sum(attributes.exist == TRUE)
       correct          <- (total.correct == length(expected.list))
       if (correct)
       {
          correct       <- correct &
-                          is.matrix(received.data[[settings$masking]]) &
-                          is.matrix(received.data[[settings$received]])
+                          is.matrix(sharing[[settings$masking]]) &
+                          is.matrix(sharing[[settings$received]])
       }
   }
   return(correct)
 }
 
-.decrypt.received.matrix <- function(masking.matrix = NULL, received.matrix = NULL)
+ddds.decrypt.received.matrix <- function(masking.matrix = NULL, received.matrix = NULL)
 {
   result <- NULL
 
@@ -50,10 +39,10 @@
   return(result)
 }
 
-.is.decrypted.data.valid <- function(expected.list)
+ddds.is.decrypted.data.valid <- function(settings, sharing)
 {
-  correct <- FALSE
-  sharing       <- get(settings$name.struct,pos=1)
+  correct       <- FALSE
+  expected.list <- c(settings$received,settings$masking, settings$decrypted)
 
   if (is.list(sharing))
   {
@@ -72,17 +61,22 @@
 decryptDataDS   <- function()
 {
   outcome       <- FALSE
-  expected.list <- c(settings$received,settings$masking, settings$decrypted)
+
 
   if (is.sharing.allowed())
   {
-    sharing <- .get_received_data()
-    if(.is.received.data.valid(sharing))
+    # sets variables for the decrytion
+    env      <- globalenv()
+    settings <- get.settings()
+    sharing  <- get.sharing()
+
+
+    if(ddds.is.received.data.valid(settings = settings, sharing = sharing))
     {
-      sharing[[settings$decrypted]] <- .decrypt.received.matrix(sharing[[settings$masking]],
-                                                                sharing[[settings$received]])
-      assign("sharing", sharing, pos = 1)
-      outcome <- .is.decrypted.data.valid(expected.list)
+      sharing[[settings$decrypted]] <- ddds.decrypt.received.matrix(sharing[[settings$masking]],
+                                                                    sharing[[settings$received]])
+      assign(get.sharing.name(), sharing, envir = env)
+      outcome                       <- ddds.is.decrypted.data.valid(settings, sharing)
     }
     else
     {

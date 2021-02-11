@@ -67,7 +67,7 @@ edds.define_no_columns <- function(settings, no.rows = 2)
   }
 }
 
-edds.createMatrixRUnif <- function(settings, no.rows = 0 , no.columns = 0, min.value= 0, max.value = 1)
+edds.create.matrix.runif <- function(settings, no.rows = 0 , no.columns = 0, min.value= 0, max.value = 1)
 {
   result <- matrix(c(0),settings$min_rows,settings$min_columns)
 
@@ -144,8 +144,8 @@ edds.encrypt.concealed.data <- function(settings, sharing, master_mode = TRUE)
 edds.create.structure.master <- function(settings, min, max,no.rows, no.columns)
 {
     outcome                         <- list()
-    outcome[[settings$concealing]]  <- edds.createMatrixRUnif(settings, no.rows, no.columns, min, max)
-    outcome[[settings$masking]]     <- edds.createMatrixRUnif(settings, no.columns, no.columns, min, max)
+    outcome[[settings$concealing]]  <- edds.create.matrix.runif(settings, no.rows, no.columns, min, max)
+    outcome[[settings$masking]]     <- edds.create.matrix.runif(settings, no.columns, no.columns, min, max)
     outcome[[settings$no_columns]]  <- no.columns
     outcome[[settings$no_rows]]     <- no.rows
 
@@ -171,7 +171,7 @@ edds.create.structure.receiver <- function(settings, sharing, min, max, envir)
       no.rows.received                <- nrow(t(received.data[[settings$received]]))
       no.columns.received             <- ncol(t(received.data[[settings$received]]))
 
-      outcome[[settings$concealing]]  <- edds.createMatrixRUnif(no.rows.received, no.columns.received, min, max)
+      outcome[[settings$concealing]]  <- edds.create.matrix.runif(settings, no.rows.received, no.columns.received, min, max)
 
       outcome[[settings$masking]]     <- received.data[[settings$received]]
       outcome[[settings$no_columns]]  <- no.columns.received
@@ -247,11 +247,11 @@ edds.encrypt.data <- function(settings, master_mode, preserve_mode, envir)
   MAX            <- stats::runif(1, min=settings$min_value+30, max = settings$min_value + 40)
   data           <- NULL
 
-  expected.list  <- c()
-  no.rows        <- edds.define_no_rows(settings = settings)
-  no.columns     <- edds.define_no_columns(settings = settings, no.rows = no.rows)
-  sharing        <- get.sharing(envir = envir)
-  saved.info     <- list()
+  expected.list   <- c()
+  no.rows         <- edds.define_no_rows(settings = settings)
+  no.columns      <- edds.define_no_columns(settings = settings, no.rows = no.rows)
+  sharing         <- get.sharing(envir = envir)
+  saved.info      <- list()
 
   #preserve the data from previous exchange, if it is required.
   if(preserve_mode) #steps 6 and 8
@@ -266,7 +266,7 @@ edds.encrypt.data <- function(settings, master_mode, preserve_mode, envir)
   if (master_mode)
   {
     #master_mode is in steps 1 and 6 of the exchange
-    sharing <- edds.create.structure.master(settings, MIN, MAX,
+    sharing       <- edds.create.structure.master(settings, MIN, MAX,
                                         no.rows = no.rows,
                                         no.columns = no.columns)
     expected.list <- c(settings$concealing,settings$masking,
@@ -275,7 +275,7 @@ edds.encrypt.data <- function(settings, master_mode, preserve_mode, envir)
   else
   {
     # not master mode: steps 3 and 8
-    sharing <- edds.create.structure.receiver(settings, sharing, MIN, MAX, envir)
+    sharing       <- edds.create.structure.receiver(settings, sharing, MIN, MAX, envir)
     expected.list <- c(settings$concealing,settings$masking,settings$encrypted,settings$no_columns, settings$no_rows)
   }
 

@@ -4,9 +4,10 @@ source('options/options_definitions.R')
 
 rm(list=ls(),pos=1)
 
-options(param.name.struct = "sharing")
-options(sharing.allowed = 0)
+options(dsSS_sharing_param.name.struct = "sharing")
+options(dsSS_sharing.allowed = 0)
 assignSharingSettingsDS()
+
 
 context("assignCoordinatesDS::expt:: incorrect parameters::no_coordinates::not_allowed")
 test_that("parameters",
@@ -55,8 +56,9 @@ test_that("no_coordinates",
 
 rm(list=ls(),pos=1)
 
-options(param.name.struct = "sharing")
-options(sharing.allowed = 1)
+options(dsSS_sharing_param.name.struct = "sharing")
+options(dsSS_sharing.allowed = 1)
+assignSharingSettingsDS()
 
 
 #("Step 0")
