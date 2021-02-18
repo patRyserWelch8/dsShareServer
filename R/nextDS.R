@@ -1,16 +1,14 @@
 # This function encode a certain number of rows in a data frame.
-.encode.encoded.data <- function(data.encoded, no.rows)
+ndds.encode.encoded.data <- function(settings, transfer, data.encoded, no.rows, env)
 {
   # get the settings, transfer data, and encoded data
-  settings     <- get("settings", pos = 1)
-  transfer     <- get.transfer(settings)
   encoded      <- get(data.encoded, pos = 1)
   tranfer.data <- encode.data.no.sharing()
 
 
   # calculate range of rows
   start     <- transfer[[settings$current_row]]
-  max.rows  <- nrow(get(data.encoded, pos = 1))
+  max.rows  <- nrow(get(data.encoded, envir = env))
   diff.rows <- max.rows - start
 
   # check the current row has not exceeded or reach the end of a data frame
@@ -52,17 +50,27 @@ nextDS <- function(data_encoded = NULL, no.rows = 1000)
 {
   if(is.sharing.allowed())
   {
+    # sets function variables
+    env                       <- globalenv()
+    settings                  <- get.settings(envir = env)
+    transfer                  <- get.transfer(envir = env)
     arg.and.settings.suitable <- are.arg.and.settings.suitable(data_encoded)
     is.correct.type           <- is.numeric(no.rows)
     is.positive               <- FALSE
+
+    # check correct rows representation
     if(is.correct.type)
     {
       is.positive <- no.rows > 0
     }
 
+    # continue with process if all argument and settings are correct
     if(arg.and.settings.suitable & is.correct.type & is.positive)
     {
-      data.transfer <- .encode.encoded.data(data_encoded, no.rows)
+      # prepare encoded data for transfer
+      data.transfer <- ndds.encode.encoded.data(settings, transfer, data_encoded, no.rows, env)
+
+      # return to client data.transfer if suitably formatted
       if(identical(data.transfer$header, "FM2"))
       {
         stop("SERVER::ERR::SHARING::004")

@@ -1,9 +1,9 @@
 # Boolean function that checks whether the arguments of the functions are suitable
 # for the comparison. Check the type and server variables have been created as data frame. Tibbles wrappes data frames.
-.are.params.correct <- function(data.server = NULL, data.encoded = NULL, data.held.in.server = NULL)
+idds.are.params.correct <- function(data.server = NULL, data.encoded = NULL, data.held.in.server = NULL)
 {
   outcome <- FALSE
-  if(is.null(.Options$sharing.near.equal.limit) || is.null(.Options$sharing.allowed))
+  if(is.null(.Options$dsSS_sharing.near.equal.limit) || is.null(.Options$dsSS_sharing.allowed))
   {
     stop("SERVER::ERR:SHARE::003")
   }
@@ -48,7 +48,7 @@
 
 # This helper function checks the two datasets are significantly the same, which is undesirable.
 # It returns TRUE if it is signifincatly the same, and false if it is not.
-.are.significant.same <- function(server, encoded)
+idds.are.significant.same <- function(server, encoded)
 {
   outcome <- FALSE
   if (is.numeric(server) & is.numeric(encoded))
@@ -74,7 +74,7 @@
 }
 
 # check the limits sets in the  opal server  are preserved through through both datasets
-.are.values.in.limit <- function(server, encoded, limit)
+idds.are.values.in.limit <- function(server, encoded, limit)
 {
    if(is.numeric(server) & is.numeric(encoded))
    {
@@ -94,7 +94,7 @@
 # chekc no 3: some values are not numeric
 # check no 4: two datasets are significantly the same (t.test and mann.whitney, confidence level 0.99)
 # check no 5: encoded values are still in the limits sets by the data governance
-.is.encoded <- function(server, encoded, limit)
+idds.is.encoded <- function(server, encoded, limit)
 {
   #init function variables
   step      <- 0
@@ -103,8 +103,8 @@
   continue  <- TRUE
 
   # convert into vectors data passed
-  server.data     <- .convert.data(server)
-  encoded.data    <- .convert.data(encoded)
+  server.data     <- idds.convert.data(server)
+  encoded.data    <- idds.convert.data(encoded)
 
   # check encoding
   while (continue)
@@ -113,8 +113,8 @@
                         identical(server.data, encoded.data), # 1 identical variables
                         any(server.data %in% encoded.data), #2 some values are present in both datasets
                         !is.numeric(encoded.data), #3 has some non-numeric values
-                        .are.significant.same(server.data, encoded.data), # 4 data are significantly the same at the point of centrality
-                        .are.values.in.limit(server.data, encoded.data, limit)) #5 data are with the limit min, max, mean, median, IQR
+                        idds.are.significant.same(server.data, encoded.data), # 4 data are significantly the same at the point of centrality
+                        idds.are.values.in.limit(server.data, encoded.data, limit)) #5 data are with the limit min, max, mean, median, IQR
     step     <- step + 1
     continue <- !is.failed & step < max
   }
@@ -124,17 +124,17 @@
 }
 
 # This function checks the server variable is encoded suitably.
-.check.encoding.variable <- function(server,encoded, limit)
+idds.check.encoding.variable <- function(server,encoded, limit)
 {
   outcome <- FALSE
 
   if (is.data.frame(server))
   {
-    outcome <- .check.encoding.data.frames(server, encoded, limit)
+    outcome <- idds.check.encoding.data.frames(server, encoded, limit)
   }
   else if (is.list(server) || is.matrix(server) || is.vector(server))
   {
-      no_steps <- .is.encoded(server,encoded,limit)
+      no_steps <- idds.is.encoded(server,encoded,limit)
       outcome  <-  (no_steps == 6)
   }
   return(outcome)
@@ -142,7 +142,7 @@
 
 # This function checks the a data frame is suitable encoded every column of a server is
 # checked after each column of the server dataframe.
-.check.encoding.data.frames <- function(server, encoded, limit)
+idds.check.encoding.data.frames <- function(server, encoded, limit)
 {
   is.encoded      <- TRUE
   classes_server  <- lapply(server,class)
@@ -154,7 +154,7 @@
       {
          if(grepl(classes_encoded[[i]], classes_server[[j]])  )
          {
-            no_steps <- .is.encoded(server[j],encoded[i],limit)
+            no_steps <- idds.is.encoded(server[j],encoded[i],limit)
             if(no_steps < 6)
             {
               is.encoded <- FALSE
@@ -167,7 +167,7 @@
 }
 
 # converts data into a vector of numbers.
-.convert.data <- function(data)
+idds.convert.data <- function(data)
 {
 
   if (is.data.frame(data))
@@ -194,12 +194,12 @@
 }
 
 # check number of columns is greater for the encoded data.
-.check.dimension <- function(server, encoded)
+idds.check.dimension <- function(server, encoded)
 {
   outcome <- FALSE
   if (is.list(server))
   {
-    lengths <- unlist(lapply(list_A,length))
+    lengths <- unlist(lapply(server,length))
     outcome <- ncol(encoded) > 1 & all(lengths == nrow(encoded))
   }
   else if(is.vector(server))
@@ -217,14 +217,15 @@
 }
 
 #this function assign the setting "encoded.data" to the results of the checks
-.set.settings <- function(outcome = FALSE, data.encoded)
+idds.set.settings <- function(outcome = FALSE, data.encoded)
 {
   if(exists("settings", where = 1))
   {
-    settings                   <- get("settings", pos = 1)
+    env                        <- globalenv()
+    settings                   <- get.settings(envir = env)
     settings$encoded.data      <- outcome
     settings$encoded.data.name <- data.encoded
-    assign("settings", settings, pos = 1)
+    assign("settings", settings, envir = env)
   }
 }
 
@@ -253,32 +254,32 @@
 isDataEncodedDS <- function(data.server = NULL, data.encoded = NULL, data.held.in.server = NULL)
 {
 
-
   if(is.sharing.allowed())
   {
     is.encoded.data      <- FALSE
     is.encoded.variable  <- FALSE
     outcome              <- FALSE
-    param.correct        <- .are.params.correct(data.server, data.encoded, data.held.in.server )
+    param.correct        <- idds.are.params.correct(data.server, data.encoded, data.held.in.server )
 
     if(param.correct)
     {
-        # get data from global environment
-      server         <- get(data.server,  pos = 1)
-      encoded        <- get(data.encoded, pos = 1)
-      held.in.server <- get(data.held.in.server, pos = 1)
+      # get data from global environment
+      env            <- globalenv()
+      server         <- get(data.server,  envir = env)
+      encoded        <- get(data.encoded, envir = env)
+      held.in.server <- get(data.held.in.server, envir = env)
       limit          <- getOption("sharing.near.equal.limit")
 
-      if(.check.dimension(server, encoded))
+      if(idds.check.dimension(server, encoded))
       {
-        is.encoded.variable <- .check.encoding.variable(server, encoded, limit)
+        is.encoded.variable <- idds.check.encoding.variable(server, encoded, limit)
         if(is.encoded.variable)
         {
-          is.encoded.data <- .check.encoding.data.frames(held.in.server,encoded,limit)
+          is.encoded.data <- idds.check.encoding.data.frames(held.in.server,encoded,limit)
         }
       }
       outcome <- is.encoded.data & is.encoded.variable
-      .set.settings(outcome, data.encoded)
+      idds.set.settings(outcome, data.encoded)
     }
     else
     {
