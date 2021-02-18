@@ -3,9 +3,9 @@ context("decryptParamDS::smk::no_settings")
 test_that("does not exist",
 {
    rm(list=ls(pos = 1),pos=1)
-   expect_equal(exists("settings", where = 1), FALSE)
-   expect_error(.get.encoded.param())
-   expect_error(.is.encoded.param.valid())
+   expect_equal(exists(".settings_ds_share", where = 1), FALSE)
+   expect_error(dpds.get.encoded.param())
+   expect_error(dpds.is.encoded.param.valid())
    expect_error(decryptParamDS())
 })
 
@@ -13,16 +13,18 @@ context("decryptParamDS::expt::no_settings")
 test_that("does not exist",
 {
    rm(list=ls(pos = 1),pos=1)
-   expect_equal(exists("settings", where = 1), FALSE)
-   expect_error(.get.encoded.param())
-   expect_error(.is.encoded.param.valid())
+   expect_equal(exists(".settings_ds_share", where = 1), FALSE)
+   expect_error(dpds.is.encoded.param.valid())
    expect_error(decryptParamDS())
 
 })
 
+options(dsSS_sharing_param.name.struct = "sharing")
+options(dsSS_sharing.allowed = 1)
+assignSharingSettingsDS()
 
 assignSharingSettingsDS()
-settings <- get("settings",pos=1)
+settings <- get(".settings_ds_share",pos=1)
 
 context("decryptParamDS::expt::no_encryption")
 test_that("does exists",
@@ -31,11 +33,10 @@ test_that("does exists",
    {
       rm("sharing", pos=1)
    }
-   expect_equal(exists("settings", where = 1), TRUE)
-   expect_equal(.get.encoded.param(),list())
-   expect_equal(.is.encoded.param.valid(),FALSE)
+   expect_equal(exists(".settings_ds_share", where = 1), TRUE)
+   expect_equal(dpds.is.encoded.param.valid(get(".settings_ds_share", pos = 1)),FALSE)
    expect_error(decryptParamDS())
-   expect_equal(exists(settings$name.struct, where = 1), FALSE)
+   expect_equal(exists(settings$name.struct.sharing, where = 1), FALSE)
 })
 
 

@@ -101,33 +101,6 @@ are.params.created <- function(param_names = c())
   return(params.exist & all.numeric)
 }
 
-#'@name get.transfer
-#'@title returns the transfer list if it is correctly setup
-#'@details This is a helper function. It cannot be called directly from any client-side
-#'function.
-#'@param settings some settings
-#'@note  Throws error "SERVER::ERR:SHARE::013" if transfer is not created on server.
-#'"Throws "SERVER::ERR:SHARE::014" if the transfer list is created on a server, with the incorrect field.
-get.transfer <- function(settings)
-{
-  transfer <- NULL
-  if(exists(settings$name.struct.transfer, where = 1))
-  {
-    transfer      <- get(settings$name.struct.transfer, pos = 1)
-    correct.field <- settings$current_row %in% names(transfer)
-    if(!correct.field)
-    {
-      transfer <- list()
-      transfer[[settings$current_row]] = 1
-    }
-  }
-  else
-  {
-    transfer <- list()
-    transfer[[settings$current_row]] = 1
-  }
-  return(transfer)
-}
 
 #'@name are.encoded.data.and.settings.suitable
 #'@title check some settings encoded data and settings are suitable for continuing transferring
@@ -226,6 +199,49 @@ get.sharing <- function(envir = globalenv())
     return(list())
   }
 }
+
+#'@name get.transfer.name
+#'@title retrieve the name of the transfer object
+#'@description This function uses the option "dsSS_settings" to retrieve this information and the global env
+#'@param envir the environment set by default to globalenv
+#'@return name of the transfer object
+get.transfer.name <-  function(envir = globalenv())
+{
+  settings           <- get.settings(envir = envir)
+  name.struct.exists <- any("name.struct.transfer" %in% names(settings))
+  if (name.struct.exists)
+  {
+    return(settings$name.struct.transfer)
+  }
+  else if (!is.null(getOption("dsSS_transfer.name.struct")))
+  {
+    return(getOption("dsSS_transfer.name.struct"))
+  }
+  else
+  {
+    return("no_transfer")
+  }
+}
+
+#'@name get.transfer
+#'@title retrieve the transfer R object
+#'@description This function uses the option "dsSS_settings" and the global enviroment to retrieve the sharing of the data
+#'@param envir the environment set by default to globalenv
+#'@return the transfer R object if it has been created. Otherwise an empty list.
+get.transfer <- function(envir = globalenv())
+{
+  transfer.name <- get.transfer.name()
+  if(exists(transfer.name, envir = envir))
+  {
+    return(get(transfer.name,envir = envir))
+  }
+  else
+  {
+    return(list())
+  }
+}
+
+
 
 #'@name get.settings.name
 #'@title retrieve the name of the settings object

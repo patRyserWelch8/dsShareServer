@@ -1,0 +1,37 @@
+#'@name   assignTransferSettingsDS
+#'@title  assigns some settings used to transfer some encoded information
+#'@description This server function sets some settings specific to transfer of encoded data; i.e.,
+#'a current row.
+#'@param current_row  numeric class representing a row in a dataset, where the transfer stopped
+#'@return TRUE
+#'@export
+assignTransferSettingsDS <- function(current_row = NULL)
+{
+  if(is.sharing.allowed())
+  {
+    # sets function variables
+    env           <- globalenv()
+    settings      <- get.settings(envir = env)
+    transfer.name <-  get.transfer.name(envir = env)
+
+    # check the argument value is numeric
+    if(is.numeric(current_row))
+    {
+      # save the current_row to the transfer object
+      transfer                         <- get.transfer(envir = env)
+      transfer[[settings$current_row]] <- current_row
+      assign(transfer.name,transfer, envir = env)
+    }
+    else
+    {
+      stop("SERVER::ERR::SHARING::022")
+    }
+    # get.transfer() returns an empty list. if transfer does not exists.
+    transfer <- get.transfer(envir = env)
+    return(any(settings$current_row %in% names(transfer)))
+  }
+  else
+  {
+    stop("SERVER::ERR::SHARING::001")
+  }
+}

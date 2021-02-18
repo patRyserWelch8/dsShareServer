@@ -2,41 +2,72 @@
 context("removeEncryptingDataDS::expt::no_settings")
 test_that("no_setting",
 {
-  if(exists("settings",where = 1))
-  {
-    rm("settings",pos=1)
-  }
-  expect_equal(exists("settings",where = 1),FALSE)
+  rm(list = ls(pos = 1), pos = 1)
+  expect_equal(exists(".settings_ds_share",where = 1),FALSE)
   expect_error(removeEncryptingDataDS())
-  expect_error(.get.sharing.data())
 })
+
+context("removeEncryptingDataDS::expt::settings_and_sharing")
+{
+  options(param.name.struct = "sharing")
+  options(dsSS_sharing.allowed = 1)
+  assignSharingSettingsDS()
+  settings <- get(".settings_ds_share", pos = 1)
+  # needs to add elements to be removed.
+  sharing <- list(rubbish = 1, rubbish_2 = 3)
+  sharing[[settings$no_columns]] <- 1
+  sharing[[settings$no_rows]] <- 1
+  sharing[[settings$no_rows]] <- 1
+  sharing[[settings$index_x]] <- 1
+  sharing[[settings$index_y]] <- 1
+
+  #master_mode
+  sharing[[settings$data]] <- 1
+  sharing[[settings$param_names]] <- 1
+
+  expected.list   <- c(settings$no_columns, settings$no_rows, settings$index_x,
+                       settings$index_y)
+  expected.list  <- c(settings$data,settings$param_names, expected.list)
+  expect_true(all(expected.list %in% names(sharing)))
+  assign("sharing", sharing, pos = 1)
+  expect_true(removeEncryptingDataDS(master_mode = TRUE))
+
+
+
+  # needs to add elements to be removed.
+
+  sharing <- list(rubbish = 1, rubbish_2 = 3)
+  sharing[[settings$no_columns]] <- 1
+  sharing[[settings$no_rows]] <- 1
+  sharing[[settings$no_rows]] <- 1
+  sharing[[settings$index_x]] <- 1
+  sharing[[settings$index_y]] <- 1
+
+  # NOT MASTER_MODE
+  sharing[[settings$concealing]] <- 1
+  assign("sharing", sharing, pos = 1)
+  expect_true(removeEncryptingDataDS(master_mode = FALSE))
+}
+
 #"Step 0"
 assignSharingSettingsDS()
-
-context("removeEncryptingDataDS::expt::get.sharing.data()")
-test_that("no_sharing",
-{
-  if(exists("sharing",where = 1))
-  {
-    rm("sharing",pos=1)
-  }
-  expect_equal(exists("settings",where = 1),TRUE)
-  expect_equal(exists("sharing",where = 1),FALSE)
-  expect_equal(.get.sharing.data(),list())
-})
-
-options(param.name.struct = "sharing")
-options(param.sharing.allowed = 1)
 
 #("Step 0")
 rm(list=ls(pos = 1),pos=1)
 
 #("Step 0")
+options(param.name.struct = "sharing")
+options(dsSS_sharing.allowed = 1)
+assignSharingSettingsDS()
+
+
+
+
 assign("pi_value_1", 100000, pos = 1)
 assign("pi_value_2", 200000, pos = 1)
 assign("pi_value_3", 300000, pos = 1)
 
-assignSharingSettingsDS()
+
 
 
 #("Step 1")
@@ -82,12 +113,15 @@ assign("master.4", get("sharing",pos = 1), pos = 1)
 context("removeEncryptingDataDS::expt::")
 test_that("computations",
 {
+  sharing <- get("sharing", pos = 1)
+  expect_equal(length(sharing),11)
   expect_equal(removeEncryptingDataDS(),TRUE)
   sharing <- get("sharing", pos = 1)
 
-  expect_equal(length(sharing),11)
+  expect_equal(length(sharing),6)
   expect_equal(all(c(settings$data,settings$no_columns, settings$no_rows,
                      settings$index_x, settings$index_y, settings$param_names) %in% names(sharing)), TRUE)
+
 })
 
 
