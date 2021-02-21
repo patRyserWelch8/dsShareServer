@@ -29,5 +29,5 @@ Options:
  dsSS_sharing_param.name.struct=sharing,
  dsSS_transfer.name.struct=transfer,
  dsSS_sharing.allowed=1,
- dsSS_sharing.near.equal.limit=1000
+ dsSS_sharing.near.equal.limit=1000000
 RoxygenNote: 7.1.0
