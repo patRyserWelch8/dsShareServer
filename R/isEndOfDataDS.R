@@ -1,5 +1,3 @@
-
-
 #'@name isEndOfDataDS
 #'@title Verifies the end of some encoded data on the server has been reached
 #'@description This server function indicates whether the number of rows transferred has exceeded
@@ -12,17 +10,28 @@
 #'
 isEndOfDataDS <- function(data_encoded = NULL)
 {
-
+  # check sharing is allowed
   if (is.sharing.allowed())
   {
+    # set return value. TRUE stop the exchange
     outcome <- TRUE
+
+    # check that data exists and are encoded suitably ....
     arg.and.settings.suitable <- are.arg.and.settings.suitable(data_encoded)
+
+    # check some number of rows are still available
     if(arg.and.settings.suitable)
     {
-      settings <- get("settings", pos = 1)
-      transfer <- get.transfer(settings)
-      outcome  <- transfer[[settings$current_row]] >= nrow(get(data_encoded,pos = 1))
+      # sets environment, settings and transfer information
+      env      <- globalenv()
+      settings <- get.settings(envir = env)
+      transfer <- get.transfer(envir = env)
+
+      # outcome becomes FALSE, if any rows remains untransferred.
+      outcome  <- transfer[[settings$current_row]] >= nrow(get(data_encoded,envir = env))
+
     }
+
     return(outcome)
   }
   else

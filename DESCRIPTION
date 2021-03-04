@@ -1,6 +1,6 @@
 Package: dsShareServer
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Provide the server-side functions for privacy-preserving sharing of parameters and encrypted datasets
 Version: 1.0.0
 Author: person(given = "Patricia",
            family = "Ryser-Welch",
@@ -20,10 +20,23 @@ Suggests:
     rmarkdown,
     stats
 AggregateMethods:
-  assignSharingSettingsDS,
-  encryptDataDS,
   assignCoordinatesDS,
-  removeExchangeDataDS
+  assignDataDS,
+  assignParamSettingsDS,
+  assignSharingSettingsDS,
+  assignVariableSettingsDS,
+  decryptDataDS,
+  decryptParamDS,
+  encryptDataDS,
+  encryptParamDS,
+  getCoordinatesDS,
+  getDataDS,
+  isDataEncodedDS,
+  isEndOfDataDS,
+  nextDS,
+  removeEncryptingDataDS,
+  removeTransferDataDS,
+  setLengthDS
 Options:
  dsSS_settings = .settings_ds_share,
  dsSS_sharing_param.name.struct=sharing,

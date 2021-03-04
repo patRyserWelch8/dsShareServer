@@ -52,12 +52,6 @@ dpds.decryptParam <- function(settings, sharing, param_names = NULL, tolerance =
   cols.correct  <- all(columns <= ncol(sharing$decrypted))
   coord.correct <- length(rows) == length(params) & length(columns) == length(rows)
 
-  # to be deleted
-  print(rows)
-  print(columns)
-  print(sharing[[settings$no_columns]])
-  print(sharing[[settings$no_rows]])
-
   if (rows.correct & cols.correct & coord.correct)
   {
       # retrieve each parametres using the coordinates. those are swapped due to transpose in encoding process

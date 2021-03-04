@@ -68,17 +68,7 @@ apds.is.outcome.valid <- function(settings, sharing)
   return(correct)
 }
 
-# create a vector for param names.
-apds.create.vector <- function (param_names = "")
-{
-  outcome <- c()
-  if(is.character(param_names))
-  {
-    names.list <- strsplit(param_names,";")
-    outcome <- unlist(names.list)
-  }
-  return(outcome)
-}
+
 
 apds.assign.param.settings <- function(param_names = c())
 {
@@ -119,11 +109,11 @@ assignParamSettingsDS <- function(param_names = "")
 {
   if (is.sharing.allowed())
   {
-    param_names.decoded <- apds.create.vector(param_names)
+    param_names.decoded <- create.vector(var_names = param_names)
 
     if(are.params.created(param_names.decoded))
     {
-      return(apds.assign.param.settings( param_names.decoded))
+      return(apds.assign.param.settings(param_names.decoded))
     }
     else
     {

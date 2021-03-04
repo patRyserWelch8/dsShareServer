@@ -59,8 +59,8 @@ idds.are.significant.same <- function(server, encoded)
     }
     else
     {
-      t    <- stats::t.test(server, encoded, conf.level = 0.99, na.action=stats::na.omit)
-      mann <- stats::wilcox.test(server, encoded, conf.level = 0.99)
+      t       <- stats::t.test(server, encoded, conf.level = 0.99, na.action=stats::na.omit)
+      mann    <- stats::wilcox.test(server, encoded, conf.level = 0.99)
       outcome <- t$p.value >= 0.01 || mann$p.value >= 0.01
     }
   }
@@ -115,6 +115,7 @@ idds.is.encoded <- function(server, encoded, limit)
                         !is.numeric(encoded.data), #3 has some non-numeric values
                         idds.are.significant.same(server.data, encoded.data), # 4 data are significantly the same at the point of centrality
                         idds.are.values.in.limit(server.data, encoded.data, limit)) #5 data are with the limit min, max, mean, median, IQR
+
     step     <- step + 1
     continue <- !is.failed & step < max
   }

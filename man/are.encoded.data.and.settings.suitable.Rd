@@ -5,10 +5,12 @@
 \alias{are.arg.and.settings.suitable}
 \title{check some settings encoded data and settings are suitable for continuing transferring}
 \usage{
-are.arg.and.settings.suitable(data.encoded)
+are.arg.and.settings.suitable(data.encoded, envir = globalenv())
 }
 \arguments{
 \item{data.encoded}{some encoded data}
+
+\item{envir}{environment set by default to globalenv}
 }
 \description{
 It checks the sharing for the following criteria:

@@ -1,3 +1,19 @@
+#'@name create.vector
+#'@title  convert character string holding semi-columns separated values into a character vector
+#'@description This function converts n variables names into a character vector of n character values
+#'@return a character vector
+#'@param var_names - a character vector of one element with ";" separated variable names
+create.vector <- function (var_names = "")
+{
+  outcome <- c()
+  if(is.character(var_names))
+  {
+    names.list <- strsplit(var_names,";")
+    outcome <- unlist(names.list)
+  }
+  return(outcome)
+}
+
 #'@name is.sharing.allowed
 #'@title  verifies the variables used to set the parametrisation to for sharing parameters
 #'exists on a DataSHIELD server.
@@ -113,6 +129,7 @@ are.params.created <- function(param_names = c())
 #' 3. encoded data is a data frame
 #' 4. the data encoded is character
 #'@param data.encoded some encoded data
+#'@param envir environment set by default to globalenv
 #'@note Throws the following errors:
 #'"SERVER::ERR:SHARE::002"  sharing is not allowed or the disclosure setting has not been set to 0 or 1
 #'"SERVER::ERR:SHARE::005"  data.encoded does not exists on the server
@@ -120,7 +137,7 @@ are.params.created <- function(param_names = c())
 #'"SERVER::ERR:SHARE::009"  data.encoded has yet to be validated by \code{isDataEncodedDS}
 #'"SERVER::ERR:SHARE::010"  data.encoded is not a character vector
 #'
-are.arg.and.settings.suitable <- function(data.encoded)
+are.arg.and.settings.suitable <- function(data.encoded, envir = globalenv())
 {
   outcome <- FALSE
   if(is.sharing.allowed())
@@ -132,18 +149,20 @@ are.arg.and.settings.suitable <- function(data.encoded)
       stop("SERVER::ERR:SHARE::010")
     }
 
-    same.name <- identical(settings$encoded.data.name,data.encoded)
-    data.exists <- exists(data.encoded, where = 1)
+    same.name   <- identical(settings$encoded.data.name,data.encoded)
+    data.exists <- exists(data.encoded, where = envir)
     if(!data.exists)
     {
       stop("SERVER::ERR:SHARE::009")
     }
 
-    correct.format <- is.data.frame(get(data.encoded, pos = 1))
+    data.encoded.var <- get(data.encoded, envir = envir)
+    correct.format <- is.data.frame(data.encoded.var)
     if(!correct.format)
     {
       stop("SERVER::ERR:SHARE::005")
     }
+
 
     same.name <- identical(settings$encoded.data.name,data.encoded)
     if(!same.name)
@@ -222,6 +241,8 @@ get.transfer.name <-  function(envir = globalenv())
     return("no_transfer")
   }
 }
+
+
 
 #'@name get.transfer
 #'@title retrieve the transfer R object

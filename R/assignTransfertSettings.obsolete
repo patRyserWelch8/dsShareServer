@@ -26,6 +26,7 @@ assignTransferSettingsDS <- function(current_row = NULL)
     {
       stop("SERVER::ERR::SHARING::022")
     }
+
     # get.transfer() returns an empty list. if transfer does not exists.
     transfer <- get.transfer(envir = env)
     return(any(settings$current_row %in% names(transfer)))

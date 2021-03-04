@@ -117,7 +117,6 @@ epds.complete.encryption <- function(settings, sharing, env = globalenv())
     sharing[[settings$data]] <- data
     assign(settings$name.struct.sharing,sharing, envir = env)
     outcome <- epds.is.encrypted.structure.valid(settings$data, env = env)
-    print(outcome)
   }
   return(outcome)
 }

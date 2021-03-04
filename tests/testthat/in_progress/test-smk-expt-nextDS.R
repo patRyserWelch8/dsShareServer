@@ -50,10 +50,11 @@ data.encoded <- isDataEncodedDS(data.server = "vector_A", data.encoded = "df_B",
 test_that("allowed and encoding set",
 {
   expect_error(nextDS())
-  expect_true(is.list(nextDS("df_B",10)))
 })
 
-rm(list = "transfer", pos = 1)
+rm(list = ls(pos = 1), pos = 1)
+source('options/options_definitions.R')
+source("data_files/variables.R")
 set.default.options.restrictive()
 set.allowed()
 assignSharingSettingsDS()

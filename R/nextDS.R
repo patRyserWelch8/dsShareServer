@@ -1,8 +1,8 @@
 # This function encode a certain number of rows in a data frame.
-ndds.encode.encoded.data <- function(settings, transfer, data.encoded, no.rows, env)
+ndds.encode.encoded.data <- function(settings, transfer, data.encoded, no.rows, env = globalenv())
 {
   # get the settings, transfer data, and encoded data
-  encoded      <- get(data.encoded, pos = 1)
+  encoded      <- get(data.encoded, envir = env)
   tranfer.data <- encode.data.no.sharing()
 
 
@@ -31,7 +31,7 @@ ndds.encode.encoded.data <- function(settings, transfer, data.encoded, no.rows, 
 
     # update transfer
     transfer[[settings$current_row]] <- end
-    assign(settings$name.struct.transfer, transfer, pos = 1)
+    assign(settings$name.struct.transfer, transfer, envir = env)
   }
 
   return(transfer.data)
