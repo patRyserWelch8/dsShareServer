@@ -1,0 +1,50 @@
+source("definition_tests/def_getEncodedDataDS.R")
+source("options/options_definitions.R")
+
+rm(list=ls(envir = globalenv()), envir = globalenv())
+
+context("getDataDS::expt::no_settings")
+test_that("no_settings",
+{
+  expect_error(getDataDS(master_mode = TRUE))
+})
+
+options(dsSS_sharing_param.name.struct = "sharing")
+options(dsSS_sharing.allowed = 0)
+assignSharingSettingsDS()
+
+context("getDataDS::expt::no_sharing")
+test_that("no_sharing",
+{
+  expect_error(getDataDS())
+  assign("sharing", list(), pos = globalenv())
+  expect_true(is.list(encode.encrypted.data(settings = get.settings(envir = globalenv()))))
+})
+
+
+options(dsSS_sharing_param.name.struct = "sharing")
+options(dsSS_sharing.allowed = 1)
+assignSharingSettingsDS()
+
+#("Step 0")
+pi_value_1 = 100000
+pi_value_2 = 200000
+pi_value_3 = 300000
+assignSharingSettingsDS()
+
+#print("Step 1")
+encryptDataDS(TRUE, FALSE)
+master.1 <- get("sharing",pos=1)
+
+
+context("getDataDS::expt::")
+test_that("variables exists",
+{
+   data <- getDataDS()
+  .test.data.structure(data)
+  expect_equal(data$header,"FM1")
+  .test.data.structure(data)
+  .test.data.structure(encode.data.no.sharing())
+  .test.data.structure(encode.data.with.sharing(master.1$encrypted,ncol(master.1$encrypted),15))
+})
+

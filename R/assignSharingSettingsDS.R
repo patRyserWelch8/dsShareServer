@@ -1,5 +1,4 @@
 
-if(getRversion() >= "3.1.0") utils::suppressForeignCheck("localvariable")
 
 
 #'@name assignSharingSettingsDS
@@ -36,29 +35,26 @@ assignSharingSettingsDS <- function()
                       min_value                = 1)
 
 
-    if(FALSE) #may have some conversion issues on opal server
       if (!is.null(getOption("dsSS_sharing_param.name.struct")))
       {
         if(is.character(getOption("dsSS_sharing_param.name.struct")) &
            !identical(getOption("dsSS_sharing_param.name.struct"), ""))
         {
-          settings$name.struct <- getOption("dsSS_sharing_param.name.struct")
+          settings$name.struct.sharing <- getOption("dsSS_sharing_param.name.struct")
         }
       }
 
-    if (!is.null(getOption("dsSS_transfer.name.struct")))
-    {
-      if(is.character(getOption("dsSS_transfer.name.struct")) &
+     if (!is.null(getOption("dsSS_transfer.name.struct")))
+     {
+       if(is.character(getOption("dsSS_transfer.name.struct")) &
          !identical(getOption("dsSS_transfer.name.struct"), ""))
-      {
-        settings$name.struct.transfer <- getOption("dsSS_transfer.name.struct")
-      }
-    }
+       {
+         settings$name.struct.transfer <- getOption("dsSS_transfer.name.struct")
+       }
+     }
 
-
-    {
-      if(!is.null(getOption("dsSS_sharing.allowed")))
-      {
+     if(!is.null(getOption("dsSS_sharing.allowed")))
+     {
         if (getOption("dsSS_sharing.allowed") == 0)
         {
           settings$sharing.allowed <- FALSE
@@ -71,23 +67,23 @@ assignSharingSettingsDS <- function()
         {
           settings$sharing.allowed <- FALSE
         }
-      }
+     }
 
-      if(!is.null(getOption("dsSS_sharing.near.equal.limit")))
-      {
+     if(!is.null(getOption("dsSS_sharing.near.equal.limit")))
+     {
         settings$sharing.near.equal.limit <- getOption("dsSS_sharing.near.equal.limit")
-      }
+     }
 
       if(is.null(getOption("dsSS_settings"))) #settings name  have not been set as an option (see onload and description)
       {
         options(dsSS_settings = get.settings.name())
       }
 
-    }
+
 
       env <- globalenv()
-      assign(".settings_ds_share",settings,envir = env)
-      return(exists(".settings_ds_share",envir = env))
+      assign(get.settings.name(),settings,envir = env)
+      return(exists(get.settings.name(),envir = env))
 }
 
 

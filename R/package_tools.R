@@ -1,3 +1,19 @@
+#'@name create.vector
+#'@title  convert character string holding semi-columns separated values into a character vector
+#'@description This function converts n variables names into a character vector of n character values
+#'@return a character vector
+#'@param var_names - a character vector of one element with ";" separated variable names
+create.vector <- function (var_names = "")
+{
+  outcome <- c()
+  if(is.character(var_names))
+  {
+    names.list <- strsplit(var_names,";")
+    outcome <- unlist(names.list)
+  }
+  return(outcome)
+}
+
 #'@name is.sharing.allowed
 #'@title  verifies the variables used to set the parametrisation to for sharing parameters
 #'exists on a DataSHIELD server.
@@ -75,6 +91,7 @@ encode.data.no.sharing <- function()
 #'@param param_names names of params
 #'@details This is a helper function. It cannot be called directly from any client-side
 #'function.
+#'@return TRUE if parameters are created. Otherwise false
 are.params.created <- function(param_names = c())
 {
   params.exist <- FALSE
@@ -82,15 +99,17 @@ are.params.created <- function(param_names = c())
 
   if (length(param_names) > 0)
   {
-    if(length(param_names) >=1  & is.character(param_names) )
+    if(length(param_names) >= 1  & is.character(param_names))
     {
       list.var      <- ls(pos = 1)
       params.exist  <- all(param_names %in% list.var)
+
       if(params.exist)
       {
         #get the object and check for numerical values. mget checks for the existence and
         #retrieve object.
-        params      <-  mget(x = param_names, envir = as.environment(1))
+        env = globalenv()
+        params      <-  mget(x = param_names, envir = env)
         all.numeric <- all(sapply(params, is.numeric))
       }
     }
@@ -98,33 +117,6 @@ are.params.created <- function(param_names = c())
   return(params.exist & all.numeric)
 }
 
-#'@name get.transfer
-#'@title returns the transfer list if it is correctly setup
-#'@details This is a helper function. It cannot be called directly from any client-side
-#'function.
-#'@param settings some settings
-#'@note  Throws error "SERVER::ERR:SHARE::013" if transfer is not created on server.
-#'"Throws "SERVER::ERR:SHARE::014" if the transfer list is created on a server, with the incorrect field.
-get.transfer <- function(settings)
-{
-  transfer <- NULL
-  if(exists(settings$name.struct.transfer, where = 1))
-  {
-    transfer      <- get(settings$name.struct.transfer, pos = 1)
-    correct.field <- settings$current_row %in% names(transfer)
-    if(!correct.field)
-    {
-      transfer <- list()
-      transfer[[settings$current_row]] = 1
-    }
-  }
-  else
-  {
-    transfer <- list()
-    transfer[[settings$current_row]] = 1
-  }
-  return(transfer)
-}
 
 #'@name are.encoded.data.and.settings.suitable
 #'@title check some settings encoded data and settings are suitable for continuing transferring
@@ -137,6 +129,7 @@ get.transfer <- function(settings)
 #' 3. encoded data is a data frame
 #' 4. the data encoded is character
 #'@param data.encoded some encoded data
+#'@param envir environment set by default to globalenv
 #'@note Throws the following errors:
 #'"SERVER::ERR:SHARE::002"  sharing is not allowed or the disclosure setting has not been set to 0 or 1
 #'"SERVER::ERR:SHARE::005"  data.encoded does not exists on the server
@@ -144,30 +137,32 @@ get.transfer <- function(settings)
 #'"SERVER::ERR:SHARE::009"  data.encoded has yet to be validated by \code{isDataEncodedDS}
 #'"SERVER::ERR:SHARE::010"  data.encoded is not a character vector
 #'
-are.arg.and.settings.suitable <- function(data.encoded)
+are.arg.and.settings.suitable <- function(data.encoded, envir = globalenv())
 {
   outcome <- FALSE
   if(is.sharing.allowed())
   {
-    settings  <- get("settings", pos = 1)
+    settings  <- get.settings()
 
     if(!is.character(data.encoded))
     {
       stop("SERVER::ERR:SHARE::010")
     }
 
-    same.name <- identical(settings$encoded.data.name,data.encoded)
-    data.exists <- exists(data.encoded, where = 1)
+    same.name   <- identical(settings$encoded.data.name,data.encoded)
+    data.exists <- exists(data.encoded, where = envir)
     if(!data.exists)
     {
       stop("SERVER::ERR:SHARE::009")
     }
 
-    correct.format <- is.data.frame(get(data.encoded, pos = 1))
+    data.encoded.var <- get(data.encoded, envir = envir)
+    correct.format <- is.data.frame(data.encoded.var)
     if(!correct.format)
     {
       stop("SERVER::ERR:SHARE::005")
     }
+
 
     same.name <- identical(settings$encoded.data.name,data.encoded)
     if(!same.name)
@@ -204,6 +199,70 @@ get.sharing.name <-  function(envir = globalenv())
     return("no_sharing")
   }
 }
+
+#'@name get.sharing
+#'@title retrieve the sharing R object
+#'@description This function uses the option "dsSS_settings" and the global enviroment
+#'to retrieve the sharing of the data
+#'@param envir the environment set by default to globalenv
+#'@return the sharing R object if it has been created. Otherwise an empty list.
+get.sharing <- function(envir = globalenv())
+{
+  sharing.name <- get.sharing.name()
+  if(exists(sharing.name, envir = envir))
+  {
+    return(get(sharing.name,envir = envir))
+  }
+  else
+  {
+    return(list())
+  }
+}
+
+#'@name get.transfer.name
+#'@title retrieve the name of the transfer object
+#'@description This function uses the option "dsSS_settings" to retrieve this information and the global env
+#'@param envir the environment set by default to globalenv
+#'@return name of the transfer object
+get.transfer.name <-  function(envir = globalenv())
+{
+  settings           <- get.settings(envir = envir)
+  name.struct.exists <- any("name.struct.transfer" %in% names(settings))
+  if (name.struct.exists)
+  {
+    return(settings$name.struct.transfer)
+  }
+  else if (!is.null(getOption("dsSS_transfer.name.struct")))
+  {
+    return(getOption("dsSS_transfer.name.struct"))
+  }
+  else
+  {
+    return("no_transfer")
+  }
+}
+
+
+
+#'@name get.transfer
+#'@title retrieve the transfer R object
+#'@description This function uses the option "dsSS_settings" and the global enviroment to retrieve the sharing of the data
+#'@param envir the environment set by default to globalenv
+#'@return the transfer R object if it has been created. Otherwise an empty list.
+get.transfer <- function(envir = globalenv())
+{
+  transfer.name <- get.transfer.name()
+  if(exists(transfer.name, envir = envir))
+  {
+    return(get(transfer.name,envir = envir))
+  }
+  else
+  {
+    return(list())
+  }
+}
+
+
 
 #'@name get.settings.name
 #'@title retrieve the name of the settings object

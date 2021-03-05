@@ -1,6 +1,7 @@
 vector_A <- c(1:71)
 vector_B <- vector_A * 100000
 vector_C <- vector_A + 1
+vector_small <- vector_A / 10e10
 
 matrix_A <- matrix(c(1:100), 10, 10)
 matrix_B <- matrix(c(1000:1099), 5, 20)
@@ -30,12 +31,15 @@ assign("df_A", df_A, pos = 1)
 assign("df_B", df_B, pos = 1)
 assign("df_C", df_C, pos = 1)
 
-assign("D", read.csv("data_files/DATASET1.csv", header = TRUE), pos = 1)
-assign("E", read.csv("data_files/DATASET2.csv", header = TRUE), pos = 1)
-assign("F", read.csv("data_files/DATASET3.csv", header = TRUE), pos = 1)
+D <- read.csv("data_files/DATASET1.csv", header = TRUE)
+E <- read.csv("data_files/DATASET2.csv", header = TRUE)
+F_1 <- read.csv("data_files/DATASET3.csv", header = TRUE)
 
+assign("D", D , pos = 1)
+assign("E", E, pos = 1)
+assign("F", F_1, pos = 1)
 
-assign("all.data", rbind(get("D", pos = 1), get("E", pos = 1), get("F", pos = 1)) , pos = 1)
+assign("all.data", rbind(D, E, F_1), pos = 1)
 
 
 

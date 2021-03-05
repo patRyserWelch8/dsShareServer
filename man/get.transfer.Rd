@@ -2,21 +2,16 @@
 % Please edit documentation in R/package_tools.R
 \name{get.transfer}
 \alias{get.transfer}
-\title{returns the transfer list if it is correctly setup}
+\title{retrieve the transfer R object}
 \usage{
-get.transfer(settings)
+get.transfer(envir = globalenv())
 }
 \arguments{
-\item{settings}{some settings}
+\item{envir}{the environment set by default to globalenv}
+}
+\value{
+the transfer R object if it has been created. Otherwise an empty list.
 }
 \description{
-returns the transfer list if it is correctly setup
-}
-\details{
-This is a helper function. It cannot be called directly from any client-side
-function.
-}
-\note{
-Throws error "SERVER::ERR:SHARE::013" if transfer is not created on server.
-"Throws "SERVER::ERR:SHARE::014" if the transfer list is created on a server, with the incorrect field.
+This function uses the option "dsSS_settings" and the global enviroment to retrieve the sharing of the data
 }

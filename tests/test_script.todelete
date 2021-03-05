@@ -1,11 +1,15 @@
-options(sharing.near.equal.limit = 1000)
-options(sharing.allowed = 1)
+library(dsShareServer)
+options(dsSS_sharing.near.equal.limit = 1000)
+options(dsSS_sharing.allowed = 1)
 
 vector_A <- c(1:71)
 vector_B <- vector_A * 100000
 vector_C <- vector_A + 1
+D        <- c(100:171)
+E        <- c(100:171)
+F        <- c(100:171)
 
-df_A     <- data.frame(vector_A,vector_B, list_C)
+df_A     <- data.frame(vector_A,vector_B, vector_A)
 df_B     <- data.frame(vector_A * -10000000 , vector_B * -10000000, vector_C * -10000000)
 df_C     <- data.frame(vector_A + 1, vector_B + 1, vector_C + 1)
 
@@ -16,12 +20,10 @@ print(dim(all.data))
 
 # step 1 - set settings
 assignSharingSettingsDS()
-print(get("settings", pos = 1))
 
 # step 2 - check encodedDataDS
 data.encoded <- isDataEncodedDS(data.server = "vector_A", data.encoded = "df_B", data.held.in.server = "all.data")
-print(get("settings", pos = 1))
-print(data.encoded)
+
 
 # step 3 - iterate through
 
