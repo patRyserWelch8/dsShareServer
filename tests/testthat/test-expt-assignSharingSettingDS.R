@@ -25,17 +25,19 @@ test_that("correct fields",
 test_that("with options",
 {
    set.allowed()
-   setOption(dsSS_sharing_param.name.struct = "sharing")
+   options(dsSS_sharing_param.name.struct = "sharing")
+   options(dsSS_transfer.name.struct = "transfer")
    assignSharingSettingsDS()
    settings.name <- getOption("dsSS_settings")
    settings <- get(settings.name, pos = 1)
-   expect_equal(settings$name.struct, getOption("dsSS_sharing_param.name.struct"))
+   expect_equal(settings$name.struct.sharing, getOption("dsSS_sharing_param.name.struct"))
+   expect_equal(settings$name.struct.transfer, getOption("dsSS_transfer.name.struct"))
    #expect_equal(settings$sharing.allowed, TRUE)
 
    set.default.options.restrictive()
    assignSharingSettingsDS()
    settings <- get(settings.name, pos=1)
-   expect_equal(settings$name.struct, getOption("dsSS_sharing_param.name.struct"))
+   expect_equal(settings$name.struct.sharing, getOption("dsSS_sharing_param.name.struct"))
    #expect_equal(settings$sharing.allowed, FALSE)
 })
 

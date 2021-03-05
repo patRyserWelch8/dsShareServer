@@ -102,7 +102,6 @@ f<- getCoordinatesDS()
 rm(sharing,pos=1)
 assign("sharing", receiver.2, pos=1)
 
-
 context("assignCoordinatesDS::expt:: incorrect parameters::with_coordinates:: allowed")
 test_that("parameters",
 {
@@ -118,22 +117,23 @@ test_that("parameters",
 context("assignCoordinatesDS::expt:: correct parameters::with_coordinates")
 test_that("parameters",
 {
-
      expect_equal(assignCoordinatesDS(header = "FM1",
-     payload = "0.5,0.5,0.5, 0.5",
-     property.a = as.numeric(object.size("0.5,0.5,0.5, 0.5")),
-     property.b = 2,
-     property.c = as.numeric(Sys.time()) /567,
-     property.d = 134893344), TRUE)
+                  payload = "0.5;0.5;0.5;0.5",
+                  property.a = as.numeric(object.size("0.5;0.5;0.5;0.5")),
+                  property.b = 2,
+                  property.c = as.numeric(Sys.time()) /567,
+                  property.d = 134893344), TRUE)
 })
 
 context("assignCoordinatesDS::expt::.save_coordinates::with_coordinates")
 test_that("with_coordinates",
 {
+  expect_true(assignSharingSettingsDS())
   expect_equal(exists("sharing",where = 1), TRUE)
   acds.save.coordinates(c(0.5, 0.5,0.5,0.5),2)
   expect_equal(exists("sharing",where = 1), TRUE)
   list.fields <- names(sharing)
+  settings <- get(".settings_ds_share", pos = 1)
   expect_equal(settings$index_x %in% list.fields, TRUE)
   expect_equal(settings$index_y %in% list.fields, TRUE)
   expect_equal(length(sharing[[settings$index_x]]),2)
@@ -167,7 +167,7 @@ test_that("with_coordinates",
 context("assignCoordinatesDS::expt::.is.assigned.coordinates.correct::with_coordinates")
 test_that("with_coordinates",
 {
-  expect_equal(acds.is.assigned.coordinates.correct(),TRUE)
+  expect_equal(acds.is.assigned.coordinates.correct(get(".settings_ds_share", pos = 1)),TRUE)
 })
 
 

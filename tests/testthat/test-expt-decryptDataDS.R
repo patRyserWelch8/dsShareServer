@@ -35,7 +35,7 @@ settings <- get(".settings_ds_share",pos = 1)
 context("decryptData::expt::no_encryption")
 test_that("does exists",
 {
-   print(settings$name.struct.sharing )
+
    if (exists(settings$name.struct.sharing,where = 1))
    {
       rm(list = settings$name.struct.sharing, pos = 1)

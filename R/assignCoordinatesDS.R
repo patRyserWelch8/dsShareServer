@@ -1,15 +1,10 @@
 # save coordinates to the sharing RObject on the server.
-acds.save.coordinates <- function(settings, received.data = NULL, no.params, env = globalenv())
+acds.save.coordinates <- function(settings, received.data = NULL, no.params  = 1, env = globalenv())
 {
-    if (is.vector(received.data))
+    if (is.vector(received.data) & is.numeric(no.params))
     {
       # retrieves sharing object or an empty list
       sharing <- get.sharing()
-      #if (exists(get.sharing.name(), where = env))
-      #{
-      #  sharing = get(get.sharing.name(), pos = env)
-      #}
-
       no.values <- length(received.data)
 
       if (no.values == (2 * no.params))
@@ -46,21 +41,20 @@ acds.create.data <- function(data = NULL,  no.params = 1)
 # checks the coordinates are correct.
 acds.is.assigned.coordinates.correct <- function(settings, env = globalenv())
 {
-  outcome <- FALSE
-  # retrieves sharing object or an empty list
-  sharing <- get.sharing()
+  outcome      <- FALSE
+
+  # retrieves sharing object or an empty list. Needs this after assign in previous call
+  sharing      <- get.sharing(envir = env)
 
   # sets the expected elements for coordinates
-  structure     <- c(settings$index_x,settings$index_y)
+  structure    <- c(settings$index_x,settings$index_y)
 
   # check expected structure exists
-  total.correct <- sum(structure %in% names(sharing))
-  value.exists  <- length(structure) ==  total.correct
+  value.exists <- all(structure %in% names(sharing))
 
-  # check data type of created coordinates
   if (value.exists)
   {
-    outcome <- is.vector(sharing[[settings$index_x]]) & is.vector(sharing[[settings$index_y]])
+    outcome    <- is.vector(sharing[[settings$index_x]]) & is.vector(sharing[[settings$index_y]])
   }
 
   return(outcome)
@@ -88,10 +82,12 @@ assignCoordinatesDS <- function(header = "", payload = "", property.a = 0,
   outcome <- FALSE
   if (is.sharing.allowed())
   {
+
     if ( is.character(header) & is.character(payload)
        & is.numeric(property.a) &  is.numeric(property.b)
        & is.numeric(property.c) & is.numeric(property.d))
        {
+
           if (nchar(header) > 0 & nchar(payload) > 0 & property.a > 0
              & property.b > 0 & property.c > 0 & property.d > 0)
             {
@@ -103,10 +99,13 @@ assignCoordinatesDS <- function(header = "", payload = "", property.a = 0,
                 received.data  <- acds.create.data(payload, no.params = property.b)
 
                 # assign coordinates to sharing R object
-                acds.save.coordinates(received.data, property.b, env)
+                print(class(property.b))
+                acds.save.coordinates(settings, received.data, property.b, env)
 
                 # verify coordinates exists and have been created successfully
-                return(acds.is.assigned.coordinates.correct(env))
+                outcome <- acds.is.assigned.coordinates.correct(settings, env)
+
+                return(outcome)
             }
             else
             {

@@ -130,7 +130,7 @@ context("decryptParamDS::expt::data_has_been_decrypted")
 test_that("data has been encrypted correctly",
 {
    assign("outcome", decryptParamDS(c("pi_value_1_a", "pi_value_2_a", "pi_value_3_a"),3), pos = 1)
-   expect_equal(exists(settings$name.struct, where = 1), TRUE)
+   expect_equal(exists(settings$name.struct.sharing, where = 1), TRUE)
    expect_equal(get("outcome", pos = 1), TRUE)
    list.var <- ls(pos = 1)
    param <- get("pi_value_1_a",pos = 1)

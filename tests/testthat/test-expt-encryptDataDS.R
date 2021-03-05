@@ -30,7 +30,7 @@ test_that("variables exists",
 
 
 set.default.options.restrictive
-options(sharing.allowed = 0)
+options(dsSS_sharing.allowed = 0)
 assignSharingSettingsDS()
 
 context("encryptDataDS::expt::not_allowed_to_share")
@@ -218,7 +218,7 @@ test_that(".is.encrypted.valid",
   #correct structure
   encryptDataDS(TRUE,TRUE)
   sharing <- get("sharing",pos = 1)
-  expect_equal(.is.encrypted.valid(sharing,expected.list),TRUE)
+  expect_equal(edds.is.encrypted.valid(sharing,expected.list),TRUE)
 
   correct.structure  <- list(data = c(1:4),
   concealing.matrix = matrix(1:2,1,1),
@@ -226,27 +226,28 @@ test_that(".is.encrypted.valid",
   encrypted.matrix = matrix(1:2,1,1),
   index = 3)
   assign("sharing",correct.structure, pos=1)
-  expect_equal(.is.encrypted.valid(sharing,expected.list),TRUE)
+  expect_equal(edds.is.encrypted.valid(sharing,expected.list),TRUE)
 
   #incorrect structure
   incorrect.structure <- list()
   assign("sharing",incorrect.structure, pos=1)
   sharing <- get("sharing",pos = 1)
-  expect_equal(.is.encrypted.valid(sharing,expected.list),FALSE)
+  expect_equal(edds.is.encrypted.valid(sharing,expected.list),FALSE)
 
   incorrect.structure <- list(master.vector = c(1,2,3),
   concealing.matrix = matrix(1:2,1,1))
   assign("sharing",incorrect.structure, pos=1)
   sharing <- get("sharing",pos = 1)
-  expect_equal(.is.encrypted.valid(sharing,expected.list),FALSE)
+  expect_equal(edds.is.encrypted.valid(sharing,expected.list),FALSE)
 })
 
 context("encryptDataDS::expt::.create.structure.master")
 test_that(".create.structure.master",
 {
   expected.list <- c("concealing","masking","no_columns","no_rows")
-
-  sharing <- .create.structure.master(min=1, max=2,no.rows=11, no.columns=13)
+  assignSharingSettingsDS()
+  settings <- get(".settings_ds_share", pos =1)
+  sharing <- edds.create.structure.master(settings, min=1, max=2,no.rows=11, no.columns=13)
   expect_equal(is.list(sharing),TRUE)
   expect_equal(all(expected.list %in% names(sharing), TRUE), TRUE)
   expect_equal(length(sharing) == length(expected.list), TRUE)
@@ -262,7 +263,11 @@ test_that("received matrix does not exist",
 {
   expected.list <- c("concealing.matrix","masking.matrix","received.matrix")
   #the received matrix does not exists
-  sharing <- .create.structure.receiver(4,23)
+  assignSharingSettingsDS()
+  settings <- get(".settings_ds_share", pos =1)
+
+
+  sharing <- edds.create.structure.receiver(settings, 4,23)
   expect_equal(is.list(sharing),TRUE)
   expect_equal(all(expected.list %in% names(sharing), FALSE), FALSE)
   expect_equal(length(sharing) == 0, TRUE)
@@ -274,7 +279,9 @@ test_that("received matrix does not exist",
 
   a.list <- list(element = 3.1427)
   assign("sharing",a.list, pos=1)
-  sharing <- .create.structure.receiver(4,23)
+  assignSharingSettingsDS()
+  settings <- get(".settings_ds_share", pos =1)
+  sharing <- edds.create.structure.receiver(settings,4,23)
   expect_equal(is.list(sharing),TRUE)
   expect_equal(all(expected.list %in% names(sharing), FALSE), FALSE)
   expect_equal(length(sharing) == 0, TRUE)
