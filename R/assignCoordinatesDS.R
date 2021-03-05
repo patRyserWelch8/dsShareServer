@@ -99,7 +99,7 @@ assignCoordinatesDS <- function(header = "", payload = "", property.a = 0,
                 received.data  <- acds.create.data(payload, no.params = property.b)
 
                 # assign coordinates to sharing R object
-                print(class(property.b))
+
                 acds.save.coordinates(settings, received.data, property.b, env)
 
                 # verify coordinates exists and have been created successfully
