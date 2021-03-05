@@ -262,18 +262,23 @@ isDataEncodedDS <- function(data.server = NULL, data.encoded = NULL, data.held.i
     outcome              <- FALSE
     param.correct        <- idds.are.params.correct(data.server, data.encoded, data.held.in.server )
 
+
     if(param.correct)
     {
       # get data from global environment
       env            <- globalenv()
+      settings       <- get.settings()
       server         <- get(data.server,  envir = env)
       encoded        <- get(data.encoded, envir = env)
       held.in.server <- get(data.held.in.server, envir = env)
-      limit          <- getOption("sharing.near.equal.limit")
+      limit          <- settings$sharing.near.equal.limit
+
 
       if(idds.check.dimension(server, encoded))
       {
+
         is.encoded.variable <- idds.check.encoding.variable(server, encoded, limit)
+
         if(is.encoded.variable)
         {
           is.encoded.data <- idds.check.encoding.data.frames(held.in.server,encoded,limit)

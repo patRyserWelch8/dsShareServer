@@ -90,11 +90,13 @@ assignDataDS(master_mode = TRUE, b$header,b$payload,b$property.a,b$property.b,b$
 master.2 <- get("sharing",pos=1)
 
 
+
 #("step 5")
 decryptDataDS()
 master.3 <- get("sharing",pos=1)
 assignParamSettingsDS(c("pi_value_1","pi_value_2","pi_value_3"))
 master.3.5 <- get("sharing",pos=1)
+
 
 f<- getCoordinatesDS()
 rm(sharing,pos=1)

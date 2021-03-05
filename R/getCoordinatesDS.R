@@ -6,13 +6,13 @@ gcds.compute.coordinates <- function(settings, env = globalenv())
   {
     return.value <- encode.data.no.sharing()
     sharing      <- get.sharing()
-    #if(exists(settings$name.struct,where=1))
-    #{
-     # sharing      <- get(settings$name.struct,pos = 1)
+      print(2)
       value.exists <- all(c(settings$index_x, settings$index_y) %in% names(sharing))
-
+      print(value.exists)
+      print("here")
       if(value.exists)
       {
+        print("here")
         data           <- c(sharing[[settings$index_x]],sharing[[settings$index_y]])
         no.params      <- length(sharing[[settings$index_x]])
         random.data    <- stats::runif((settings$min_rows * settings$min_columns) + 1 - (2 * no.params), min = 0, max = 2)
@@ -22,7 +22,7 @@ gcds.compute.coordinates <- function(settings, env = globalenv())
         index <- stats::runif(1, min = 1, max= 100)
         return.value <- encode.data.with.sharing(encrypted.data, length(sharing[[settings$index_x]]), index)
       }
-    #}
+
   }
   return(return.value)
 }
@@ -42,7 +42,7 @@ getCoordinatesDS <- function()
   {
     env = globalenv()
     settings = get.settings(envir = env)
-    if(!exists(settings$name.struct.sharing,where=1))
+    if(!exists(settings$name.struct.sharing,envir = env))
     {
       stop("SERVER::ERR::PARAM::003")
     }

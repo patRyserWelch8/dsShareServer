@@ -5,8 +5,6 @@ test_that("does not exist",
    {
      rm(".settings_ds_share", pos=1)
    }
-   expect_equal(exists(".settings_ds_share", where = 1), FALSE)
-
    expect_error(ddds.is.received.data.valid())
    expect_equal(ddds.decrypt.received.matrix(), NULL)
    expect_error(ddds.is.decrypted.data.valid())

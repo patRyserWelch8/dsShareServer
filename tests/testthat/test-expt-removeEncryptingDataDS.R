@@ -3,7 +3,6 @@ context("removeEncryptingDataDS::expt::no_settings")
 test_that("no_setting",
 {
   rm(list = ls(pos = 1), pos = 1)
-  expect_equal(exists(".settings_ds_share",where = 1),FALSE)
   expect_error(removeEncryptingDataDS())
 })
 

@@ -7,7 +7,6 @@ test_that("exists list",
    {
      rm(".settings_ds_share", envir = globalenv())
    }
-   expect_equal(exists(".settings_ds_share", where = 1), FALSE)
    assignSharingSettingsDS()
    settings.name <- getOption("dsSS_settings")
    expect_equal(exists(settings.name, where = 1), TRUE)
@@ -19,14 +18,14 @@ test_that("correct fields",
                     "data", "index_x", "index_y", "no_columns", "no_rows", "min_rows","max_rows",
                     "min_columns", "max_columns", "min_value")
 
-   settings <- get.settings(envir = global.env())
+   settings <- get.settings(envir = globalenv())
    expect_equal(all(list.fields %in% names(settings)), TRUE)
 })
 
 test_that("with options",
 {
    set.allowed()
-   set.default.options.not.restrictive()
+   setOption(dsSS_sharing_param.name.struct = "sharing")
    assignSharingSettingsDS()
    settings.name <- getOption("dsSS_settings")
    settings <- get(settings.name, pos = 1)

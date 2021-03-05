@@ -3,7 +3,6 @@ context("decryptParamDS::smk::no_settings")
 test_that("does not exist",
 {
    rm(list=ls(pos = 1),pos=1)
-   expect_equal(exists(".settings_ds_share", where = 1), FALSE)
    expect_error(dpds.get.encoded.param())
    expect_error(dpds.is.encoded.param.valid())
    expect_error(decryptParamDS())
@@ -13,7 +12,6 @@ context("decryptParamDS::expt::no_settings")
 test_that("does not exist",
 {
    rm(list=ls(pos = 1),pos=1)
-   expect_equal(exists(".settings_ds_share", where = 1), FALSE)
    expect_error(dpds.is.encoded.param.valid())
    expect_error(decryptParamDS())
 

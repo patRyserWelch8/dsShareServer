@@ -25,7 +25,7 @@ assignVariableSettingsDS <- function(var_name = NULL)
          assign(get.settings.name(),settings, envir = env)
 
          # save the current_row to the transfer object
-         transfer[[settings$current_row]] <- 0
+         transfer[[settings$current_row]] <- 1
          assign(get.transfer.name(),transfer, envir = env)
       }
       else

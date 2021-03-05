@@ -3,7 +3,7 @@ rm(list=ls(pos = 1),pos=1)
 context("assignParamSettingsDS::smk::incorrect_outcome")
 test_that("everything is incorrect",
 {
-  expect_equal(exists(".settings_ds_share", where = 1), FALSE)
+
   expect_error(assignParamSettingsDS())
   expect_error(assignParamSettingsDS(123))
   expect_equal(are.params.created(param_names = c("first_var")), FALSE)
@@ -144,18 +144,18 @@ test_that("everyting is correct",
 context("assignParamSettingsDS::expt::.create_vector")
 test_that("correct and incorrect arguments",
 {
-   outcome <- apds.create.vector(123)
+   outcome <- create.vector(123)
 
-   outcome <- apds.create.vector("")
+   outcome <- create.vector("")
    expect_equal(length(outcome),0)
 
-   outcome <- apds.create.vector("a")
+   outcome <- create.vector("a")
    expect_equal(length(outcome),1)
 
-   outcome <-  outcome <- apds.create.vector("a;b")
+   outcome <-  outcome <- create.vector("a;b")
    expect_equal(length(outcome),2)
 
-   outcome <- apds.create.vector("a;b;c;d;e")
+   outcome <- create.vector("a;b;c;d;e")
    expect_equal(length(outcome),5)
 
 
