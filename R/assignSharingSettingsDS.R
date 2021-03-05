@@ -10,6 +10,7 @@
 #'@export
 assignSharingSettingsDS <- function()
 {
+    # create basic structure with default value
     settings <- list( sharing.allowed          = 0,
                       sharing.near.equal.limit = 1000,
                       encoded.data             = FALSE,
@@ -32,9 +33,12 @@ assignSharingSettingsDS <- function()
                       max_rows                 = 21,#21,
                       min_columns              = 13,#13,
                       max_columns              = 23,#23,
-                      min_value                = 1)
+                      min_value                = 1,
+                      footprint                = 9812735)
 
 
+      # capture values from the Opal server
+      # name of the param sharing structure R-server object
       if (!is.null(getOption("dsSS_sharing_param.name.struct")))
       {
         if(is.character(getOption("dsSS_sharing_param.name.struct")) &
@@ -44,6 +48,7 @@ assignSharingSettingsDS <- function()
         }
       }
 
+     # name of the transfer structure R-server object
      if (!is.null(getOption("dsSS_transfer.name.struct")))
      {
        if(is.character(getOption("dsSS_transfer.name.struct")) &
@@ -53,6 +58,7 @@ assignSharingSettingsDS <- function()
        }
      }
 
+     # set sharing of parameters of data
      if(!is.null(getOption("dsSS_sharing.allowed")))
      {
         if (getOption("dsSS_sharing.allowed") == 0)
@@ -69,16 +75,17 @@ assignSharingSettingsDS <- function()
         }
      }
 
+     # set sharing of parameters of limit of verifying encoding data
      if(!is.null(getOption("dsSS_sharing.near.equal.limit")))
      {
         settings$sharing.near.equal.limit <- getOption("dsSS_sharing.near.equal.limit")
      }
 
-      if(is.null(getOption("dsSS_settings"))) #settings name  have not been set as an option (see onload and description)
-      {
-        options(dsSS_settings = get.settings.name())
-      }
-
+     # set seeds footprint for generation of random numbers
+     if(!is.null(getOption("dsSS_sharing.near.equal.limit")))
+     {
+       settings$footprint <- getOption("dsSS_sharing.seed.footprint")
+     }
 
 
       env <- globalenv()

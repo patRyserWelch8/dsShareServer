@@ -26,6 +26,8 @@ ndds.encode.encoded.data <- function(settings, transfer, data.encoded, no.rows, 
     # prepare for transfer
     names(encoded)  <- NULL
     data            <- as.numeric(unlist(encoded[c(start:end),]))
+    seed            <- generate.secure.seed(settings)
+    set.seed(seed)
     index           <- stats::runif(1, min = .Machine$double.xmin, max  = .Machine$double.xmax)
     transfer.data   <- encode.data.with.sharing(data, ncol(encoded), index)
 

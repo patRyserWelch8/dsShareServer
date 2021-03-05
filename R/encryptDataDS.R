@@ -31,6 +31,7 @@ edds.define_no_rows <- function(settings)
 {
   no.rows <- 2
   continue <- TRUE
+  set.seed(generate.secure.seed(settings))
   while(continue)
   {
     no.rows <- as.integer(stats::runif(1, min = settings$min_rows, max = settings$max_rows))
@@ -49,6 +50,7 @@ edds.define_no_columns <- function(settings, no.rows = 2)
   {
       no.columns <- no.rows
       continue = TRUE
+      set.seed(generate.secure.seed(settings))
       while(continue)
       {
         no.columns <- as.integer(stats::runif(1, min = settings$min_columns, max = settings$max_columns))
@@ -84,6 +86,7 @@ edds.create.matrix.runif <- function(settings, no.rows = 0 , no.columns = 0, min
       no.columns <- settings$min_columns
     }
 
+    set.seed(generate.secure.seed(settings))
     random.numbers <- stats::runif(no.rows * no.columns, min = min.value, max = max.value)
     result         <-  matrix(random.numbers,no.rows,no.columns)
 
