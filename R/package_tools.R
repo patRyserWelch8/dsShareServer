@@ -363,6 +363,7 @@ get.settings.name <-  function()
 #'@description This function uses the option "dsSS_settings" and the global enviroment
 #'to retrieve the settings
 #'@param envir the environment set by default to globalenv
+#'@export
 get.settings <- function(envir = globalenv())
 {
     settings.name <- get.settings.name()
