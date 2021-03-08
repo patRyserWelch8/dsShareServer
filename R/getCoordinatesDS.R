@@ -17,6 +17,7 @@ gcds.compute.coordinates <- function(env = globalenv())
     no.params      <- length(sharing[[settings$index_x]])
 
     # generate random data
+    set.seed(generate.secure.seed(settings = settings))
     random.data    <- stats::runif((settings$min_rows * settings$min_columns) + 1 - (2 * no.params), min = 0, max = 2)
 
     # obfuscate
@@ -25,6 +26,7 @@ gcds.compute.coordinates <- function(env = globalenv())
                             random.data[((length(random.data)/2)+1):length(random.data)])
 
     # encode in suitable format for transfer
+    set.seed(generate.secure.seed(settings = settings))
     index        <- stats::runif(1, min = 1, max= 100)
     return.value <- encode.data.with.sharing(encrypted.data, length(sharing[[settings$index_x]]), index)
   }

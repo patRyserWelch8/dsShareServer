@@ -47,14 +47,18 @@ dpds.decryptParam <- function(settings, sharing, param_names = NULL, tolerance =
   rows          <- ceiling(sharing[[settings$index_x]] * sharing[[settings$no_columns]])
   columns       <- ceiling(sharing[[settings$index_y]] * sharing[[settings$no_rows]])
 
+
+
   # check all the retrieve information are suitable for decryption
   rows.correct  <- all(rows    <= nrow(sharing$decrypted))
   cols.correct  <- all(columns <= ncol(sharing$decrypted))
   coord.correct <- length(rows) == length(params) & length(columns) == length(rows)
 
+
   if (rows.correct & cols.correct & coord.correct)
   {
       # retrieve each parametres using the coordinates. those are swapped due to transpose in encoding process
+
       for(param in 1:no.params)
       {
           param_name     <-  params[param]
@@ -75,7 +79,7 @@ dpds.decryptParam <- function(settings, sharing, param_names = NULL, tolerance =
 #'@export
 decryptParamDS <- function(param_names = NULL, tolerance = 8)
 {
-   outcome <- FALSE
+   outcome     <- FALSE
    param.value <- NA
 
    if (is.sharing.allowed())

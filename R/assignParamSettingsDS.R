@@ -1,12 +1,13 @@
 # generate some ratios to be apply for each coordinate in the matrix. Those ratios
 # indicates which rows and columns are use finding the appropriate vectors.
-apds.generate.ratios <- function(no.elements = 0, coordinate = 0)
+apds.generate.ratios <- function(settings, no.elements = 0, coordinate = 0)
 {
   stop    <-  (no.elements == 0) & (coordinate == 0)
 
   while(!stop)
   {
      # generate a vector of random numbers.
+     set.seed(generate.secure.seed(settings))
      outcome   <- as.vector(stats::runif(no.elements, min = 0.01, max = 0.99))
 
      # find the rows or columns index for the coordinates.
@@ -26,19 +27,12 @@ apds.init.coordinates.ratios <- function(settings, sharing, param_names)
 {
   if(is.list(sharing))
   {
-    # set random number each time it is executed. The random number
-    # prevents eavesdroppers to build again the indices.
-    sys.time <- as.numeric(Sys.time())
-    set.seed(sys.time)
-    random.number <- stats::runif (1, min = 1, max = 10^6)
-
-    set.seed(sys.time/random.number)
 
     # set the ratio in the coordinates. x becomes uses the columns and y the rows. Some transpose
     # in latter steps will set x as column and y as row. Some checks are in place
     # to prevent issues with indices out of bounds.
-    sharing[[settings$index_x]]     <- apds.generate.ratios(no.elements = length(param_names), coordinate = sharing[[settings$no_columns]] - 1)
-    sharing[[settings$index_y]]     <- apds.generate.ratios(no.elements = length(param_names), coordinate = sharing[[settings$no_rows]] - 1)
+    sharing[[settings$index_x]]     <- apds.generate.ratios(settings, no.elements = length(param_names), coordinate = sharing[[settings$no_columns]] - 2)
+    sharing[[settings$index_y]]     <- apds.generate.ratios(settings, no.elements = length(param_names), coordinate = sharing[[settings$no_rows]] - 2)
     sharing[[settings$param_names]] <- param_names
 
 

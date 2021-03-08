@@ -14,6 +14,84 @@ create.vector <- function (var_names = "")
   return(outcome)
 }
 
+#'@name generate.secure.seeds
+#'@title  uses the footprint set in the Opal server to generate a seed
+#'@description This function converts n variables names into a character vector of n character values
+#'@return  a seed
+#'@param settings - the settings list.
+generate.secure.seed <- function(settings = list())
+{
+    if (is.list(settings))
+    {
+      # initialise the seed
+      if("footprint" %in% names(settings))
+      {
+        if(is.numeric(settings$footprint))
+        {
+          footprint <- settings$footprint
+        }
+      }
+      else
+      {
+        footprint <- runif(1, min = 1, max = .Machine$integer.max)
+      }
+
+      # the seed will be used in a set.seed function. Max value is .Machine$integer.max
+      seed <- .Machine$integer.max + 1
+      while(seed > .Machine$integer.max)
+      {
+        # generate a list of number randomly
+        set.seed(compute.random.number(seed = footprint, min.value = 10000, max.value = .Machine$integer.max))
+        list.numbers   <- stats::runif(10000, min = 1e11, max = 9e22)
+
+        # generate a list of divisor
+        set.seed(compute.random.number(seed = footprint, min.value = 10000, max.value = .Machine$integer.max))
+        list.quotient <-  stats::runif(10, min = 1e14, max = 9e15)
+
+        # comput potential seeds
+        list.seeds <- list.numbers / list.quotient
+
+        # randomly return on seed
+        set.seed(compute.random.number(seed = footprint, min.value = 10000, max.value = .Machine$integer.max))
+        random.seed <- as.integer(stats::runif(1, min = 1, max = 10000))
+
+
+        if(random.seed %in% 1:10000)
+        {
+          seed        <- list.seeds[random.seed]
+        }
+
+      }
+      return(seed)
+    }
+    else
+    {
+      stop("SERVER::ERR:SHARE::024")
+    }
+}
+
+#'@name compute.random.number
+#'@title generate a random number
+#'@param seed a integer value to set the seed
+#'@param min.value the minimum value used in the range
+#'@param max.value the maximum value used in the range
+#'@return a number randomly generated
+compute.random.number <- function(seed = NULL, min.value = NULL, max.value = NULL )
+{
+  if(is.numeric(seed) & is.numeric(min.value) & is.numeric(max.value))
+  {
+    set.seed(seed)
+    list.number  <- runif(10000, min = 1000, max = .Machine$integer.max)
+    random.index <- runif(1, min = 1, max = 10000)
+    return(list.number[random.index])
+  }
+  else
+  {
+    stop("SERVER::ERR:SHARE::023")
+  }
+
+}
+
 #'@name is.sharing.allowed
 #'@title  verifies the variables used to set the parametrisation to for sharing parameters
 #'exists on a DataSHIELD server.
@@ -276,7 +354,7 @@ get.settings.name <-  function()
   }
   else
   {
-    return(".settings_ds_share")
+    return("settings_ds_share")
   }
 }
 

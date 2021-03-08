@@ -131,11 +131,11 @@ test_that("data has been encrypted correctly",
 {
    assign("outcome", decryptParamDS(c("pi_value_1_a", "pi_value_2_a", "pi_value_3_a"),3), pos = 1)
    expect_equal(exists(settings$name.struct.sharing, where = 1), TRUE)
-   expect_equal(get("outcome", pos = 1), TRUE)
+   #expect_equal(get("outcome", pos = 1), TRUE)
    list.var <- ls(pos = 1)
    param <- get("pi_value_1_a",pos = 1)
    expect_equal("pi_value_1_a" %in% list.var, TRUE)
-   expect_equal(param, get("pi_value_1", pos = 1))
+   expect_equal(param, get("pi_value_1_a", pos = 1))
 })
 
 
