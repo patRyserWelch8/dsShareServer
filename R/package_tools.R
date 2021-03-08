@@ -354,7 +354,7 @@ get.settings.name <-  function()
   }
   else
   {
-    return(".settings_ds_share")
+    return("settings_ds_share")
   }
 }
 

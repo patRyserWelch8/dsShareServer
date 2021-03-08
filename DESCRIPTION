@@ -39,7 +39,7 @@ AggregateMethods:
   removeTransferDataDS,
   setLengthDS
 Options:
- dsSS_settings = .settings_ds_share,
+ dsSS_settings = 'settings_ds_share',
  dsSS_sharing_param.name.struct=sharing,
  dsSS_transfer.name.struct=transfer,
  dsSS_sharing.allowed=1,
