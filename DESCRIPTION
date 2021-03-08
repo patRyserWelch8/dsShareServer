@@ -37,7 +37,8 @@ AggregateMethods:
   nextDS,
   removeEncryptingDataDS,
   removeTransferDataDS,
-  setLengthDS
+  setPiDS,
+  getSettings
 Options:
  dsSS_settings = 'settings_ds_share',
  dsSS_sharing_param.name.struct=sharing,
