@@ -13,7 +13,7 @@ asss.get.name <- function(current.name = "", option.name = "")
     # check the value is different than current name
     if(!identical(name, current.name) & length(name) > 1)
     {
-      new.name <- name
+      new.name <- as.character(name)
     }
   }
 
@@ -50,7 +50,7 @@ asss.get.logical.value <- function(current.value = TRUE, option.name = "")
   #set value. is.logical = true
   new.value  <- current.value
   value      <- as.integer(asss.get.num.value(current.value = as.numeric(current.value), option.name = option.name))
-  if(as.integer(value) %in% c(0,1))
+  if(value %in% c(0,1))
   {
      new.value  <- as.logical(value)
   }
