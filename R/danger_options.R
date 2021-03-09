@@ -5,5 +5,5 @@
 #'@export
 danger_options <- function()
 {
-  return(.Options$dsSS_sharing.allowed)
+  return(.Options)
 }
