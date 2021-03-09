@@ -26,8 +26,9 @@ test_that("allowed and nothing has been set",
   expect_error(nextDS("df_B",10))
 })
 
-
+options(dsSS_sharing.allowed = 1)
 set.allowed()
+options(dsSS_sharing.allowed = 1)
 assignSharingSettingsDS()
 source("data_files/variables.R")
 test_that("allowed and no encoding set",
@@ -39,6 +40,7 @@ test_that("allowed and no encoding set",
 
 set.default.options.restrictive()
 set.allowed()
+options(dsSS_sharing.allowed = 1)
 assignSharingSettingsDS()
 
 source("data_files/variables.R")
@@ -63,6 +65,7 @@ test_that("allowed and no encoding set",
   source("data_files/variables.R")
   set.default.options.restrictive()
   set.allowed()
+  options(dsSS_sharing.allowed = 1)
   assignSharingSettingsDS()
   assignVariableSettingsDS("df_B")
 

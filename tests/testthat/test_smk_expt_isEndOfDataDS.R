@@ -45,6 +45,7 @@ if(exists("transfer",where = 1))
   rm(list = "transfer", pos = 1)
 }
 
+options(dsSS_sharing.allowed = 1)
 test_that("option set, allowed",
 {
   expect_error(isEndOfDataDS())

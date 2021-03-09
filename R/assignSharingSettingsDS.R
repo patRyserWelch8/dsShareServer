@@ -1,5 +1,62 @@
+# check the option and return a suitable name.
+asss.get.name <- function(current.name = "", option.name = "")
+{
+  # sets new.name to current name. If issues then name does not change.
+  new.name <- current.name
 
+  # obtain the option value
+  name     <- getOption(option.name)
 
+  # check the value is a class character
+  if (is.character(name))
+  {
+    # check the value is different than current name
+    if(!identical(name, current.name) & length(name) > 1)
+    {
+      new.name <- name
+    }
+  }
+
+  return(new.name)
+}
+
+# check the option and return a numerical value
+asss.get.num.value <- function(current.value = 0, option.name = "")
+{
+  # new.value
+  new.value <- current.value
+
+  # obtain value
+  # obtain the option value
+  value     <- getOption(option.name)
+  if (is.character(value) || is.numeric(value))
+  {
+    # check the contains some digits
+    if (grepl("\\d", value))
+    {
+      value <- as.numeric(value)
+      if(!is.na(value))
+      {
+        new.value <- value
+      }
+    }
+  }
+  return(new.value)
+}
+
+# check the option and return a boolean value
+asss.get.logical.value <- function(current.value = FALSE, option.name = "")
+{
+  #set value. is.logical = true
+  new.value  <- is.logical(current.value) & current.value
+  value      <- as.integer(asss.get.num.value(current.value = as.numeric(current.value), option.name = option.name))
+  if(as.integer(value) %in% c(0,1))
+  {
+     new.value  <- as.logical(value)
+  }
+
+  return(new.value)
+}
 
 #'@name assignSharingSettingsDS
 #'@title  assign the settings required to share parameters
@@ -37,60 +94,19 @@ assignSharingSettingsDS <- function()
                       footprint                = 9812735)
 
 
-      # capture values from the Opal server
-      # name of the param sharing structure R-server object
-      if (!is.null(getOption("dsSS_sharing_param.name.struct")))
-      {
-        if(is.character(getOption("dsSS_sharing_param.name.struct")) &
-           !identical(getOption("dsSS_sharing_param.name.struct"), ""))
-        {
-          settings$name.struct.sharing <- getOption("dsSS_sharing_param.name.struct")
-        }
-      }
+     # capture values from the Opal server
+     settings$name.struct.sharing      <-  asss.get.name(settings$name.struct.sharing,"dsSS_sharing_param.name.struct")
+     settings$name.struct.transfer     <-  asss.get.name(settings$name.struct.transfer,"dsSS_transfer.name.struct")
+     settings$sharing.allowed          <-  asss.get.logical.value(settings$sharing.allowed, "dsSS_sharing.allowed" )
+     settings$sharing.near.equal.limit <- asss.get.num.value(settings$sharing.near.equal.limit, "dsSS_sharing.near.equal.limit" )
+     settings$footprint                <- asss.get.num.value(settings$footprint,"dsSS_sharing.seed.footprint")
 
-     # name of the transfer structure R-server object
-     if (!is.null(getOption("dsSS_transfer.name.struct")))
-     {
-       if(is.character(getOption("dsSS_transfer.name.struct")) &
-         !identical(getOption("dsSS_transfer.name.struct"), ""))
-       {
-         settings$name.struct.transfer <- getOption("dsSS_transfer.name.struct")
-       }
-     }
+     # assign value in global env
+     env <- globalenv()
+     assign(get.settings.name(),settings,envir = env)
 
-     # set sharing of parameters of data
-     if(!is.null(getOption("dsSS_sharing.allowed")))
-     {
-        if (getOption("dsSS_sharing.allowed") == 0)
-        {
-          settings$sharing.allowed <- FALSE
-        }
-        else if (getOption("dsSS_sharing.allowed") == 1)
-        {
-          settings$sharing.allowed <- TRUE
-        }
-        else
-        {
-          settings$sharing.allowed <- FALSE
-        }
-     }
-
-     # set sharing of parameters of limit of verifying encoding data
-     if(!is.null(getOption("dsSS_sharing.near.equal.limit")))
-     {
-        settings$sharing.near.equal.limit <- getOption("dsSS_sharing.near.equal.limit")
-     }
-
-     # set seeds footprint for generation of random numbers
-     if(!is.null(getOption("dsSS_sharing.near.equal.limit")))
-     {
-       settings$footprint <- getOption("dsSS_sharing.seed.footprint")
-     }
-
-
-      env <- globalenv()
-      assign(get.settings.name(),settings,envir = env)
-      return(exists(get.settings.name(),envir = env))
+     # check it has been created and return outcome
+     return(exists(get.settings.name(),envir = env))
 }
 
 
