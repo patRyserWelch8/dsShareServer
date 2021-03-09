@@ -38,7 +38,8 @@ AggregateMethods:
   removeEncryptingDataDS,
   removeTransferDataDS,
   setPiDS,
-  get.settings
+  get.settings,
+  danger_options
 Options:
  dsSS_settings = 'settings_ds_share',
  dsSS_sharing_param.name.struct='sharing',
