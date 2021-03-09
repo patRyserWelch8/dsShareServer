@@ -104,7 +104,7 @@ compute.random.number <- function(seed = NULL, min.value = NULL, max.value = NUL
 is.sharing.allowed <- function()
 {
   settings <- get.settings()
-  return(settings$sharing.allowed)
+  return(as.logical(settings$sharing.allowed))
 }
 
 #'@name encode.data.with.sharing

@@ -98,8 +98,8 @@ assignSharingSettingsDS <- function()
      settings$name.struct.sharing      <-  asss.get.name(settings$name.struct.sharing,"dsSS_sharing_param.name.struct")
      settings$name.struct.transfer     <-  asss.get.name(settings$name.struct.transfer,"dsSS_transfer.name.struct")
      settings$sharing.allowed          <-  asss.get.logical.value(as.logical(settings$sharing.allowed), "dsSS_sharing.allowed" )
-     settings$sharing.near.equal.limit <- asss.get.num.value(settings$sharing.near.equal.limit, "dsSS_sharing.near.equal.limit" )
-     settings$footprint                <- asss.get.num.value(settings$footprint,"dsSS_sharing.seed.footprint")
+     settings$sharing.near.equal.limit <-  asss.get.num.value(settings$sharing.near.equal.limit, "dsSS_sharing.near.equal.limit" )
+     settings$footprint                <-  asss.get.num.value(settings$footprint,"dsSS_sharing.seed.footprint")
 
      # assign value in global env
      env <- globalenv()
