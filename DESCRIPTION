@@ -41,8 +41,8 @@ AggregateMethods:
   get.settings
 Options:
  dsSS_settings = 'settings_ds_share',
- dsSS_sharing_param.name.struct=sharing,
- dsSS_transfer.name.struct=transfer,
+ dsSS_sharing_param.name.struct='sharing',
+ dsSS_transfer.name.struct='transfer',
  dsSS_sharing.allowed=1,
  dsSS_sharing.near.equal.limit=1000000,
  dsSS_sharing.seed.footprint=1118066363
