@@ -45,10 +45,10 @@ asss.get.num.value <- function(current.value = 0, option.name = "")
 }
 
 # check the option and return a boolean value
-asss.get.logical.value <- function(current.value = FALSE, option.name = "")
+asss.get.logical.value <- function(current.value = TRUE, option.name = "")
 {
   #set value. is.logical = true
-  new.value  <- is.logical(current.value) & current.value
+  new.value  <- current.value
   value      <- as.integer(asss.get.num.value(current.value = as.numeric(current.value), option.name = option.name))
   if(as.integer(value) %in% c(0,1))
   {
