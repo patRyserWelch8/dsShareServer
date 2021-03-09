@@ -45,10 +45,10 @@ asss.get.num.value <- function(current.value = 0, option.name = "")
 }
 
 # check the option and return a boolean value
-asss.get.logical.value <- function(current.value = FALSE, option.name = "")
+asss.get.logical.value <- function(current.value = TRUE, option.name = "")
 {
   #set value. is.logical = true
-  new.value  <- is.logical(current.value) & current.value
+  new.value  <- current.value
   value      <- as.integer(asss.get.num.value(current.value = as.numeric(current.value), option.name = option.name))
   if(as.integer(value) %in% c(0,1))
   {
@@ -98,8 +98,8 @@ assignSharingSettingsDS <- function()
      settings$name.struct.sharing      <-  asss.get.name(settings$name.struct.sharing,"dsSS_sharing_param.name.struct")
      settings$name.struct.transfer     <-  asss.get.name(settings$name.struct.transfer,"dsSS_transfer.name.struct")
      settings$sharing.allowed          <-  asss.get.logical.value(as.logical(settings$sharing.allowed), "dsSS_sharing.allowed" )
-     settings$sharing.near.equal.limit <- asss.get.num.value(settings$sharing.near.equal.limit, "dsSS_sharing.near.equal.limit" )
-     settings$footprint                <- asss.get.num.value(settings$footprint,"dsSS_sharing.seed.footprint")
+     settings$sharing.near.equal.limit <-  asss.get.num.value(settings$sharing.near.equal.limit, "dsSS_sharing.near.equal.limit" )
+     settings$footprint                <-  asss.get.num.value(settings$footprint,"dsSS_sharing.seed.footprint")
 
      # assign value in global env
      env <- globalenv()
