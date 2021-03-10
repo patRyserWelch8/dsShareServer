@@ -45,14 +45,14 @@ asss.get.num.value <- function(current.value = 0, option.name = "")
 }
 
 # check the option and return a boolean value
-asss.get.logical.value <- function(current.value = TRUE, option.name = "")
+asss.get.logical.value <- function(current.value = 1, option.name = "")
 {
   #set value. is.logical = true
   new.value  <- current.value
   value      <- as.integer(asss.get.num.value(current.value = as.numeric(current.value), option.name = option.name))
   if(value %in% c(0,1))
   {
-     new.value  <- as.logical(value)
+     new.value  <- value
   }
 
   return(new.value)
@@ -95,6 +95,7 @@ assignSharingSettingsDS <- function()
 
 
      # capture values from the Opal server
+     setting.name                      <-  asss.get.name(".settings_ds_share","dsSS_settings")
      settings$name.struct.sharing      <-  asss.get.name(settings$name.struct.sharing,"dsSS_sharing_param.name.struct")
      settings$name.struct.transfer     <-  asss.get.name(settings$name.struct.transfer,"dsSS_transfer.name.struct")
      settings$sharing.allowed          <-  asss.get.logical.value(as.logical(settings$sharing.allowed), "dsSS_sharing.allowed" )
@@ -103,10 +104,11 @@ assignSharingSettingsDS <- function()
 
      # assign value in global env
      env <- globalenv()
-     assign(get.settings.name(),settings,envir = env)
+     assign(setting.name,settings,envir = env)
+     assign("dsSS", setting.name, envir = env)
 
      # check it has been created and return outcome
-     return(exists(get.settings.name(),envir = env))
+     return(exists(setting.name,envir = env) & exists("dsSS") & is.sharing.allowed())
 }
 
 
