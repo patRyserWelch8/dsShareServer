@@ -348,14 +348,8 @@ get.transfer <- function(envir = globalenv())
 #'
 get.settings.name <-  function()
 {
-  if(!is.null(getOption("dsSS_settings")))
-  {
-    return(getOption("dsSS_settings"))
-  }
-  else
-  {
-    return("settings_ds_share")
-  }
+  env = globalenv()
+  return(get("dsSS", envir = env))
 }
 
 #'@name get.settings
