@@ -302,6 +302,25 @@ test_that("no arguments",
     expect_error(isDataEncodedDS())
 })
 
+test_that("use mtcars and encoded data",
+{
+   assign("cars", mtcars, pos = 1)
+   assign("encoded", as.data.frame(encoded.data), pos = 1)
+   assign("dataset1", read_csv("data_files/DATASET1.csv"), pos = 1)
+   isDataEncodedDS(data.server = "mtcars", data.encoded = "encoded", data.held.in.server = "dataset1")
+
+   assign("cars", mtcars, pos = 1)
+   assign("encoded", as.data.frame(encoded.data), pos = 1)
+   assign("dataset2", read_csv("data_files/DATASET2.csv"), pos = 1)
+   isDataEncodedDS(data.server = "mtcars", data.encoded = "encoded", data.held.in.server = "dataset2")
+
+   assign("cars", mtcars, pos = 1)
+   assign("encoded", as.data.frame(encoded.data), pos = 1)
+   assign("dataset3", read_csv("data_files/DATASET2.csv"), pos = 1)
+   isDataEncodedDS(data.server = "mtcars", data.encoded = "encoded", data.held.in.server = "dataset3")
+})
+
+
 context("dsShareServer::isDataEncodeDS::expt")
 test_that("arguments are not correct",
 {
@@ -422,8 +441,6 @@ test_that("expected outcome restrictive",
 
   expect_false(isDataEncodedDS(data.server = "vector_A", data.encoded = "df_C", data.held.in.server = "F"))
   expect_true(isDataEncodedDS(data.server = "vector_small", data.encoded = "df_B", data.held.in.server = "all.data"))
-
-
 })
 
 

@@ -1,6 +1,6 @@
 # Boolean function that checks whether the arguments of the functions are suitable
 # for the comparison. Check the type and server variables have been created as data frame. Tibbles wrappes data frames.
-idds.are.params.correct <- function(data.server = NULL, data.encoded = NULL, data.held.in.server = NULL)
+idds.are.params.correct <- function(data.server = NULL, data.encoded = NULL, data.held.in.server = NULL, env = globalenv())
 {
   outcome <- FALSE
   if(is.null(.Options$dsSS_sharing.near.equal.limit) || is.null(.Options$dsSS_sharing.allowed))
@@ -9,13 +9,13 @@ idds.are.params.correct <- function(data.server = NULL, data.encoded = NULL, dat
   }
   else if(is.character(data.server) & is.character(data.encoded) & is.character(data.held.in.server))
   {
-    if(exists(data.server, where = 1) &
-       exists(data.encoded, where = 1) &
-       exists(data.held.in.server, where = 1))
+    if(exists(data.server, where = env) &
+       exists(data.encoded, where = env) &
+       exists(data.held.in.server, where = env))
     {
-       server         <- get(data.server, pos = 1)
-       encoded        <- get(data.encoded, pos = 1)
-       held.in.server <- get(data.held.in.server, pos = 1)
+       server         <- get(data.server, pos = env)
+       encoded        <- get(data.encoded, pos = env)
+       held.in.server <- get(data.held.in.server, pos = env)
 
        if (!is.data.frame(encoded))
        {
@@ -60,7 +60,7 @@ idds.are.significant.same <- function(server, encoded)
     else
     {
       t       <- stats::t.test(server, encoded, conf.level = 0.99, na.action=stats::na.omit)
-      mann    <- stats::wilcox.test(server, encoded, conf.level = 0.99)
+      mann    <- stats::wilcox.test(server, encoded, conf.level = 0.99, exact=FALSE)
       outcome <- t$p.value >= 0.01 || mann$p.value >= 0.01
     }
   }
@@ -260,7 +260,7 @@ isDataEncodedDS <- function(data.server = NULL, data.encoded = NULL, data.held.i
     is.encoded.data      <- FALSE
     is.encoded.variable  <- FALSE
     outcome              <- FALSE
-    param.correct        <- idds.are.params.correct(data.server, data.encoded, data.held.in.server )
+    param.correct        <- idds.are.params.correct(data.server, data.encoded, data.held.in.server)
 
 
     if(param.correct)
