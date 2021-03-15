@@ -47,6 +47,6 @@ Options:
  dsSS_sharing.allowed=1,
  dsSS_sharing.near.equal.limit=1000000,
  dsSS_sharing.seed.footprint=1118066363
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Depends: 
     R (>= 2.10)
