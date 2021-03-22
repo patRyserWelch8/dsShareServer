@@ -1,7 +1,7 @@
 Package: dsShareServer
 Type: Package
 Title: Provide the server-side functions for privacy-preserving sharing of parameters and encrypted datasets
-Version: 1.0.0
+Version: 1.0.9
 Author: person(given = "Patricia",
            family = "Ryser-Welch",
            role = c("aut", "cre"),
@@ -39,7 +39,8 @@ AggregateMethods:
   removeTransferDataDS,
   setPiDS,
   get.settings,
-  danger_options
+  danger_options,
+  assignDemoDataDS
 Options:
  dsSS_settings = 'settings_ds_share',
  dsSS_sharing_param.name.struct='sharing',

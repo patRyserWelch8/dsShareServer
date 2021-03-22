@@ -182,6 +182,7 @@ assign("receiver.2", get("sharing",pos=1), pos = 1)
 assign("b",getDataDS(master_mode =  FALSE), pos = 1)
 rm(sharing,pos=1)
 assign("sharing", get("master.1", pos = 1), pos=1)
+b <- get("b", pos = 1)
 assignDataDS(master_mode = TRUE, b$header,b$payload,b$property.a,b$property.b,b$property.c,b$property.d)
 assign("master.2", get("sharing",pos=1), pos = 1)
 

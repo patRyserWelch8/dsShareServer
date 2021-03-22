@@ -21,4 +21,8 @@
   {
     options(dsSS_sharing.near.equal.limit = 1000000)
   }
+
+  # breaks devtools check ...
+  #assign("datashield_mtcars_data", data("datashield_mtcars"), envir = globalenv())
+  #assign("datashield_encoded_data_data", data("encoded.data"), envir = globalenv())
 }

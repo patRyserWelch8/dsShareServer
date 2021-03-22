@@ -304,18 +304,18 @@ test_that("no arguments",
 
 test_that("use mtcars and encoded data",
 {
-   assign("cars", mtcars, pos = 1)
-   assign("encoded", as.data.frame(encoded.data), pos = 1)
+   assign("cars", dsShareServer::datashield_mtcars, pos = 1)
+   assign("encoded", as.data.frame(dsShareServer::encoded_data), pos = 1)
    assign("dataset1", read_csv("data_files/DATASET1.csv"), pos = 1)
    isDataEncodedDS(data.server = "mtcars", data.encoded = "encoded", data.held.in.server = "dataset1")
 
    assign("cars", mtcars, pos = 1)
-   assign("encoded", as.data.frame(encoded.data), pos = 1)
+   assign("encoded", as.data.frame(dsShareServer::encoded_data), pos = 1)
    assign("dataset2", read_csv("data_files/DATASET2.csv"), pos = 1)
    isDataEncodedDS(data.server = "mtcars", data.encoded = "encoded", data.held.in.server = "dataset2")
 
    assign("cars", mtcars, pos = 1)
-   assign("encoded", as.data.frame(encoded.data), pos = 1)
+   assign("encoded", as.data.frame(dsShareServer::encoded_data), pos = 1)
    assign("dataset3", read_csv("data_files/DATASET2.csv"), pos = 1)
    isDataEncodedDS(data.server = "mtcars", data.encoded = "encoded", data.held.in.server = "dataset3")
 })

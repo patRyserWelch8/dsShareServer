@@ -112,7 +112,8 @@ assignDataDS <- function(master_mode = TRUE, header = "", payload = "", property
 
   if (is.sharing.allowed())
   {
-    if ( is.character(header) & is.character(payload)
+
+    if (   is.character(header)   & is.character(payload)
          & is.numeric(property.a) &  is.numeric(property.b)
          & is.numeric(property.c) & is.numeric(property.d))
     {
