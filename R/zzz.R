@@ -4,12 +4,17 @@
 {
   if(is.null(getOption("dsSS_settings")))
   {
-    options(dsSS_settings = ".settings_ds_share")
+    options(dsSS_settings = "settings_ds_share")
   }
 
   if(is.null(getOption("dsSS_param.name.struct")))
   {
     options(dsSS_param.name.struct = "sharing")
+  }
+
+  if(is.null(getOption("dsSS_transfer.name.struct")))
+  {
+    options(dsSS_param.name.struct = "transfer")
   }
 
   if(is.null(getOption("dsSS_sharing.allowed")))
@@ -21,8 +26,4 @@
   {
     options(dsSS_sharing.near.equal.limit = 1000000)
   }
-
-  # breaks devtools check ...
-  #assign("datashield_mtcars_data", data("datashield_mtcars"), envir = globalenv())
-  #assign("datashield_encoded_data_data", data("encoded.data"), envir = globalenv())
 }

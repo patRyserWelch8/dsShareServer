@@ -5,16 +5,16 @@ source("definition_tests/def_process.R")
 context("encryptParamDS::expt::no_settings")
 test_that("no_setting",
 {
-  if(exists(".settings_ds_share",where = 1))
+  if(exists("settings_ds_share",where = 1))
   {
-    rm(".settings_ds_share",pos=1)
+    rm("settings_ds_share",pos=1)
   }
 
   if(exists("sharing",where = 1))
   {
     rm("sharing",pos=1)
   }
-  expect_equal(exists(".settings_ds_share",where = 1),FALSE)
+  expect_equal(exists("settings_ds_share",where = 1),FALSE)
   expect_error(encryptParamDS())
 })
 
@@ -40,9 +40,9 @@ assign("pi_value",pi_value, pos=1)
 context("encryptParamDS::expt::.is.shared.secrets.valid")
 test_that("no_sharing",
 {
-  expect_equal(exists(".settings_ds_share",where = 1),TRUE)
+  expect_equal(exists("settings_ds_share",where = 1),TRUE)
   expect_equal(exists("sharing",where = 1),FALSE)
-  expect_equal(epds.is.shared.secrets.valid(get(".settings_ds_share", pos = 1), pi_value),FALSE)
+  expect_equal(epds.is.shared.secrets.valid(get("settings_ds_share", pos = 1), pi_value),FALSE)
 })
 
 encryptDataDS(TRUE, FALSE)
@@ -78,12 +78,12 @@ master.3.5 <- get("sharing",pos=1)
 context("encryptParamDS::expt::.is.shared.secrets.valid")
 test_that("sharing and encryption exists",
 {
-  expect_equal(exists(".settings_ds_share",where = 1),TRUE)
+  expect_equal(exists("settings_ds_share",where = 1),TRUE)
   expect_equal(exists("sharing",where = 1),TRUE)
-  expect_equal(epds.is.shared.secrets.valid(get(".settings_ds_share", pos = 1),  master.3.5),TRUE)
-  expect_equal(epds.is.shared.secrets.valid(get(".settings_ds_share",pos = 1),  master.3),FALSE)
-  expect_equal(epds.is.shared.secrets.valid(get(".settings_ds_share", pos = 1),  master.2),FALSE)
-  expect_equal(epds.is.shared.secrets.valid(get(".settings_ds_share", pos = 1),  master.1),FALSE)
+  expect_equal(epds.is.shared.secrets.valid(get("settings_ds_share", pos = 1),  master.3.5),TRUE)
+  expect_equal(epds.is.shared.secrets.valid(get("settings_ds_share",pos = 1),  master.3),FALSE)
+  expect_equal(epds.is.shared.secrets.valid(get("settings_ds_share", pos = 1),  master.2),FALSE)
+  expect_equal(epds.is.shared.secrets.valid(get("settings_ds_share", pos = 1),  master.1),FALSE)
 })
 
 context("encryptParamDS::expt::..compute.encoding.ratio")
@@ -127,7 +127,7 @@ test_that("computations",
 context("encryptParamDS::expt::.is.encrypted.structure.valid")
 test_that("not valid",
 {
-   settings <- get(".settings_ds_share", pos = 1)
+   settings <- get("settings_ds_share", pos = 1)
    expect_equal(epds.is.encrypted.structure.valid(settings$data),FALSE)
 })
 
@@ -144,7 +144,7 @@ test_that("parameters  correct",
 context("encryptParamDS::expt::.is.encrypted.structure.valid")
 test_that(" valid",
 {
-  settings <- get(".settings_ds_share", pos = 1)
+  settings <- get("settings_ds_share", pos = 1)
   expect_equal(epds.is.encrypted.structure.valid(settings$data),TRUE)
 
 })

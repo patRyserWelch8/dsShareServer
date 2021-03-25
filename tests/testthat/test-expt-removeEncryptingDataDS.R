@@ -11,7 +11,7 @@ context("removeEncryptingDataDS::expt::settings_and_sharing")
   options(param.name.struct = "sharing")
   options(dsSS_sharing.allowed = 1)
   assignSharingSettingsDS()
-  settings <- get(".settings_ds_share", pos = 1)
+  settings <- get("settings_ds_share", pos = 1)
   # needs to add elements to be removed.
   sharing <- list(rubbish = 1, rubbish_2 = 3)
   sharing[[settings$no_columns]] <- 1

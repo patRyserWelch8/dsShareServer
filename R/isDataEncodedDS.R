@@ -17,26 +17,29 @@ idds.are.params.correct <- function(data.server = NULL, data.encoded = NULL, dat
        encoded        <- get(data.encoded, pos = env)
        held.in.server <- get(data.held.in.server, pos = env)
 
+       print(1)
        if (!is.data.frame(encoded))
        {
          stop("SERVER::ERR:SHARE::005")
        }
 
+       print(2)
        if (!is.data.frame(held.in.server))
        {
          stop("SERVER::ERR:SHARE::006")
        }
-
+       print(3)
        correct.format <- is.data.frame(server) || is.list(server) || is.matrix(server) || (length(server) > 1)
        if(!correct.format)
        {
          stop("SERVER::ERR:SHARE::007")
        }
 
-
+       print(4)
        outcome        <- correct.format &
                          is.data.frame(encoded) &
                          is.data.frame(held.in.server)
+
     }
   }
   else
@@ -220,13 +223,13 @@ idds.check.dimension <- function(server, encoded)
 #this function assign the setting "encoded.data" to the results of the checks
 idds.set.settings <- function(outcome = FALSE, data.encoded)
 {
-  if(exists("settings", where = 1))
+  if(exists(get.settings.name(), where = 1))
   {
     env                        <- globalenv()
     settings                   <- get.settings(envir = env)
     settings$encoded.data      <- outcome
     settings$encoded.data.name <- data.encoded
-    assign("settings", settings, envir = env)
+    assign(get.settings.name(), settings, envir = env)
   }
 }
 
@@ -261,6 +264,7 @@ isDataEncodedDS <- function(data.server = NULL, data.encoded = NULL, data.held.i
     is.encoded.variable  <- FALSE
     outcome              <- FALSE
     param.correct        <- idds.are.params.correct(data.server, data.encoded, data.held.in.server)
+    print(param.correct)
 
 
     if(param.correct)

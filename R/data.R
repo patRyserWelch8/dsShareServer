@@ -8,4 +8,4 @@
 #'  The columns have been obfuscated within a dataframe made of 10 columns. The encoded
 #'  values of hp is column 9 and qsec is column 4.
 #' @source \url{https://www.rdocumentation.org/packages/datasets/versions/3.6.2/topics/mtcars}
-"encoded_ddata"
+"encoded_data"

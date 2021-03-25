@@ -15,7 +15,7 @@ test_that("incorrect arguments",
 options(dsSS_sharing.near.equal.limit = 0.01)
 options(dsSS_param.name.struct = "sharing_testing")
 options(dsSS_sharing.allowed = 1)
-options(dsSS_settings = ".settings_ds_share")
+options(dsSS_settings = "settings_ds_share")
 
 test_that("incorrect arguments",
 {
@@ -43,7 +43,7 @@ test_that("correct arguments outcome true",
 options(dsSS_sharing.near.equal.limit = 0.01)
 options(dsSS_param.name.struct = "sharing_testing")
 options(dsSS_sharing.allowed = 0)
-options(dsSS_settings = ".settings_ds_share")
+options(dsSS_settings = "settings_ds_share")
 
 assignSharingSettingsDS()
 
@@ -62,7 +62,7 @@ test_that("correct arguments outcome true",
 options(dsSS_sharing.near.equal.limit = 0.01)
 options(dsSS_param.name.struct = "sharing_testing")
 options(dsSS_sharing.allowed = 1)
-options(dsSS_settings = ".settings_ds_share")
+options(dsSS_settings = "settings_ds_share")
 assignSharingSettingsDS()
 test_that("correct arguments outcome errors",
 {
@@ -302,23 +302,36 @@ test_that("no arguments",
     expect_error(isDataEncodedDS())
 })
 
+
 test_that("use mtcars and encoded data",
 {
-   assign("cars", dsShareServer::datashield_mtcars, pos = 1)
-   assign("encoded", as.data.frame(dsShareServer::encoded_data), pos = 1)
+
+   options(dsSS_sharing.near.equal.limit = 1000)
+   options(dsSS_param.name.struct = "sharing_testing")
+   options(dsSS_sharing.allowed = 1)
+   options(dsSS_settings = "settings_ds_share")
+
+   expect_true(assignDemoDataDS())
+
+   expect_true(exists("datashield.mtcars.data", where = 1))
+   expect_true(exists("datashield.encrypted.data", where = 1))
    assign("dataset1", read_csv("data_files/DATASET1.csv"), pos = 1)
-   isDataEncodedDS(data.server = "mtcars", data.encoded = "encoded", data.held.in.server = "dataset1")
-
-   assign("cars", mtcars, pos = 1)
-   assign("encoded", as.data.frame(dsShareServer::encoded_data), pos = 1)
    assign("dataset2", read_csv("data_files/DATASET2.csv"), pos = 1)
-   isDataEncodedDS(data.server = "mtcars", data.encoded = "encoded", data.held.in.server = "dataset2")
+   assign("dataset3", read_csv("data_files/DATASET3.csv"), pos = 1)
 
-   assign("cars", mtcars, pos = 1)
-   assign("encoded", as.data.frame(dsShareServer::encoded_data), pos = 1)
-   assign("dataset3", read_csv("data_files/DATASET2.csv"), pos = 1)
-   isDataEncodedDS(data.server = "mtcars", data.encoded = "encoded", data.held.in.server = "dataset3")
+   expect_true(isDataEncodedDS(data.server = "datashield.mtcars.data", data.encoded = "datashield.encrypted.data", data.held.in.server = "dataset1"))
+
+
+
+   expect_true(isDataEncodedDS(data.server = "datashield.mtcars.data", data.encoded = "datashield.encrypted.data", data.held.in.server = "dataset2"))
+
+
+
+   expect_true(isDataEncodedDS(data.server = "datashield.mtcars.data", data.encoded = "datashield.encrypted.data", data.held.in.server = "dataset3"))
+
+
 })
+
 
 
 context("dsShareServer::isDataEncodeDS::expt")
@@ -331,7 +344,7 @@ test_that("arguments are not correct",
 options(dsSS_sharing.near.equal.limit = 0.01)
 options(dsSS_param.name.struct = "sharing_testing")
 options(dsSS_sharing.allowed = 1)
-options(dsSS_settings = ".settings_ds_share")
+options(dsSS_settings = "settings_ds_share")
 assignSharingSettingsDS()
 test_that("expected outcome not restrictive",
 {
@@ -390,7 +403,7 @@ test_that("expected outcome not restrictive",
 options(dsSS_sharing.near.equal.limit = 1000000)
 options(dsSS_param.name.struct = "sharing_testing")
 options(dsSS_sharing.allowed = 1)
-options(dsSS_settings = ".settings_ds_share")
+options(dsSS_settings = "settings_ds_share")
 assignSharingSettingsDS()
 test_that("expected outcome restrictive",
 {

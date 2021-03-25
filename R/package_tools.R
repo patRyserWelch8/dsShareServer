@@ -376,9 +376,10 @@ get.settings.name <-  function()
   env = globalenv()
   if (!exists("dsSS"))
   {
-    setting.name <-  get.name(".settings_ds_share","dsSS_settings")
+    setting.name <-  get.name("settings_ds_share","dsSS_settings")
     assign("dsSS", setting.name, envir = env)
   }
+
   return(get("dsSS", envir = env))
 }
 

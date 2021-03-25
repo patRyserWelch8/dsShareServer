@@ -5,16 +5,17 @@ asss.get.num.value <- function(current.value = 0, option.name = "")
 {
   # new.value
   new.value <- current.value
-
   # obtain value
   # obtain the option value
   value     <- getOption(option.name)
+
   if (is.character(value) || is.numeric(value))
   {
     # check the contains some digits
     if (grepl("\\d", value))
     {
       value <- as.numeric(value)
+
       if(!is.na(value))
       {
         new.value <- value
@@ -49,7 +50,7 @@ assignSharingSettingsDS <- function()
 {
     # create basic structure with default value
     settings <- list( sharing.allowed          = 1,
-                      sharing.near.equal.limit = 1000,
+                      sharing.near.equal.limit = 1e+6,
                       encoded.data             = FALSE,
                       encoded.data.name        = "no_name",
                       name.struct.sharing      = "sharing",

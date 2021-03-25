@@ -8,9 +8,12 @@ test_that("no option set",
   expect_error(isEndOfDataDS(data_encoded = vector_a))
   expect_error(isEndOfDataDS(data_encoded = "vector_a"))
 })
+rm(list = ls(pos = 1), pos = 1)
+options(dsSS_param.name.struct = "sharing_testing")
+options(dsSS_sharing.allowed = 0)
+options(dsSS_sharing.near.equal.limit = 1000000)
+options(dsSS_settings = "settings_ds_share")
 
-set.default.options.to.null()
-set.not.allowed()
 assignSharingSettingsDS()
 
 test_that("option set, not allowed",
@@ -45,13 +48,17 @@ if(exists("transfer",where = 1))
   rm(list = "transfer", pos = 1)
 }
 
+
+options(dsSS_param.name.struct = "sharing_testing")
 options(dsSS_sharing.allowed = 1)
+options(dsSS_sharing.near.equal.limit = 1000000)
+options(dsSS_settings = "settings_ds_share")
+
 test_that("option set, allowed",
 {
   expect_error(isEndOfDataDS())
   expect_error(isEndOfDataDS(data_encoded = vector_a))
   expect_error(isEndOfDataDS(data_encoded = "vector_A"))
-  expect_error(isEndOfDataDS(data_encoded = "df_B"))
   expect_error(isEndOfDataDS(data_encoded = "F")) #exist but was not encoded data as above
   expect_error(isEndOfDataDS(data_encoded = "H")) #does not exist
 })

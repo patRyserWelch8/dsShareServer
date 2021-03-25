@@ -3,13 +3,21 @@ ndds.encode.encoded.data <- function(settings, transfer, data.encoded, no.rows, 
 {
   # get the settings, transfer data, and encoded data
   encoded      <- get(data.encoded, envir = env)
-  tranfer.data <- encode.data.no.sharing()
+  transfer.data <- encode.data.no.sharing()
+  print(transfer.data)
 
+  #check current_row exists
+  if (!(settings$current_row %in% names(transfer)))
+  {
+    transfer[[settings$current_row]] <- 1
+  }
 
   # calculate range of rows
   start     <- transfer[[settings$current_row]]
   max.rows  <- nrow(get(data.encoded, envir = env))
   diff.rows <- max.rows - start
+  print(diff.rows)
+
 
   # check the current row has not exceeded or reach the end of a data frame
   if (start < max.rows & diff.rows > 0)
@@ -25,11 +33,24 @@ ndds.encode.encoded.data <- function(settings, transfer, data.encoded, no.rows, 
 
     # prepare for transfer
     names(encoded)  <- NULL
-    data            <- as.numeric(unlist(encoded[c(start:end),]))
-    seed            <- generate.secure.seed(settings)
-    set.seed(seed)
-    index           <- stats::runif(1, min = .Machine$double.xmin, max  = .Machine$double.xmax)
-    transfer.data   <- encode.data.with.sharing(data, ncol(encoded), index)
+    print(start)
+    print(end)
+    print(transfer.data)
+    if(start < max.rows)
+    {
+
+      unlist.data     <- unlist(encoded[c(start:end),])
+      print(unlist.data)
+      data            <- as.numeric(unlist.data)
+      print(data)
+      seed            <- generate.secure.seed(settings)
+      set.seed(seed)
+      index           <- stats::runif(1, min = .Machine$double.xmin, max  = .Machine$double.xmax)
+      transfer.data   <- encode.data.with.sharing(data, ncol(encoded), index)
+      print("UUUUUU")
+      print(transfer.data)
+    }
+
 
     # update transfer
     transfer[[settings$current_row]] <- end
@@ -56,6 +77,7 @@ nextDS <- function(data_encoded = NULL, no.rows = 1000)
     env                       <- globalenv()
     settings                  <- get.settings(envir = env)
     transfer                  <- get.transfer(envir = env)
+
     arg.and.settings.suitable <- are.arg.and.settings.suitable(data_encoded)
     is.correct.type           <- is.numeric(no.rows)
     is.positive               <- FALSE
