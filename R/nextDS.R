@@ -97,7 +97,7 @@ ndds.encode.encoded.data <- function(settings, transfer, data.encoded, no.rows, 
 #'@return a list made of encoded data
 #'@seealso \link[dsShareServer]{nextDS}, \link[dsShareServer]{isEndOfDataDS}
 #'@export
-nextDS <- function(data.encoded = NULL, no.rows = 1000, start = FALSE)
+nextDS <- function(data.encoded = NULL, no.rows = 1000)
 {
   #check for sharing allowed by data owners. Error thrown if not allowed
   allowed     <- is.sharing.allowed()
