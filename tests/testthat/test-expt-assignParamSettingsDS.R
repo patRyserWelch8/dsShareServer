@@ -35,11 +35,11 @@ test_that("everyting is incorrect",
 
 options(dsSS_sharing_param.name.struct = "sharing")
 options(dsSS_sharing.allowed = 0)
-assignSharingSettingsDS()
 
 context("assignParamSettingsDS::smk::not_allowed_sharing")
 test_that("not allowed sharingt",
 {
+  expect_error(assignSharingSettingsDS())
   expect_equal(exists("settings_ds_share", where = 1), TRUE)
   expect_error(assignParamSettingsDS())
   expect_error(assignParamSettingsDS(123))

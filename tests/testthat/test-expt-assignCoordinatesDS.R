@@ -6,12 +6,13 @@ rm(list=ls(),pos=1)
 
 options(dsSS_sharing_param.name.struct = "sharing")
 options(dsSS_sharing.allowed = 0)
-assignSharingSettingsDS()
+
 
 
 context("assignCoordinatesDS::expt:: incorrect parameters::no_coordinates::not_allowed")
 test_that("parameters",
 {
+  expect_error(assignSharingSettingsDS())
   expect_error(assignCoordinatesDS())
   expect_error(assignCoordinatesDS(1))
   expect_error(assignCoordinatesDS("FM1",TRUE))

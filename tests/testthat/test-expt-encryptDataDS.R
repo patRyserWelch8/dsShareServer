@@ -31,11 +31,13 @@ test_that("variables exists",
 
 set.default.options.restrictive
 options(dsSS_sharing.allowed = 0)
-assignSharingSettingsDS()
+
 
 context("encryptDataDS::expt::not_allowed_to_share")
 test_that("not_allowed_to_take_part",
 {
+  expect_error(assignSharingSettingsDS())
+
   expect_error(encryptDataDS(TRUE, FALSE))
 })
 

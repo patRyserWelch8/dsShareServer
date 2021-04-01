@@ -2,7 +2,7 @@
 
 options(dsSS_sharing.allowed = 1)
 
-print("assignSharingSettings")
+print("assignSharingSettingsDS")
 print(assignSharingSettingsDS())
 
 print("Dataset 1")
@@ -12,10 +12,10 @@ DATASET1 <- read_csv("tests/testthat/data_files/DATASET1.csv")
 
 print("demo data")
 print(assignDemoDataDS())
-assignVariableSettingsDS("datashield.encrypted.data")
+assignVariable("datashield.encrypted.data")
 
 print("encoded data")
-encoded.data <- isDataEncodedDS("datashield.mtcars.data", "datashield.encrypted.data", "DATASET1")
+encoded.data <- isDataEncodedDSDS("datashield.mtcars.data", "datashield.encrypted.data", "DATASET1")
 
 print("nextDS")
 nextDS("datashield.encrypted.data", no.rows = 5)

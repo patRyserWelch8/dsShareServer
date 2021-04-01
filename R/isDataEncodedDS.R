@@ -17,25 +17,25 @@ idds.are.params.correct <- function(data.server = NULL, data.encoded = NULL, dat
        encoded        <- get(data.encoded, pos = env)
        held.in.server <- get(data.held.in.server, pos = env)
 
-       print(1)
+
        if (!is.data.frame(encoded))
        {
          stop("SERVER::ERR:SHARE::005")
        }
 
-       print(2)
+
        if (!is.data.frame(held.in.server))
        {
          stop("SERVER::ERR:SHARE::006")
        }
-       print(3)
+
        correct.format <- is.data.frame(server) || is.list(server) || is.matrix(server) || (length(server) > 1)
        if(!correct.format)
        {
          stop("SERVER::ERR:SHARE::007")
        }
 
-       print(4)
+
        outcome        <- correct.format &
                          is.data.frame(encoded) &
                          is.data.frame(held.in.server)
@@ -221,6 +221,7 @@ idds.check.dimension <- function(server, encoded)
 }
 
 #this function assign the setting "encoded.data" to the results of the checks
+# redundant instead use assignVariable
 idds.set.settings <- function(outcome = FALSE, data.encoded)
 {
   if(exists(get.settings.name(), where = 1))
@@ -233,7 +234,7 @@ idds.set.settings <- function(outcome = FALSE, data.encoded)
   }
 }
 
-#'@name isDataEncodedDS
+#'@name isDataEncodedDSDS
 #'@title check some R objects are suitably encoded
 #'@details This server function verifies the following rules are applied to the encoded data
 #'against (1) a server variable and (2) a datasets held in the server itself.
@@ -255,7 +256,7 @@ idds.set.settings <- function(outcome = FALSE, data.encoded)
 #'@return TRUE if the encoding is suitable. Otherwise false.
 #'@export
 #'
-isDataEncodedDS <- function(data.server = NULL, data.encoded = NULL, data.held.in.server = NULL)
+isDataEncodedDSDS <- function(data.server = NULL, data.encoded = NULL, data.held.in.server = NULL)
 {
 
   if(is.sharing.allowed())
@@ -264,7 +265,7 @@ isDataEncodedDS <- function(data.server = NULL, data.encoded = NULL, data.held.i
     is.encoded.variable  <- FALSE
     outcome              <- FALSE
     param.correct        <- idds.are.params.correct(data.server, data.encoded, data.held.in.server)
-    print(param.correct)
+
 
 
     if(param.correct)
@@ -289,7 +290,8 @@ isDataEncodedDS <- function(data.server = NULL, data.encoded = NULL, data.held.i
         }
       }
       outcome <- is.encoded.data & is.encoded.variable
-      idds.set.settings(outcome, data.encoded)
+      assignSharingSettingsDS()
+      assignVariable(var_name = data.encoded)
     }
     else
     {

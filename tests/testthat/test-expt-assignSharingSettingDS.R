@@ -9,7 +9,6 @@ test_that("exists list",
    }
    assignSharingSettingsDS()
    settings.name <- getOption("dsSS_settings")
-   print(settings.name)
    expect_equal(exists(settings.name, where = 1), TRUE)
 })
 
@@ -38,7 +37,7 @@ test_that("with options",
 
    options(dsSS_sharing.allowed = 0)
    set.default.options.restrictive()
-   assignSharingSettingsDS()
+   expect_error(assignSharingSettingsDS())
    settings <- get(settings.name, pos=1)
    expect_equal(settings$name.struct.sharing, getOption("dsSS_sharing_param.name.struct"))
    expect_equal(settings$sharing.allowed, 0)
@@ -47,14 +46,14 @@ test_that("with options",
 test_that("with options incorrect",
 {
    set.default.options.incorrect.struct()
-   assignSharingSettingsDS()
+   expect_error(assignSharingSettingsDS())
    settings.name <- getOption("dsSS_settings")
    settings <- get(settings.name, pos=1)
    expect_equal(settings$name.struct.sharing, "sharing")
    expect_equal(settings$sharing.allowed, 0)
 
    set.default.options.incorrect.allowed()
-   assignSharingSettingsDS()
+   expect_error(assignSharingSettingsDS())
    settings <- get(settings.name, pos=1)
    expect_equal(settings$name.struct.sharing, "sharing")
    expect_equal(settings$sharing.allowed, 0)

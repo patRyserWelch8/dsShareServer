@@ -1,11 +1,10 @@
-#'@name   assignVariableSettingsDS
+#'@name   assignVariable
 #'@title  assigns the name of R-server object to the settings used to transfer some encoded information
 #'@description This server function sets a settings specific to transfer of encoded data; i.e.,
 #'the name of the R object used.
 #'@param var_name  a character string with the name of the server R-server object used int the transfer
 #'@return TRUE
-#'@export
-assignVariableSettingsDS <- function(var_name = NULL)
+assignVariable <- function(var_name = NULL)
 {
   if(is.sharing.allowed())
   {
@@ -37,9 +36,6 @@ assignVariableSettingsDS <- function(var_name = NULL)
     {
       stop("SERVER::ERR::SHARING::022")
     }
-
-
-
     return(any("encoded.data.name" %in% names(settings)) &
            identical(settings$encoded.data.name, var_name))
   }

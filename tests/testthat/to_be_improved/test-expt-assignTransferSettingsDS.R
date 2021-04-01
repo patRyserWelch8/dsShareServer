@@ -1,4 +1,4 @@
-# The function has now been rename assignVariableSettingsDS .... test needs to be renamed and extended.
+# The function has now been rename assignVariable .... test needs to be renamed and extended.
 context("assignTransferSettingsDS::expt::no_settings")
 test_that("no_settings",
 {

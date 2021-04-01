@@ -4,10 +4,10 @@
 \alias{isEndOfDataDS}
 \title{Verifies the end of some encoded data on the server has been reached}
 \usage{
-isEndOfDataDS(data_encoded = NULL)
+isEndOfDataDS(data.encoded = NULL)
 }
 \arguments{
-\item{data_encoded}{- character argument specifying the name of the encoded data on a data server}
+\item{data.encoded}{- character argument specifying the name of the encoded data on a data server}
 }
 \value{
 A boolean value. TRUE if the last row of the encoded data has been transferred.
@@ -18,5 +18,5 @@ This server function indicates whether the number of rows transferred has exceed
 of equal to the number of rows in the encoded data frame.
 }
 \seealso{
-\link[dsShareServer]{nextDS}, \link[dsShareServer]{isDataEncodedDS}
+\link[dsShareServer]{nextDS}, \link[dsShareServer]{isDataEncodedDSDS}
 }

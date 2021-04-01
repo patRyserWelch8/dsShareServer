@@ -9,11 +9,12 @@ test_that("nothing has been set",
   expect_error(nextDS("df_B",10))
 })
 
-set.not.allowed()
-assignSharingSettingsDS()
+
 
 test_that("not allowed and nothing has been set",
 {
+  set.not.allowed()
+  expect_error(assignSharingSettingsDS())
   expect_error(nextDS())
   expect_error(nextDS("df_B",10))
 })
@@ -47,7 +48,7 @@ source("data_files/variables.R")
 assign("all.data", rbind(get("D", pos = 1), get("E", pos = 1), get("F", pos = 1)) , pos = 1)
 all.data <- get("all.data", pos= 1)
 
-data.encoded <- isDataEncodedDS(data.server = "vector_A", data.encoded = "df_B", data.held.in.server = "all.data")
+data.encoded <- isDataEncodedDSDS(data.server = "vector_A", data.encoded = "df_B", data.held.in.server = "all.data")
 
 test_that("allowed and encoding set",
 {
@@ -67,23 +68,31 @@ test_that("allowed and no encoding set",
   set.allowed()
   options(dsSS_sharing.allowed = 1)
   assignSharingSettingsDS()
-  assignVariableSettingsDS("df_B")
 
   source("data_files/variables.R")
   assign("all.data", rbind(get("D", pos = 1), get("E", pos = 1), get("F", pos = 1)) , pos = 1)
   all.data <- get("all.data", pos= 1)
 
-  data.encoded <- isDataEncodedDS(data.server = "vector_A", data.encoded = "df_B", data.held.in.server = "all.data")
-  EOF     <- isEndOfDataDS(data_encoded = "df_B")
-  df_B    <- get("df_B", pos = 1)
-  counter <- 1
+  data.encoded  <- isDataEncodedDSDS(data.server = "vector_A", data.encoded = "df_B", data.held.in.server = "all.data")
+  EOF           <- isEndOfDataDS(data.encoded = "df_B")
+  df_B          <- get("df_B", pos = 1)
+  counter       <- 1
+
+
+  transfer      <- get("transfer", pos = 1)
+  print(transfer$current_row)
+  expect_true(transfer$current_row == counter)
+
+
+
   while(!EOF)
   {
     data.transfer <- nextDS("df_B",10)
     counter       <- counter  + 10
-    EOF           <- isEndOfDataDS(data_encoded = "df_B")
+    EOF           <- isEndOfDataDS(data.encoded = "df_B")
     transfer      <- get("transfer", pos = 1)
 
+    print(transfer$current_row)
     expect_true(transfer$current_row == counter)
     expect_true(identical(data.transfer$header,"FM1"))
     expect_true(is.numeric(data.transfer$property.a))

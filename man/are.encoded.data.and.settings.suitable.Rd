@@ -28,7 +28,7 @@ function.
 Throws the following errors:
 "SERVER::ERR:SHARE::002"  sharing is not allowed or the disclosure setting has not been set to 0 or 1
 "SERVER::ERR:SHARE::005"  data.encoded does not exists on the server
-"SERVER::ERR:SHARE::008"  data.encoded is not the same R object as previously validated \code{isDataEncodedDS}
-"SERVER::ERR:SHARE::009"  data.encoded has yet to be validated by \code{isDataEncodedDS}
+"SERVER::ERR:SHARE::008"  data.encoded is not the same R object as previously validated \code{isDataEncodedDSDS}
+"SERVER::ERR:SHARE::009"  data.encoded has yet to be validated by \code{isDataEncodedDSDS}
 "SERVER::ERR:SHARE::010"  data.encoded is not a character vector
 }

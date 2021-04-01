@@ -11,11 +11,12 @@ test_that("no_settings",
 
 options(dsSS_sharing_param.name.struct = "sharing")
 options(dsSS_sharing.allowed = 0)
-assignSharingSettingsDS()
+
 
 context("getDataDS::expt::no_sharing")
 test_that("no_sharing",
 {
+  expect_error(assignSharingSettingsDS())
   expect_error(getDataDS())
   assign("sharing", list(), pos = globalenv())
   expect_true(is.list(encode.encrypted.data(settings = get.settings(envir = globalenv()))))
