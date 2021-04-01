@@ -64,7 +64,7 @@ The package makes available to the parser the following functions. Documentation
 * encryptParamDS
 * removeEncryptingDataDS
 * removeExchangeDataDS
-* isDataEncodedDSDS
+* isDataEncodedDS
 * nextDS
 * isEndOfDataDS
 

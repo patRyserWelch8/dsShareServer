@@ -234,7 +234,7 @@ idds.set.settings <- function(outcome = FALSE, data.encoded)
   }
 }
 
-#'@name isDataEncodedDSDS
+#'@name isDataEncodedDS
 #'@title check some R objects are suitably encoded
 #'@details This server function verifies the following rules are applied to the encoded data
 #'against (1) a server variable and (2) a datasets held in the server itself.
@@ -256,7 +256,7 @@ idds.set.settings <- function(outcome = FALSE, data.encoded)
 #'@return TRUE if the encoding is suitable. Otherwise false.
 #'@export
 #'
-isDataEncodedDSDS <- function(data.server = NULL, data.encoded = NULL, data.held.in.server = NULL)
+isDataEncodedDS <- function(data.server = NULL, data.encoded = NULL, data.held.in.server = NULL)
 {
 
   if(is.sharing.allowed())
@@ -290,8 +290,7 @@ isDataEncodedDSDS <- function(data.server = NULL, data.encoded = NULL, data.held
         }
       }
       outcome <- is.encoded.data & is.encoded.variable
-      assignSharingSettingsDS()
-      assignVariable(var_name = data.encoded)
+      assignVariable(data.encoded, outcome)
     }
     else
     {

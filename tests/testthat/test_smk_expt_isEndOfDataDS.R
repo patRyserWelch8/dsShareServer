@@ -8,6 +8,7 @@ test_that("no option set",
   expect_error(isEndOfDataDS(data.encoded = vector_a))
   expect_error(isEndOfDataDS(data.encoded = "vector_a"))
 })
+
 rm(list = ls(pos = 1), pos = 1)
 options(dsSS_param.name.struct = "sharing_testing")
 options(dsSS_sharing.allowed = 0)
@@ -40,7 +41,7 @@ source("data_files/variables.R")
 
 
 assignSharingSettingsDS()
-data.encoded <- isDataEncodedDSDS(data.server = "vector_A", data.encoded = "df_B", data.held.in.server = "all.data")
+data.encoded <- isDataEncodedDS(data.server = "vector_A", data.encoded = "df_B", data.held.in.server = "all.data")
 
 if(exists("transfer",where = 1))
 {
@@ -88,11 +89,11 @@ test_that("option set, allowed",
 
   # step 1 - set settings
   expect_true(assignSharingSettingsDS())
-  expect_true(assignVariable(var_name = "df_B"))
+
 
 
   # step 2 - check encodedDataDS
-  expect_true(isDataEncodedDSDS(data.server = "vector_A", data.encoded = "df_B", data.held.in.server = "all.data"))
+  expect_true(isDataEncodedDS(data.server = "vector_A", data.encoded = "df_B", data.held.in.server = "all.data"))
 
 
   # step 3 - iterate through

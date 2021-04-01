@@ -15,7 +15,7 @@ print(assignDemoDataDS())
 assignVariable("datashield.encrypted.data")
 
 print("encoded data")
-encoded.data <- isDataEncodedDSDS("datashield.mtcars.data", "datashield.encrypted.data", "DATASET1")
+encoded.data <- isDataEncodedDS("datashield.mtcars.data", "datashield.encrypted.data", "DATASET1")
 
 print("nextDS")
 nextDS("datashield.encrypted.data", no.rows = 5)

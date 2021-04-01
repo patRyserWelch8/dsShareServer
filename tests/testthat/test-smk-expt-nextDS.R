@@ -48,7 +48,7 @@ source("data_files/variables.R")
 assign("all.data", rbind(get("D", pos = 1), get("E", pos = 1), get("F", pos = 1)) , pos = 1)
 all.data <- get("all.data", pos= 1)
 
-data.encoded <- isDataEncodedDSDS(data.server = "vector_A", data.encoded = "df_B", data.held.in.server = "all.data")
+data.encoded <- isDataEncodedDS(data.server = "vector_A", data.encoded = "df_B", data.held.in.server = "all.data")
 
 test_that("allowed and encoding set",
 {
@@ -73,7 +73,7 @@ test_that("allowed and no encoding set",
   assign("all.data", rbind(get("D", pos = 1), get("E", pos = 1), get("F", pos = 1)) , pos = 1)
   all.data <- get("all.data", pos= 1)
 
-  data.encoded  <- isDataEncodedDSDS(data.server = "vector_A", data.encoded = "df_B", data.held.in.server = "all.data")
+  data.encoded  <- isDataEncodedDS(data.server = "vector_A", data.encoded = "df_B", data.held.in.server = "all.data")
   EOF           <- isEndOfDataDS(data.encoded = "df_B")
   df_B          <- get("df_B", pos = 1)
   counter       <- 1
@@ -82,8 +82,6 @@ test_that("allowed and no encoding set",
   transfer      <- get("transfer", pos = 1)
   print(transfer$current_row)
   expect_true(transfer$current_row == counter)
-
-
 
   while(!EOF)
   {

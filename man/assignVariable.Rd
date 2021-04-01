@@ -4,10 +4,12 @@
 \alias{assignVariable}
 \title{assigns the name of R-server object to the settings used to transfer some encoded information}
 \usage{
-assignVariable(var_name = NULL)
+assignVariable(encoded.data = NULL, is.encoded.data = FALSE)
 }
 \arguments{
-\item{var_name}{a character string with the name of the server R-server object used int the transfer}
+\item{encoded.data}{a character string with the name of the server R-server object used int the transfer}
+
+\item{is.encoded.data}{a logical argument to indicate data has been encoded. Set to false by default}
 }
 \value{
 TRUE

@@ -31,7 +31,7 @@ AggregateMethods:
   encryptParamDS,
   getCoordinatesDS,
   getDataDS,
-  isDataEncodedDSDS,
+  isDataEncodedDS,
   isEndOfDataDS,
   nextDS,
   removeEncryptingDataDS,

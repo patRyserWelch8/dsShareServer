@@ -5,7 +5,7 @@
 #'@param data.encoded - character argument specifying the name of the encoded data on a data server
 #'@return A boolean value. TRUE if the last row of the encoded data has been transferred.
 #'Otherwise, returns FALSE
-#'@seealso \link[dsShareServer]{nextDS}, \link[dsShareServer]{isDataEncodedDSDS}
+#'@seealso \link[dsShareServer]{nextDS}, \link[dsShareServer]{isDataEncodedDS}
 #'@export
 #'
 isEndOfDataDS <- function(data.encoded = NULL)

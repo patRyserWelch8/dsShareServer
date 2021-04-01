@@ -18,5 +18,5 @@ This server function indicates whether the number of rows transferred has exceed
 of equal to the number of rows in the encoded data frame.
 }
 \seealso{
-\link[dsShareServer]{nextDS}, \link[dsShareServer]{isDataEncodedDSDS}
+\link[dsShareServer]{nextDS}, \link[dsShareServer]{isDataEncodedDS}
 }
