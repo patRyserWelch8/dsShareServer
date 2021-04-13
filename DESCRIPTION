@@ -39,7 +39,8 @@ AggregateMethods:
   setPiDS,
   get.settings,
   danger_options,
-  assignDemoDataDS
+  assignDemoDataDS,
+  concatDataToVariableDS
 Options:
  dsSS_settings=settings_ds_share,
  dsSS_sharing_param.name.struct=sharing,

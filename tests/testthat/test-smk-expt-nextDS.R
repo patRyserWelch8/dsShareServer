@@ -80,7 +80,6 @@ test_that("allowed and no encoding set",
 
 
   transfer      <- get("transfer", pos = 1)
-  print(transfer$current_row)
   expect_true(transfer$current_row == counter)
 
   while(!EOF)
@@ -90,7 +89,6 @@ test_that("allowed and no encoding set",
     EOF           <- isEndOfDataDS(data.encoded = "df_B")
     transfer      <- get("transfer", pos = 1)
 
-    print(transfer$current_row)
     expect_true(transfer$current_row == counter)
     expect_true(identical(data.transfer$header,"FM1"))
     expect_true(is.numeric(data.transfer$property.a))
