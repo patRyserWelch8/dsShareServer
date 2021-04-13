@@ -2,9 +2,10 @@
 
 export(assignCoordinatesDS)
 export(assignDataDS)
+export(assignDemoDataDS)
 export(assignParamSettingsDS)
 export(assignSharingSettingsDS)
-export(assignVariableSettingsDS)
+export(concatDataToVariableDS)
 export(danger_options)
 export(decryptDataDS)
 export(decryptParamDS)

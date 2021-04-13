@@ -6,12 +6,13 @@ rm(list=ls(),pos=1)
 
 options(dsSS_sharing_param.name.struct = "sharing")
 options(dsSS_sharing.allowed = 0)
-assignSharingSettingsDS()
+
 
 
 context("assignCoordinatesDS::expt:: incorrect parameters::no_coordinates::not_allowed")
 test_that("parameters",
 {
+  expect_error(assignSharingSettingsDS())
   expect_error(assignCoordinatesDS())
   expect_error(assignCoordinatesDS(1))
   expect_error(assignCoordinatesDS("FM1",TRUE))
@@ -133,7 +134,7 @@ test_that("with_coordinates",
   acds.save.coordinates(c(0.5, 0.5,0.5,0.5),2)
   expect_equal(exists("sharing",where = 1), TRUE)
   list.fields <- names(sharing)
-  settings <- get(".settings_ds_share", pos = 1)
+  settings <- get("settings_ds_share", pos = 1)
   expect_equal(settings$index_x %in% list.fields, TRUE)
   expect_equal(settings$index_y %in% list.fields, TRUE)
   expect_equal(length(sharing[[settings$index_x]]),2)
@@ -167,7 +168,7 @@ test_that("with_coordinates",
 context("assignCoordinatesDS::expt::.is.assigned.coordinates.correct::with_coordinates")
 test_that("with_coordinates",
 {
-  expect_equal(acds.is.assigned.coordinates.correct(get(".settings_ds_share", pos = 1)),TRUE)
+  expect_equal(acds.is.assigned.coordinates.correct(get("settings_ds_share", pos = 1)),TRUE)
 })
 
 

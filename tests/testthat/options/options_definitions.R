@@ -7,7 +7,7 @@ set.default.options.not.restrictive <- function()
   options(dsSS_sharing.near.equal.limit = 0.01)
   options(dsSS_param.name.struct = "sharing_testing")
   options(dsSS_sharing.allowed = 1)
-  options(dsSS_settings = ".settings_ds_share")
+  options(dsSS_settings = "settings_ds_share")
 }
 
 set.default.options.restrictive <- function()
@@ -15,7 +15,7 @@ set.default.options.restrictive <- function()
   options(dsSS_param.name.struct = "sharing_testing")
   options(dsSS_sharing.allowed = 0)
   options(dsSS_sharing.near.equal.limit = 1000000)
-  options(dsSS_settings = ".settings_ds_share")
+  options(dsSS_settings = "settings_ds_share")
 }
 
 set.default.options.incorrect.struct <- function()

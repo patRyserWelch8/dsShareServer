@@ -2,27 +2,24 @@ source("definition_tests/def_getEncodedDataDS.R")
 
 rm(list=ls(pos = 1),pos=1)
 
-
-
-
 options(dsSS_sharing_param.name.struct = "sharing")
 options(dsSS_sharing.allowed = 0)
-assignSharingSettingsDS()
 
 context("getCoordinatesDS::expt::no_sharing_allowed")
 test_that("no_sharing_allowed",
 {
+  expect_error(assignSharingSettingsDS())
   expect_error(getCoordinatesDS())
 })
 
 rm(list=ls(),pos=1)
 options(param.name.struct = "sharing-test")
 options(param.sharing.allowed = 1)
-assignSharingSettingsDS()
 
 context("getCoordinatesDS::expt::no_sharing_structure")
 test_that("no_sharing",
 {
+  expect_error(assignSharingSettingsDS())
   expect_error(getCoordinatesDS())
 
 })

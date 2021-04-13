@@ -22,7 +22,7 @@ options(dsSS_sharing.allowed = 1)
 assignSharingSettingsDS()
 
 assignSharingSettingsDS()
-settings <- get(".settings_ds_share",pos=1)
+settings <- get("settings_ds_share",pos=1)
 
 context("decryptParamDS::expt::no_encryption")
 test_that("does exists",
@@ -31,8 +31,8 @@ test_that("does exists",
    {
       rm("sharing", pos=1)
    }
-   expect_equal(exists(".settings_ds_share", where = 1), TRUE)
-   expect_equal(dpds.is.encoded.param.valid(get(".settings_ds_share", pos = 1)),FALSE)
+   expect_equal(exists("settings_ds_share", where = 1), TRUE)
+   expect_equal(dpds.is.encoded.param.valid(get("settings_ds_share", pos = 1)),FALSE)
    expect_error(decryptParamDS())
    expect_equal(exists(settings$name.struct.sharing, where = 1), FALSE)
 })
@@ -70,6 +70,7 @@ assign("receiver.2", get("sharing",pos=1), pos = 1)
 assign("b",getDataDS(master_mode =  FALSE), pos = 1)
 rm(sharing,pos=1)
 assign("sharing", get("master.1", pos = 1), pos=1)
+b <- get("b", pos = 1)
 assignDataDS(master_mode = TRUE, b$header,b$payload,b$property.a,b$property.b,b$property.c,b$property.d)
 assign("master.2", get("sharing",pos=1), pos = 1)
 

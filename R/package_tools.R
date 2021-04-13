@@ -104,7 +104,17 @@ compute.random.number <- function(seed = NULL, min.value = NULL, max.value = NUL
 is.sharing.allowed <- function()
 {
   settings <- get.settings()
-  return(as.logical(settings$sharing.allowed))
+  allowed  <- as.logical(settings$sharing.allowed)
+
+  if(!allowed)
+  {
+    stop("SERVER::ERR::SHARING::001")
+  }
+  else
+  {
+    return(allowed)
+  }
+
 }
 
 #'@name encode.data.with.sharing
@@ -320,7 +330,32 @@ get.transfer.name <-  function(envir = globalenv())
   }
 }
 
+#'@name get.name
+#'@title read the name from an option
+#'@description This function read the name of an option. If it it does not
+#'exists then the current name value is returned.
+#'@param current.name - A character argument representing a default value. Set to ""
+#'@param option.name  - A character argument representing a R option. Set to ""
+get.name <- function(current.name = "", option.name = "")
+{
+  # sets new.name to current name. If issues then name does not change.
+  new.name <- current.name
 
+  # obtain the option value
+  name     <- getOption(option.name)
+
+  # check the value is a class character
+  if (is.character(name))
+  {
+    # check the value is different than current name
+    if(!identical(name, current.name) & length(name) > 1)
+    {
+      new.name <- as.character(name)
+    }
+  }
+
+  return(new.name)
+}
 
 #'@name get.transfer
 #'@title retrieve the transfer R object
@@ -349,6 +384,12 @@ get.transfer <- function(envir = globalenv())
 get.settings.name <-  function()
 {
   env = globalenv()
+  if (!exists("dsSS"))
+  {
+    setting.name <-  get.name("settings_ds_share","dsSS_settings")
+    assign("dsSS", setting.name, envir = env)
+  }
+
   return(get("dsSS", envir = env))
 }
 

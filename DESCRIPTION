@@ -1,7 +1,7 @@
 Package: dsShareServer
 Type: Package
 Title: Provide the server-side functions for privacy-preserving sharing of parameters and encrypted datasets
-Version: 1.0.0
+Version: 1.0.9
 Author: person(given = "Patricia",
            family = "Ryser-Welch",
            role = c("aut", "cre"),
@@ -25,7 +25,6 @@ AggregateMethods:
   assignDataDS,
   assignParamSettingsDS,
   assignSharingSettingsDS,
-  assignVariableSettingsDS,
   decryptDataDS,
   decryptParamDS,
   encryptDataDS,
@@ -39,14 +38,16 @@ AggregateMethods:
   removeTransferDataDS,
   setPiDS,
   get.settings,
-  danger_options
+  danger_options,
+  assignDemoDataDS,
+  concatDataToVariableDS
 Options:
- dsSS_settings = 'settings_ds_share',
- dsSS_sharing_param.name.struct='sharing',
- dsSS_transfer.name.struct='transfer',
+ dsSS_settings=settings_ds_share,
+ dsSS_sharing_param.name.struct=sharing,
+ dsSS_transfer.name.struct=transfer,
  dsSS_sharing.allowed=1,
  dsSS_sharing.near.equal.limit=1000000,
  dsSS_sharing.seed.footprint=1118066363
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Depends: 
-    R (>= 2.10)
+    R (>= 3.5.0)

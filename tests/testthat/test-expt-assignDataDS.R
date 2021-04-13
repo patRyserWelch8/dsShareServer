@@ -18,11 +18,12 @@ test_that("no_setting",
 
 options(param.name.struct = "sharing")
 options(dsSS_sharing.allowed = 0)
-assignSharingSettingsDS()
+
 
 context("assignDataDS::expt::not_allowed")
 test_that("not_allowed",
 {
+  expect_error(assignSharingSettingsDS())
   expect_error(assignDataDS())
   expect_error(assignDataDS(1))
   expect_error(assignDataDS("FM1",TRUE))

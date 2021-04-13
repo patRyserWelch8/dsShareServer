@@ -17,10 +17,12 @@ idds.are.params.correct <- function(data.server = NULL, data.encoded = NULL, dat
        encoded        <- get(data.encoded, pos = env)
        held.in.server <- get(data.held.in.server, pos = env)
 
+
        if (!is.data.frame(encoded))
        {
          stop("SERVER::ERR:SHARE::005")
        }
+
 
        if (!is.data.frame(held.in.server))
        {
@@ -37,6 +39,7 @@ idds.are.params.correct <- function(data.server = NULL, data.encoded = NULL, dat
        outcome        <- correct.format &
                          is.data.frame(encoded) &
                          is.data.frame(held.in.server)
+
     }
   }
   else
@@ -218,15 +221,16 @@ idds.check.dimension <- function(server, encoded)
 }
 
 #this function assign the setting "encoded.data" to the results of the checks
+# redundant instead use assignVariable
 idds.set.settings <- function(outcome = FALSE, data.encoded)
 {
-  if(exists("settings", where = 1))
+  if(exists(get.settings.name(), where = 1))
   {
     env                        <- globalenv()
     settings                   <- get.settings(envir = env)
     settings$encoded.data      <- outcome
     settings$encoded.data.name <- data.encoded
-    assign("settings", settings, envir = env)
+    assign(get.settings.name(), settings, envir = env)
   }
 }
 
@@ -263,6 +267,7 @@ isDataEncodedDS <- function(data.server = NULL, data.encoded = NULL, data.held.i
     param.correct        <- idds.are.params.correct(data.server, data.encoded, data.held.in.server)
 
 
+
     if(param.correct)
     {
       # get data from global environment
@@ -285,7 +290,7 @@ isDataEncodedDS <- function(data.server = NULL, data.encoded = NULL, data.held.i
         }
       }
       outcome <- is.encoded.data & is.encoded.variable
-      idds.set.settings(outcome, data.encoded)
+      assignVariable(data.encoded, outcome)
     }
     else
     {

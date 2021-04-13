@@ -4,10 +4,10 @@
 \alias{nextDS}
 \title{transfer a certain number of rows from some encoded data.}
 \usage{
-nextDS(data_encoded = NULL, no.rows = 1000)
+nextDS(data.encoded = NULL, no.rows = 1000)
 }
 \arguments{
-\item{data_encoded}{character argument representing the name of the encoded data}
+\item{data.encoded}{character argument representing the name of the encoded data}
 
 \item{no.rows}{positive integer value indicating the number of rows to transfer}
 }

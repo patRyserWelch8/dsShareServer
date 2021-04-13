@@ -81,7 +81,7 @@ The package throws the following errors. Some explanations are provided below.
 
 ## SERVER::ERR::SHARING::003
 **Purpose:** stops the execution of a server function, when the settings list has not been created.
-**Solution:** the assignSharingSettings has been called from the client
+**Solution:** the assignSharingSettingsDS has been called from the client
 
 ## SERVER::ERR::SHARING::004
 **Purpose:**  some formating of the data prior some transfer has been unsuccessful.

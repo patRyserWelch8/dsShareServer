@@ -14,9 +14,9 @@ test_that("variables exists",
 context("encryptDataDS::expt::no_settings")
 test_that("variables exists",
 {
-  if (exists(".settings_ds_share",where = 1))
+  if (exists("settings_ds_share",where = 1))
   {
-    rm(".settings_ds_share", pos=1)
+    rm("settings_ds_share", pos=1)
   }
   expect_error(encryptDataDS(123,134))
   expect_error(encryptDataDS("123","134"))
@@ -31,11 +31,13 @@ test_that("variables exists",
 
 set.default.options.restrictive
 options(dsSS_sharing.allowed = 0)
-assignSharingSettingsDS()
+
 
 context("encryptDataDS::expt::not_allowed_to_share")
 test_that("not_allowed_to_take_part",
 {
+  expect_error(assignSharingSettingsDS())
+
   expect_error(encryptDataDS(TRUE, FALSE))
 })
 
@@ -106,7 +108,6 @@ test_that("no row",
 test_that("no row correct",
 {
   createdMatrix <- edds.create.matrix.runif(settings = settings, no.rows = 12)
-  print(nrow(createdMatrix))
   expect_equal(nrow(createdMatrix) == 12, TRUE)
   expect_equal(ncol(createdMatrix) == 13, TRUE)
   expect_equal(all(createdMatrix <= 1, TRUE),TRUE)
@@ -182,6 +183,7 @@ assign("receiver.2", get("sharing",pos=1), pos = 1)
 assign("b",getDataDS(master_mode =  FALSE), pos = 1)
 rm(sharing,pos=1)
 assign("sharing", get("master.1", pos = 1), pos=1)
+b <- get("b", pos = 1)
 assignDataDS(master_mode = TRUE, b$header,b$payload,b$property.a,b$property.b,b$property.c,b$property.d)
 assign("master.2", get("sharing",pos=1), pos = 1)
 
@@ -246,7 +248,7 @@ test_that(".create.structure.master",
 {
   expected.list <- c("concealing","masking","no_columns","no_rows")
   assignSharingSettingsDS()
-  settings <- get(".settings_ds_share", pos =1)
+  settings <- get("settings_ds_share", pos =1)
   sharing <- edds.create.structure.master(settings, min=1, max=2,no.rows=11, no.columns=13)
   expect_equal(is.list(sharing),TRUE)
   expect_equal(all(expected.list %in% names(sharing), TRUE), TRUE)
@@ -264,7 +266,7 @@ test_that("received matrix does not exist",
   expected.list <- c("concealing.matrix","masking.matrix","received.matrix")
   #the received matrix does not exists
   assignSharingSettingsDS()
-  settings <- get(".settings_ds_share", pos =1)
+  settings <- get("settings_ds_share", pos =1)
 
 
   sharing <- edds.create.structure.receiver(settings, 4,23)
@@ -280,7 +282,7 @@ test_that("received matrix does not exist",
   a.list <- list(element = 3.1427)
   assign("sharing",a.list, pos=1)
   assignSharingSettingsDS()
-  settings <- get(".settings_ds_share", pos =1)
+  settings <- get("settings_ds_share", pos =1)
   sharing <- edds.create.structure.receiver(settings,4,23)
   expect_equal(is.list(sharing),TRUE)
   expect_equal(all(expected.list %in% names(sharing), FALSE), FALSE)

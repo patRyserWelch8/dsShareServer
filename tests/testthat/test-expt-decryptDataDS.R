@@ -1,9 +1,9 @@
 context("decryptData::expt::no_settings")
 test_that("does not exist",
 {
-   if (exists(".settings_ds_share",where = 1))
+   if (exists("settings_ds_share",where = 1))
    {
-     rm(".settings_ds_share", pos=1)
+     rm("settings_ds_share", pos=1)
    }
    expect_error(ddds.is.received.data.valid())
    expect_equal(ddds.decrypt.received.matrix(), NULL)
@@ -13,13 +13,14 @@ test_that("does not exist",
 
 options(dsSS_sharing_param.name.struct = "sharing")
 options(dsSS_sharing.allowed = 0)
-assignSharingSettingsDS()
-settings <- get(".settings_ds_share",pos = 1)
+
+
 
 context("decryptData::expt::not_allowed")
 test_that("not_allowed",
 {
-   expect_equal(exists(".settings_ds_share", where = 1), TRUE)
+   expect_error(assignSharingSettingsDS())
+   expect_equal(exists("settings_ds_share", where = 1), TRUE)
    expect_error(ddds.is.received.data.valid())
    expect_equal(ddds.decrypt.received.matrix(), NULL)
    expect_error(ddds.is.decrypted.data.valid())
@@ -28,26 +29,20 @@ test_that("not_allowed",
 
 options(dsSS_sharing_param.name.struct = "sharing")
 options(dsSS_sharing.allowed = 1)
-assignSharingSettingsDS()
-settings <- get(".settings_ds_share",pos = 1)
+
 
 
 context("decryptData::expt::no_encryption")
 test_that("does exists",
 {
-
-   if (exists(settings$name.struct.sharing,where = 1))
-   {
-      rm(list = settings$name.struct.sharing, pos = 1)
-   }
-   expect_equal(exists(settings$name.struct.sharing, where = 1), FALSE)
+   expect_true(assignSharingSettingsDS())
    expect_error(ddds.is.received.data.valid())
    expect_equal(ddds.decrypt.received.matrix(), NULL)
    expect_error(ddds.is.decrypted.data.valid())
-   expect_error(decryptDataDS())
+   expect_true(decryptDataDS())
 })
 
-
+settings <- get("settings_ds_share",pos = 1)
 #complete set steps to reach the point of decryption
 encryptDataDS(TRUE, FALSE)
 assign("master.1" ,get("sharing",pos=1), pos = 1)
@@ -66,8 +61,10 @@ assign("receiver.2", get("sharing",pos=1), pos = 1)
 
 #("step 4")
 assign("b",getDataDS(master_mode =  FALSE), pos = 1)
+
 rm(sharing,pos=1)
 assign("sharing", get("master.1", pos = 1), pos=1)
+b <- get("b", pos = 1)
 assignDataDS(master_mode = TRUE, b$header,b$payload,b$property.a,b$property.b,b$property.c,b$property.d)
 assign("master.2", get("sharing",pos=1), pos = 1)
 

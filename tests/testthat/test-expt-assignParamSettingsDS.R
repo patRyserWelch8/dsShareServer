@@ -35,12 +35,12 @@ test_that("everyting is incorrect",
 
 options(dsSS_sharing_param.name.struct = "sharing")
 options(dsSS_sharing.allowed = 0)
-assignSharingSettingsDS()
 
 context("assignParamSettingsDS::smk::not_allowed_sharing")
 test_that("not allowed sharingt",
 {
-  expect_equal(exists(".settings_ds_share", where = 1), TRUE)
+  expect_error(assignSharingSettingsDS())
+  expect_equal(exists("settings_ds_share", where = 1), TRUE)
   expect_error(assignParamSettingsDS())
   expect_error(assignParamSettingsDS(123))
   expect_equal(are.params.created(param_names = c("first_var_X")), FALSE)
@@ -107,7 +107,7 @@ master.3 <- get("sharing",pos=1)
 context("assignParamSettingsDS::smk::correct_outcome")
 test_that("everything is correct",
 {
-  expect_equal(exists(".settings_ds_share", where = 1), TRUE)
+  expect_equal(exists("settings_ds_share", where = 1), TRUE)
   expect_equal(exists("first_var", where = 1), TRUE)
   expect_equal(assignParamSettingsDS("first_var"),TRUE)
   expect_true(assignParamSettingsDS("first_var;second_var"))
@@ -118,19 +118,19 @@ test_that("everything is correct",
 context("assignParamSettingsDS::expt::.init.coordinates.ratios")
 test_that("everyting is correct",
 {
-  sharing <- apds.init.coordinates.ratios(get(".settings_ds_share", pos = 1), get("sharing", pos = 1), param_names = c("first_var"))
+  sharing <- apds.init.coordinates.ratios(get("settings_ds_share", pos = 1), get("sharing", pos = 1), param_names = c("first_var"))
   expect_equal("index_x" %in% names(sharing), TRUE)
   expect_equal("index_y" %in% names(sharing), TRUE)
   expect_equal("param_names" %in% names(sharing), TRUE)
   expect_equal(length(sharing$index_x), 1)
 
-  sharing <- apds.init.coordinates.ratios(get(".settings_ds_share", pos = 1), get("sharing", pos = 1), param_names = c("first_var","second_var"))
+  sharing <- apds.init.coordinates.ratios(get("settings_ds_share", pos = 1), get("sharing", pos = 1), param_names = c("first_var","second_var"))
   expect_equal("index_x" %in% names(sharing), TRUE)
   expect_equal("index_y" %in% names(sharing), TRUE)
   expect_equal("param_names" %in% names(sharing), TRUE)
   expect_equal(length(sharing$index_x), 2)
 
-  sharing <- apds.init.coordinates.ratios(get(".settings_ds_share", pos = 1), get("sharing", pos = 1),
+  sharing <- apds.init.coordinates.ratios(get("settings_ds_share", pos = 1), get("sharing", pos = 1),
                                       param_names = c("first_var","second_var","third_var"))
   expect_equal("index_x" %in% names(sharing), TRUE)
   expect_equal("index_y" %in% names(sharing), TRUE)
