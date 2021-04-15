@@ -40,7 +40,7 @@ adds.create.matrix <- function(data = NULL,  no.columns = 1)
           no.rows     <- length(data.vector)/no.columns
 
           # check it is not a scalar!
-          if (no.rows > 1 & no.columns > 1)
+          if (no.rows > 1 || no.columns > 1)
           {
               # transform vector as numeric values and then as a matrix
               data.numeric    <- as.numeric(x = data.vector)

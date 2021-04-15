@@ -32,25 +32,24 @@ cdds.save<- function(data.written.to.server, data.type, received.data = NULL, en
 cdds.concat <- function(data.written.to.server, received.data, env = globalenv())
 {
   concat.data <- received.data
-  print("AAA")
+
   # check the R object has been created
   if(exists(data.written.to.server, envir = env))
   {
-    print("BBB")
+
     data         <- get(data.written.to.server, envir = env)
 
     # check data type is either a matrix or a data frame
     if((is.data.frame(data) || is.matrix(data)) &
        (is.data.frame(received.data) || is.matrix(received.data)))
     {
-      print("CCC")
+
       no.col.data     <- ncol(data)
       no.col.received <- ncol(received.data)
 
-      print("DDD")
+
       if(no.col.data == no.col.received)
       {
-        print("EEE")
         # concat data
         concat.data <- rbind(data, received.data)
 
