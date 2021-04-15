@@ -34,6 +34,64 @@ test_that("concatDataVariable::smk::incorrect_param",
 context("concatDataVariable::expt::correct_param")
 test_that("concatDataVariable::expt::correct_param",
 {
+  # one row
+  rm(list = ls(pos = 1), pos = 1)
+  data          <- as.character(paste(stats::runif(11 * 1, 100000, 400000),sep="", collapse=";"))
+  size          <- as.numeric(utils::object.size(data))
+  no.columns    <- 11
+  no.rows       <- 13
+  index         <- ceiling(stats::runif(1, min = 0, max = no.columns))
+  timestamp     <- as.numeric(Sys.time()) / size
+  return.value  <- list(header = "FM2" ,
+                        payload = data,
+                        property.a = size,
+                        property.b = no.columns,
+                        property.c = timestamp,
+                        property.d = index/timestamp)
+
+  options(param.name.struct = "sharing")
+  options(dsSS_sharing.allowed = 1)
+  expect_true(assignSharingSettingsDS())
+
+
+  expect_true(concatDataToVariableDS("written.var",
+                                     "matrix",
+                                     FALSE,
+                                     return.value$header,
+                                     return.value$payload,
+                                     return.value$property.a,
+                                     return.value$property.b,
+                                     return.value$property.c,
+                                     return.value$property.d))
+
+  print(get("written.var", pos = 1))
+
+  data          <- as.character(paste(stats::runif(11 * 1, 100000, 400000),sep="", collapse=";"))
+  size          <- as.numeric(utils::object.size(data))
+  no.columns    <- 11
+  no.rows       <- 13
+  index         <- ceiling(stats::runif(1, min = 0, max = no.columns))
+  timestamp     <- as.numeric(Sys.time()) / size
+  return.value  <- list(header = "FM2" ,
+                        payload = data,
+                        property.a = size,
+                        property.b = no.columns,
+                        property.c = timestamp,
+                        property.d = index/timestamp)
+
+
+  expect_true(concatDataToVariableDS("written.var",
+                                     "matrix",
+                                     FALSE,
+                                     return.value$header,
+                                     return.value$payload,
+                                     return.value$property.a,
+                                     return.value$property.b,
+                                     return.value$property.c,
+                                     return.value$property.d))
+  print(get("written.var", pos = 1))
+
+
   # variable does not exists on the server
   rm(list = ls(pos = 1), pos = 1)
   data          <- as.character(paste(stats::runif(11 *13, 100000, 400000),sep="", collapse=";"))
