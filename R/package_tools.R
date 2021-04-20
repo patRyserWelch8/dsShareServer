@@ -189,7 +189,7 @@ are.params.created <- function(param_names = c())
   {
     if(length(param_names) >= 1  & is.character(param_names))
     {
-      list.var      <- ls(pos = 1)
+      list.var      <- ls(pos = 1, all.names = TRUE)
       params.exist  <- all(param_names %in% list.var)
 
       if(params.exist)
