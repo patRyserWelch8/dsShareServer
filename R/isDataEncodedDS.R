@@ -13,7 +13,7 @@ idds.are.params.correct <- function(data.server = NULL, data.encoded = NULL, dat
        exists(data.encoded, where = env) &
        exists(data.held.in.server, where = env))
     {
-       server         <- get(data.server, pos = env)
+       data.server    <- get(data.server, pos = env)
        encoded        <- get(data.encoded, pos = env)
        held.in.server <- get(data.held.in.server, pos = env)
 
@@ -29,7 +29,8 @@ idds.are.params.correct <- function(data.server = NULL, data.encoded = NULL, dat
          stop("SERVER::ERR:SHARE::006")
        }
 
-       correct.format <- is.data.frame(server) || is.list(server) || is.matrix(server) || (length(server) > 1)
+       correct.format <- is.data.frame(data.server) || is.list(data.server) ||
+                         is.matrix(data.server) || (length(data.server) > 1)
        if(!correct.format)
        {
          stop("SERVER::ERR:SHARE::007")
@@ -39,7 +40,6 @@ idds.are.params.correct <- function(data.server = NULL, data.encoded = NULL, dat
        outcome        <- correct.format &
                          is.data.frame(encoded) &
                          is.data.frame(held.in.server)
-
     }
   }
   else
@@ -266,8 +266,6 @@ isDataEncodedDS <- function(data.server = NULL, data.encoded = NULL, data.held.i
     outcome              <- FALSE
     param.correct        <- idds.are.params.correct(data.server, data.encoded, data.held.in.server)
 
-
-
     if(param.correct)
     {
       # get data from global environment
@@ -292,10 +290,7 @@ isDataEncodedDS <- function(data.server = NULL, data.encoded = NULL, data.held.i
       outcome <- is.encoded.data & is.encoded.variable
       assignVariable(data.encoded, outcome)
     }
-    else
-    {
-      stop("SERVER::ERR::SHARING::002")
-    }
+
   }
   else
   {
