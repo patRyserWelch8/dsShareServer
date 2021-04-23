@@ -7,7 +7,10 @@ idds.are.params.correct <- function(data.server = NULL, data.encoded = NULL, dat
   {
     stop("SERVER::ERR:SHARE::003")
   }
-  else if(is.character(data.server) & is.character(data.encoded) & is.character(data.held.in.server))
+
+  if(is.character(data.server) &
+     is.character(data.encoded) &
+     is.character(data.held.in.server))
   {
     if(exists(data.server, where = env) &
        exists(data.encoded, where = env) &
@@ -17,12 +20,10 @@ idds.are.params.correct <- function(data.server = NULL, data.encoded = NULL, dat
        encoded        <- get(data.encoded, pos = env)
        held.in.server <- get(data.held.in.server, pos = env)
 
-
        if (!is.data.frame(encoded))
        {
          stop("SERVER::ERR:SHARE::005")
        }
-
 
        if (!is.data.frame(held.in.server))
        {
@@ -40,6 +41,12 @@ idds.are.params.correct <- function(data.server = NULL, data.encoded = NULL, dat
        outcome        <- correct.format &
                          is.data.frame(encoded) &
                          is.data.frame(held.in.server)
+
+
+    }
+    else
+    {
+      stop("SERVER::ERR:SHARE::040")
     }
   }
   else
@@ -212,8 +219,8 @@ idds.check.dimension <- function(server, encoded)
   }
   else if (is.data.frame(server))
   {
-
     outcome <- ncol(encoded) > ncol(server) & nrow(encoded) == nrow(server)
+
   }
 
   return(outcome)
@@ -264,18 +271,18 @@ isDataEncodedDS <- function(data.server = NULL, data.encoded = NULL, data.held.i
     is.encoded.data      <- FALSE
     is.encoded.variable  <- FALSE
     outcome              <- FALSE
-    param.correct        <- idds.are.params.correct(data.server, data.encoded, data.held.in.server)
+    data.server.split    <- unlist(strsplit(data.server,"\\$"))
+    param.correct        <- idds.are.params.correct(data.server.split[1], data.encoded, data.held.in.server)
 
     if(param.correct)
     {
       # get data from global environment
       env            <- globalenv()
       settings       <- get.settings()
-      server         <- get(data.server,  envir = env)
+      server         <- get(data.server.split[1],  envir = env)
       encoded        <- get(data.encoded, envir = env)
       held.in.server <- get(data.held.in.server, envir = env)
       limit          <- settings$sharing.near.equal.limit
-
 
       if(idds.check.dimension(server, encoded))
       {
@@ -289,6 +296,10 @@ isDataEncodedDS <- function(data.server = NULL, data.encoded = NULL, data.held.i
       }
       outcome <- is.encoded.data & is.encoded.variable
       assignVariable(data.encoded, outcome)
+    }
+    else
+    {
+      stop("SERVER::SHARING::ERR:002")
     }
 
   }
