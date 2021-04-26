@@ -53,7 +53,13 @@ dpds.decryptParam <- function(settings, sharing, param_names = NULL, tolerance =
   rows.correct  <- all(rows    <= nrow(sharing$decrypted))
   cols.correct  <- all(columns <= ncol(sharing$decrypted))
   coord.correct <- length(rows) == length(params) & length(columns) == length(rows)
-
+  print(rows.correct)
+  print(ncol(sharing$decrypted))
+  print(sharing[[settings$index_y]])
+  print(columns)
+  print(columns <= ncol(sharing$decrypted))
+  print(cols.correct)
+  print(coord.correct)
 
   if (rows.correct & cols.correct & coord.correct)
   {
@@ -64,6 +70,8 @@ dpds.decryptParam <- function(settings, sharing, param_names = NULL, tolerance =
           param_name     <-  params[param]
           param.value    <-  round(sharing$decrypted[columns[param],rows[param]], tolerance)
           outcome[param] <- !is.na(param.value)
+          print(outcome[param])
+          print(param_names)
           assign(param_name,param.value, envir = env)
       }
   }

@@ -67,10 +67,10 @@ assignSharingSettingsDS <- function()
                       param_names              = "param_names",
                       no_columns               = "no_columns",
                       no_rows                  = "no_rows",
-                      min_rows                 = 11,#11,
-                      max_rows                 = 21,#21,
-                      min_columns              = 13,#13,
-                      max_columns              = 23,#23,
+                      min_rows                 = 21,#11,
+                      max_rows                 = 31,#21,
+                      min_columns              = 23,#13,
+                      max_columns              = 33,#23,
                       min_value                = 1,
                       footprint                = 9812735)
 

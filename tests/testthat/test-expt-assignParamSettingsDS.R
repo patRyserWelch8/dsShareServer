@@ -75,6 +75,7 @@ assignSharingSettingsDS()
 assign("first_var",1, pos=1)
 assign("second_var",1, pos=1)
 assign("third_var",1, pos=1)
+assign("fourth_var",1, pos=1)
 
 
 #("Step 1")
@@ -110,7 +111,8 @@ test_that("everything is correct",
   expect_equal(exists("settings_ds_share", where = 1), TRUE)
   expect_equal(exists("first_var", where = 1), TRUE)
   expect_equal(assignParamSettingsDS("first_var"),TRUE)
-  expect_true(assignParamSettingsDS("first_var;second_var"))
+  expect_true(assignParamSettingsDS("first_var;second_var;third_var"))
+  expect_true(assignParamSettingsDS("first_var;second_var;third_var;fourth_var"))
 
 })
 

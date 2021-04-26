@@ -28,39 +28,25 @@ generate.secure.seed <- function(settings = list())
       {
         if(is.numeric(settings$footprint))
         {
-          footprint <- settings$footprint
+          footprint  <- settings$footprint
         }
       }
       else
       {
-        footprint <- runif(1, min = 1, max = .Machine$integer.max)
+        footprint <- as.integer(runif(1, min = 1, max = .Machine$integer.max/10000))
       }
 
-      # the seed will be used in a set.seed function. Max value is .Machine$integer.max
-      seed <- .Machine$integer.max + 1
-      while(seed > .Machine$integer.max)
+      repeat
       {
-        # generate a list of number randomly
-        set.seed(compute.random.number(seed = footprint, min.value = 10000, max.value = .Machine$integer.max))
-        list.numbers   <- stats::runif(10000, min = 1e11, max = 9e22)
+        RNGkind("L'Ecuyer-CMRG")
+        index <- round(length(.Random.seed)/2)
+        random.seed <- abs(.Random.seed[index])
+        seed <- as.integer(abs(random.seed / footprint))
 
-        # generate a list of divisor
-        set.seed(compute.random.number(seed = footprint, min.value = 10000, max.value = .Machine$integer.max))
-        list.quotient <-  stats::runif(10, min = 1e14, max = 9e15)
-
-        # comput potential seeds
-        list.seeds <- list.numbers / list.quotient
-
-        # randomly return on seed
-        set.seed(compute.random.number(seed = footprint, min.value = 10000, max.value = .Machine$integer.max))
-        random.seed <- as.integer(stats::runif(1, min = 1, max = 10000))
-
-
-        if(random.seed %in% 1:10000)
+        if(footprint < .Machine$integer.max)
         {
-          seed        <- list.seeds[random.seed]
+          break()
         }
-
       }
       return(seed)
     }
