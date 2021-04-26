@@ -41,7 +41,7 @@ source("data_files/variables.R")
 
 
 assignSharingSettingsDS()
-data.encoded <- isDataEncodedDS(data.server = "vector_A", data.encoded = "df_B", data.held.in.server = "all.data")
+data.encoded <- isDataEncodedDS(data.server = "vector_A", data.encoded = "df_B")
 
 if(exists("transfer",where = 1))
 {
@@ -93,7 +93,7 @@ test_that("option set, allowed",
 
 
   # step 2 - check encodedDataDS
-  expect_true(isDataEncodedDS(data.server = "vector_A", data.encoded = "df_B", data.held.in.server = "all.data"))
+  expect_true(isDataEncodedDS(data.server = "vector_A", data.encoded = "df_B"))
 
 
   # step 3 - iterate through

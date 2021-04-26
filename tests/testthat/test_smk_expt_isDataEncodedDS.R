@@ -30,13 +30,13 @@ source("data_files/variables.R")
 
 test_that("correct arguments outcome true",
 {
-  expect_true(idds.are.params.correct(data.server = "D", data.encoded = "E", data.held.in.server = "F"))
-  expect_true(idds.are.params.correct(data.server = "vector_A", data.encoded = "E", data.held.in.server = "F"))
-  expect_true(idds.are.params.correct(data.server = "matrix_A", data.encoded = "E", data.held.in.server = "F"))
-  expect_true(idds.are.params.correct(data.server = "list_A", data.encoded = "E", data.held.in.server = "F"))
-  expect_true(idds.are.params.correct(data.server = "df_A", data.encoded = "E", data.held.in.server = "F"))
-  expect_error(idds.are.params.correct(data.server = "pi", data.encoded = "E", data.held.in.server = "F"))
-  expect_error(idds.are.params.correct(data.server = "df_A", data.encoded = "vector_A", data.held.in.server = "F"))
+  expect_true(idds.are.params.correct(data.server = "D", data.encoded = "E"))
+  expect_true(idds.are.params.correct(data.server = "vector_A", data.encoded = "E"))
+  expect_true(idds.are.params.correct(data.server = "matrix_A", data.encoded = "E"))
+  expect_true(idds.are.params.correct(data.server = "list_A", data.encoded = "E"))
+  expect_true(idds.are.params.correct(data.server = "df_A", data.encoded = "E"))
+  expect_error(idds.are.params.correct(data.server = "pi", data.encoded = "E"))
+  expect_error(idds.are.params.correct(data.server = "df_A", data.encoded = "vector_A"))
 })
 
 
@@ -50,14 +50,14 @@ options(dsSS_settings = "settings_ds_share")
 test_that("correct arguments outcome true",
 {
   expect_error(assignSharingSettingsDS())
-  expect_true(idds.are.params.correct(data.server = "D", data.encoded = "E", data.held.in.server = "F"))
-  expect_true(idds.are.params.correct(data.server = "vector_A", data.encoded = "E", data.held.in.server = "F"))
-  expect_true(idds.are.params.correct(data.server = "matrix_A", data.encoded = "E", data.held.in.server = "F"))
-  expect_true(idds.are.params.correct(data.server = "list_A", data.encoded = "E", data.held.in.server = "F"))
-  expect_true(idds.are.params.correct(data.server = "df_A", data.encoded = "E", data.held.in.server = "F"))
+  expect_true(idds.are.params.correct(data.server = "D", data.encoded = "E"))
+  expect_true(idds.are.params.correct(data.server = "vector_A", data.encoded = "E"))
+  expect_true(idds.are.params.correct(data.server = "matrix_A", data.encoded = "E"))
+  expect_true(idds.are.params.correct(data.server = "list_A", data.encoded = "E"))
+  expect_true(idds.are.params.correct(data.server = "df_A", data.encoded = "E"))
 
-  expect_error(idds.are.params.correct(data.server = "pi", data.encoded = "E", data.held.in.server = "F"))
-  expect_error(idds.are.params.correct(data.server = "df_A", data.encoded = "vector_A", data.held.in.server = "F"))
+  expect_error(idds.are.params.correct(data.server = "pi", data.encoded = "E"))
+  expect_error(idds.are.params.correct(data.server = "df_A", data.encoded = "vector_A"))
 })
 
 options(dsSS_sharing.near.equal.limit = 0.01)
@@ -67,10 +67,10 @@ options(dsSS_settings = "settings_ds_share")
 assignSharingSettingsDS()
 test_that("correct arguments outcome errors",
 {
-  expect_error(idds.are.params.correct(data.server = "pi", data.encoded = "E", data.held.in.server = "F"))
-  expect_error(idds.are.params.correct(data.server = "df_A", data.encoded = "vector_A", data.held.in.server = "F"))
-  expect_error(idds.are.params.correct(data.server = "df_A", data.encoded = "matrix_A", data.held.in.server = "F"))
-  expect_error(idds.are.params.correct(data.server = "df_A", data.encoded = "list_C", data.held.in.server = "F"))
+  expect_error(idds.are.params.correct(data.server = "pi", data.encoded = "E"))
+  expect_error(idds.are.params.correct(data.server = "df_A", data.encoded = "vector_A"))
+  expect_error(idds.are.params.correct(data.server = "df_A", data.encoded = "matrix_A"))
+  expect_error(idds.are.params.correct(data.server = "df_A", data.encoded = "list_C"))
 
 
   expect_error(idds.are.params.correct(data.server = "df_A", data.encoded = "E", data.held.in.server = "vector_A"))
@@ -320,15 +320,15 @@ test_that("use mtcars and encoded data",
    assign("dataset2", read_csv("data_files/DATASET2.csv"), pos = 1)
    assign("dataset3", read_csv("data_files/DATASET3.csv"), pos = 1)
 
-   expect_true(isDataEncodedDS(data.server = "datashield.mtcars.data", data.encoded = "datashield.encrypted.data", data.held.in.server = "dataset1"))
+   expect_true(isDataEncodedDS(data.server = "datashield.mtcars.data", data.encoded = "datashield.encrypted.data"))
 
 
 
-   expect_true(isDataEncodedDS(data.server = "datashield.mtcars.data", data.encoded = "datashield.encrypted.data", data.held.in.server = "dataset2"))
+   expect_true(isDataEncodedDS(data.server = "datashield.mtcars.data", data.encoded = "datashield.encrypted.data"))
 
 
 
-   expect_true(isDataEncodedDS(data.server = "datashield.mtcars.data", data.encoded = "datashield.encrypted.data", data.held.in.server = "dataset3"))
+   expect_true(isDataEncodedDS(data.server = "datashield.mtcars.data", data.encoded = "datashield.encrypted.data"))
 
 
 })
@@ -350,55 +350,55 @@ assignSharingSettingsDS()
 test_that("expected outcome not restrictive",
 {
 
-  expect_error(isDataEncodedDS(data.server = "vector_A", data.encoded = "vector_A", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "vector_B", data.encoded = "vector_B", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "vector_C", data.encoded = "vector_C", data.held.in.server = "F"))
+  expect_error(isDataEncodedDS(data.server = "vector_A", data.encoded = "vector_A"))
+  expect_error(isDataEncodedDS(data.server = "vector_B", data.encoded = "vector_B"))
+  expect_error(isDataEncodedDS(data.server = "vector_C", data.encoded = "vector_C"))
 
-  expect_error(isDataEncodedDS(data.server = "list_A", data.encoded = "list_A", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "list_B", data.encoded = "list_B", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "list_C", data.encoded = "list_C", data.held.in.server = "F"))
+  expect_error(isDataEncodedDS(data.server = "list_A", data.encoded = "list_A"))
+  expect_error(isDataEncodedDS(data.server = "list_B", data.encoded = "list_B"))
+  expect_error(isDataEncodedDS(data.server = "list_C", data.encoded = "list_C"))
 
-  expect_false(isDataEncodedDS(data.server = "df_A", data.encoded = "df_A", data.held.in.server = "F"))
-  expect_false(isDataEncodedDS(data.server = "df_B", data.encoded = "df_B", data.held.in.server = "F"))
-  expect_false(isDataEncodedDS(data.server = "df_C", data.encoded = "df_C", data.held.in.server = "F"))
+  expect_false(isDataEncodedDS(data.server = "df_A", data.encoded = "df_A"))
+  expect_false(isDataEncodedDS(data.server = "df_B", data.encoded = "df_B"))
+  expect_false(isDataEncodedDS(data.server = "df_C", data.encoded = "df_C"))
 
-  expect_error(isDataEncodedDS(data.server = "matrix_A", data.encoded = "matrix_A", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "matrix_B", data.encoded = "matrix_B", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "matrix_C", data.encoded = "matrix_C", data.held.in.server = "F"))
+  expect_error(isDataEncodedDS(data.server = "matrix_A", data.encoded = "matrix_A"))
+  expect_error(isDataEncodedDS(data.server = "matrix_B", data.encoded = "matrix_B"))
+  expect_error(isDataEncodedDS(data.server = "matrix_C", data.encoded = "matrix_C"))
 
-  expect_error(isDataEncodedDS(data.server = "vector_A", data.encoded = "matrix_A", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "vector_A", data.encoded = "list_A", data.held.in.server = "F"))
-  expect_false(isDataEncodedDS(data.server = "vector_A", data.encoded = "df_A", data.held.in.server = "F"))
+  expect_error(isDataEncodedDS(data.server = "vector_A", data.encoded = "matrix_A"))
+  expect_error(isDataEncodedDS(data.server = "vector_A", data.encoded = "list_A"))
+  expect_false(isDataEncodedDS(data.server = "vector_A", data.encoded = "df_A"))
 
-  expect_error(isDataEncodedDS(data.server = "vector_B", data.encoded = "matrix_B", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "vector_B", data.encoded = "list_B", data.held.in.server = "F"))
-  expect_true(isDataEncodedDS(data.server = "vector_B", data.encoded = "df_B", data.held.in.server = "F"))
+  expect_error(isDataEncodedDS(data.server = "vector_B", data.encoded = "matrix_B"))
+  expect_error(isDataEncodedDS(data.server = "vector_B", data.encoded = "list_B"))
+  expect_true(isDataEncodedDS(data.server = "vector_B", data.encoded = "df_B"))
 
-  expect_error(isDataEncodedDS(data.server = "vector_C", data.encoded = "matrix_C", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "vector_C", data.encoded = "list_C", data.held.in.server = "F"))
-  expect_false(isDataEncodedDS(data.server = "vector_C", data.encoded = "df_C", data.held.in.server = "F"))
+  expect_error(isDataEncodedDS(data.server = "vector_C", data.encoded = "matrix_C"))
+  expect_error(isDataEncodedDS(data.server = "vector_C", data.encoded = "list_C"))
+  expect_false(isDataEncodedDS(data.server = "vector_C", data.encoded = "df_C"))
 
-  expect_error(isDataEncodedDS(data.server = "vector_A", data.encoded = "vector_B", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "vector_B", data.encoded = "vector_C", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "vector_A", data.encoded = "vector_C", data.held.in.server = "F"))
+  expect_error(isDataEncodedDS(data.server = "vector_A", data.encoded = "vector_B"))
+  expect_error(isDataEncodedDS(data.server = "vector_B", data.encoded = "vector_C"))
+  expect_error(isDataEncodedDS(data.server = "vector_A", data.encoded = "vector_C"))
 
-  expect_error(isDataEncodedDS(data.server = "matrix_A", data.encoded = "matrix_B", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "matrix_B", data.encoded = "matrix_C", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "matrix_A", data.encoded = "matrix_C", data.held.in.server = "F"))
+  expect_error(isDataEncodedDS(data.server = "matrix_A", data.encoded = "matrix_B"))
+  expect_error(isDataEncodedDS(data.server = "matrix_B", data.encoded = "matrix_C"))
+  expect_error(isDataEncodedDS(data.server = "matrix_A", data.encoded = "matrix_C"))
 
-  expect_error(isDataEncodedDS(data.server = "list_A", data.encoded = "list_B", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "list_B", data.encoded = "list_C", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "list_A", data.encoded = "list_C", data.held.in.server = "F"))
+  expect_error(isDataEncodedDS(data.server = "list_A", data.encoded = "list_B"))
+  expect_error(isDataEncodedDS(data.server = "list_B", data.encoded = "list_C"))
+  expect_error(isDataEncodedDS(data.server = "list_A", data.encoded = "list_C"))
 
-  expect_true(isDataEncodedDS(data.server = "df_A", data.encoded = "df_B", data.held.in.server = "F"))
-  expect_true(isDataEncodedDS(data.server = "df_B", data.encoded = "df_C", data.held.in.server = "F"))
-  expect_false(isDataEncodedDS(data.server = "df_A", data.encoded = "df_C", data.held.in.server = "F"))
+  expect_true(isDataEncodedDS(data.server = "df_A", data.encoded = "df_B"))
+  expect_true(isDataEncodedDS(data.server = "df_B", data.encoded = "df_C"))
+  expect_false(isDataEncodedDS(data.server = "df_A", data.encoded = "df_C"))
 
-  expect_true(isDataEncodedDS(data.server = "vector_A", data.encoded = "df_B", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "vector_A", data.encoded = "list_B", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "vector_A", data.encoded = "list_A", data.held.in.server = "F"))
-  expect_false(isDataEncodedDS(data.server = "vector_A", data.encoded = "df_A", data.held.in.server = "F"))
-  expect_false(isDataEncodedDS(data.server = "vector_A", data.encoded = "df_C", data.held.in.server = "F"))
+  expect_true(isDataEncodedDS(data.server = "vector_A", data.encoded = "df_B"))
+  expect_error(isDataEncodedDS(data.server = "vector_A", data.encoded = "list_B"))
+  expect_error(isDataEncodedDS(data.server = "vector_A", data.encoded = "list_A"))
+  expect_false(isDataEncodedDS(data.server = "vector_A", data.encoded = "df_A"))
+  expect_false(isDataEncodedDS(data.server = "vector_A", data.encoded = "df_C"))
 })
 
 options(dsSS_sharing.near.equal.limit = 1000000)
@@ -409,52 +409,52 @@ assignSharingSettingsDS()
 test_that("expected outcome restrictive",
 {
 
-  expect_error(isDataEncodedDS(data.server = "vector_A", data.encoded = "vector_A", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "vector_B", data.encoded = "vector_B", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "vector_C", data.encoded = "vector_C", data.held.in.server = "F"))
+  expect_error(isDataEncodedDS(data.server = "vector_A", data.encoded = "vector_A"))
+  expect_error(isDataEncodedDS(data.server = "vector_B", data.encoded = "vector_B"))
+  expect_error(isDataEncodedDS(data.server = "vector_C", data.encoded = "vector_C"))
 
-  expect_error(isDataEncodedDS(data.server = "list_A", data.encoded = "list_A", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "list_B", data.encoded = "list_B", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "list_C", data.encoded = "list_C", data.held.in.server = "F"))
+  expect_error(isDataEncodedDS(data.server = "list_A", data.encoded = "list_A"))
+  expect_error(isDataEncodedDS(data.server = "list_B", data.encoded = "list_B"))
+  expect_error(isDataEncodedDS(data.server = "list_C", data.encoded = "list_C"))
 
-  expect_false(isDataEncodedDS(data.server = "df_A", data.encoded = "df_A", data.held.in.server = "F"))
-  expect_false(isDataEncodedDS(data.server = "df_B", data.encoded = "df_B", data.held.in.server = "F"))
-  expect_false(isDataEncodedDS(data.server = "df_C", data.encoded = "df_C", data.held.in.server = "F"))
+  expect_false(isDataEncodedDS(data.server = "df_A", data.encoded = "df_A"))
+  expect_false(isDataEncodedDS(data.server = "df_B", data.encoded = "df_B"))
+  expect_false(isDataEncodedDS(data.server = "df_C", data.encoded = "df_C"))
 
-  expect_error(isDataEncodedDS(data.server = "matrix_A", data.encoded = "matrix_A", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "matrix_B", data.encoded = "matrix_B", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "matrix_C", data.encoded = "matrix_C", data.held.in.server = "F"))
+  expect_error(isDataEncodedDS(data.server = "matrix_A", data.encoded = "matrix_A"))
+  expect_error(isDataEncodedDS(data.server = "matrix_B", data.encoded = "matrix_B"))
+  expect_error(isDataEncodedDS(data.server = "matrix_C", data.encoded = "matrix_C"))
 
-  expect_error(isDataEncodedDS(data.server = "vector_A", data.encoded = "matrix_A", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "vector_A", data.encoded = "list_A", data.held.in.server = "F"))
-  expect_false(isDataEncodedDS(data.server = "vector_A", data.encoded = "df_A", data.held.in.server = "F"))
+  expect_error(isDataEncodedDS(data.server = "vector_A", data.encoded = "matrix_A"))
+  expect_error(isDataEncodedDS(data.server = "vector_A", data.encoded = "list_A"))
+  expect_false(isDataEncodedDS(data.server = "vector_A", data.encoded = "df_A"))
 
-  expect_error(isDataEncodedDS(data.server = "vector_B", data.encoded = "matrix_B", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "vector_B", data.encoded = "list_B", data.held.in.server = "F"))
-  expect_true(isDataEncodedDS(data.server = "vector_B", data.encoded = "df_B", data.held.in.server = "F"))
+  expect_error(isDataEncodedDS(data.server = "vector_B", data.encoded = "matrix_B"))
+  expect_error(isDataEncodedDS(data.server = "vector_B", data.encoded = "list_B"))
+  expect_true(isDataEncodedDS(data.server = "vector_B", data.encoded = "df_B"))
 
-  expect_error(isDataEncodedDS(data.server = "vector_C", data.encoded = "matrix_C", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "vector_C", data.encoded = "list_C", data.held.in.server = "F"))
-  expect_false(isDataEncodedDS(data.server = "vector_C", data.encoded = "df_C", data.held.in.server = "F"))
+  expect_error(isDataEncodedDS(data.server = "vector_C", data.encoded = "matrix_C"))
+  expect_error(isDataEncodedDS(data.server = "vector_C", data.encoded = "list_C"))
+  expect_false(isDataEncodedDS(data.server = "vector_C", data.encoded = "df_C"))
 
-  expect_error(isDataEncodedDS(data.server = "vector_A", data.encoded = "vector_B", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "vector_B", data.encoded = "vector_C", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "vector_A", data.encoded = "vector_C", data.held.in.server = "F"))
+  expect_error(isDataEncodedDS(data.server = "vector_A", data.encoded = "vector_B"))
+  expect_error(isDataEncodedDS(data.server = "vector_B", data.encoded = "vector_C"))
+  expect_error(isDataEncodedDS(data.server = "vector_A", data.encoded = "vector_C"))
 
-  expect_error(isDataEncodedDS(data.server = "matrix_A", data.encoded = "matrix_B", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "matrix_B", data.encoded = "matrix_C", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "matrix_A", data.encoded = "matrix_C", data.held.in.server = "F"))
+  expect_error(isDataEncodedDS(data.server = "matrix_A", data.encoded = "matrix_B"))
+  expect_error(isDataEncodedDS(data.server = "matrix_B", data.encoded = "matrix_C"))
+  expect_error(isDataEncodedDS(data.server = "matrix_A", data.encoded = "matrix_C"))
 
-  expect_error(isDataEncodedDS(data.server = "list_A", data.encoded = "list_B", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "list_B", data.encoded = "list_C", data.held.in.server = "F"))
-  expect_error(isDataEncodedDS(data.server = "list_A", data.encoded = "list_C", data.held.in.server = "F"))
+  expect_error(isDataEncodedDS(data.server = "list_A", data.encoded = "list_B"))
+  expect_error(isDataEncodedDS(data.server = "list_B", data.encoded = "list_C"))
+  expect_error(isDataEncodedDS(data.server = "list_A", data.encoded = "list_C"))
 
-  expect_true(isDataEncodedDS(data.server = "df_A", data.encoded = "df_B", data.held.in.server = "F"))
-  expect_false(isDataEncodedDS(data.server = "df_B", data.encoded = "df_C", data.held.in.server = "F"))
-  expect_false(isDataEncodedDS(data.server = "df_A", data.encoded = "df_C", data.held.in.server = "F"))
+  expect_true(isDataEncodedDS(data.server = "df_A", data.encoded = "df_B"))
+  expect_true(isDataEncodedDS(data.server = "df_B", data.encoded = "df_C"))
+  expect_false(isDataEncodedDS(data.server = "df_A", data.encoded = "df_C"))
 
-  expect_false(isDataEncodedDS(data.server = "vector_A", data.encoded = "df_C", data.held.in.server = "F"))
-  expect_true(isDataEncodedDS(data.server = "vector_small", data.encoded = "df_B", data.held.in.server = "all.data"))
+  expect_false(isDataEncodedDS(data.server = "vector_A", data.encoded = "df_C"))
+  expect_true(isDataEncodedDS(data.server = "vector_small", data.encoded = "df_B"))
 })
 
 

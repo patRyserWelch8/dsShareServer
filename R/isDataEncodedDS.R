@@ -1,6 +1,6 @@
 # Boolean function that checks whether the arguments of the functions are suitable
 # for the comparison. Check the type and server variables have been created as data frame. Tibbles wrappes data frames.
-idds.are.params.correct <- function(data.server = NULL, data.encoded = NULL, data.held.in.server = NULL, env = globalenv())
+idds.are.params.correct <- function(data.server = NULL, data.encoded = NULL,  env = globalenv())
 {
   outcome <- FALSE
   if(is.null(.Options$dsSS_sharing.near.equal.limit) || is.null(.Options$dsSS_sharing.allowed))
@@ -9,25 +9,18 @@ idds.are.params.correct <- function(data.server = NULL, data.encoded = NULL, dat
   }
 
   if(is.character(data.server) &
-     is.character(data.encoded) &
-     is.character(data.held.in.server))
+     is.character(data.encoded))
   {
     if(exists(data.server, where = env) &
-       exists(data.encoded, where = env) &
-       exists(data.held.in.server, where = env))
+       exists(data.encoded, where = env))
     {
        data.server    <- get(data.server, pos = env)
        encoded        <- get(data.encoded, pos = env)
-       held.in.server <- get(data.held.in.server, pos = env)
+
 
        if (!is.data.frame(encoded))
        {
          stop("SERVER::ERR:SHARE::005")
-       }
-
-       if (!is.data.frame(held.in.server))
-       {
-         stop("SERVER::ERR:SHARE::006")
        }
 
        correct.format <- is.data.frame(data.server) || is.list(data.server) ||
@@ -39,8 +32,8 @@ idds.are.params.correct <- function(data.server = NULL, data.encoded = NULL, dat
 
 
        outcome        <- correct.format &
-                         is.data.frame(encoded) &
-                         is.data.frame(held.in.server)
+                         is.data.frame(encoded)
+
 
 
     }
@@ -263,7 +256,7 @@ idds.set.settings <- function(outcome = FALSE, data.encoded)
 #'@return TRUE if the encoding is suitable. Otherwise false.
 #'@export
 #'
-isDataEncodedDS <- function(data.server = NULL, data.encoded = NULL, data.held.in.server = NULL)
+isDataEncodedDS <- function(data.server = NULL, data.encoded = NULL)
 {
 
   if(is.sharing.allowed())
@@ -272,7 +265,7 @@ isDataEncodedDS <- function(data.server = NULL, data.encoded = NULL, data.held.i
     is.encoded.variable  <- FALSE
     outcome              <- FALSE
     data.server.split    <- unlist(strsplit(data.server,"\\$"))
-    param.correct        <- idds.are.params.correct(data.server.split[1], data.encoded, data.held.in.server)
+    param.correct        <- idds.are.params.correct(data.server.split[1], data.encoded)
 
     if(param.correct)
     {
@@ -281,7 +274,6 @@ isDataEncodedDS <- function(data.server = NULL, data.encoded = NULL, data.held.i
       settings       <- get.settings()
       server         <- get(data.server.split[1],  envir = env)
       encoded        <- get(data.encoded, envir = env)
-      held.in.server <- get(data.held.in.server, envir = env)
       limit          <- settings$sharing.near.equal.limit
 
       if(idds.check.dimension(server, encoded))
@@ -289,12 +281,12 @@ isDataEncodedDS <- function(data.server = NULL, data.encoded = NULL, data.held.i
 
         is.encoded.variable <- idds.check.encoding.variable(server, encoded, limit)
 
-        if(is.encoded.variable)
-        {
-          is.encoded.data <- idds.check.encoding.data.frames(held.in.server,encoded,limit)
-        }
+        #if(is.encoded.variable)
+        #{
+        #  is.encoded.data <- idds.check.encoding.data.frames(encoded,limit)
+        #}
       }
-      outcome <- is.encoded.data & is.encoded.variable
+      outcome <- is.encoded.variable
       assignVariable(data.encoded, outcome)
     }
     else
