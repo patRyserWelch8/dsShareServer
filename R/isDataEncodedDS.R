@@ -11,10 +11,28 @@ idds.are.params.correct <- function(data.server = NULL, data.encoded = NULL,  en
   if(is.character(data.server) &
      is.character(data.encoded))
   {
-    if(exists(data.server, where = env) &
-       exists(data.encoded, where = env))
+    # format as a vector as a vector of characters
+    server.variables <- create.vector(data.server)
+    indices          <- grep(pattern= "\\$",server.variables)
+
+    if(!identical(indices, integer(0)))
     {
-       data.server    <- get(data.server, pos = env)
+      variables        <- unlist(strsplit(server.variables[indices],"\\$"))
+      variables        <- levels(factor(variables[seq_along(variables) %% 2 > 0]))
+      server.variables <- c(variables, server.variables[!seq_along(server.variables) %in% indices])
+    }
+
+    # check all the server variables exists
+    variables.created <- sapply(server.variables, function(name, env){exists(name, where = env)},env = env)
+    variables.created <- all(TRUE == variables.created)
+
+    # check data.encoded.exists
+    encoded.created   <- exists(data.encoded, where = env)
+
+    if(variables.created &
+       encoded.created)
+    {
+
        encoded        <- get(data.encoded, pos = env)
 
 
@@ -23,8 +41,18 @@ idds.are.params.correct <- function(data.server = NULL, data.encoded = NULL,  en
          stop("SERVER::ERR:SHARE::005")
        }
 
-       correct.format <- is.data.frame(data.server) || is.list(data.server) ||
-                         is.matrix(data.server) || (length(data.server) > 1)
+       correct.format <- sapply(server.variables,
+                                function(var){data.server    <- get(var, pos = env);
+                                              return( is.data.frame(data.server) ||
+                                                               is.list(data.server) ||
+                                                               is.matrix(data.server) ||
+                                                               length(data.server) > 1)})
+       print(correct.format)
+
+       correct.format <- all(TRUE == correct.format)
+       print("UUUUUUUUU")
+       print(correct.format)
+
        if(!correct.format)
        {
          stop("SERVER::ERR:SHARE::007")
@@ -33,7 +61,6 @@ idds.are.params.correct <- function(data.server = NULL, data.encoded = NULL,  en
 
        outcome        <- correct.format &
                          is.data.frame(encoded)
-
 
 
     }
@@ -264,14 +291,20 @@ isDataEncodedDS <- function(data.server = NULL, data.encoded = NULL)
     is.encoded.data      <- FALSE
     is.encoded.variable  <- FALSE
     outcome              <- FALSE
-    data.server.split    <- unlist(strsplit(data.server,"\\$"))
-    param.correct        <- idds.are.params.correct(data.server.split[1], data.encoded)
+
+
+    print(data.server)
+
+    param.correct        <- idds.are.params.correct(data.server, data.encoded)
 
     if(param.correct)
     {
       # get data from global environment
       env            <- globalenv()
       settings       <- get.settings()
+      data.server    <- create.vector(data.server)
+      data.server.split    <- unlist(strsplit(data.server,"\\$"))
+      print (data.server.split) --- HERE ISSUES  NEEDS TO BRING ALL THIS IN ONE NEW FUNCTION AND USE SAPPLY !
       server         <- get(data.server.split[1],  envir = env)
       encoded        <- get(data.encoded, envir = env)
       limit          <- settings$sharing.near.equal.limit

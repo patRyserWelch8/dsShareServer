@@ -37,6 +37,7 @@ test_that("correct arguments outcome true",
   expect_true(idds.are.params.correct(data.server = "df_A", data.encoded = "E"))
   expect_error(idds.are.params.correct(data.server = "pi", data.encoded = "E"))
   expect_error(idds.are.params.correct(data.server = "df_A", data.encoded = "vector_A"))
+  expect_true(idds.are.params.correct(data.server = "df_A;E", data.encoded = "E"))
 })
 
 
@@ -455,6 +456,8 @@ test_that("expected outcome restrictive",
 
   expect_false(isDataEncodedDS(data.server = "vector_A", data.encoded = "df_C"))
   expect_true(isDataEncodedDS(data.server = "vector_small", data.encoded = "df_B"))
+
+  print(isDataEncodedDS(data.server = "df_A$vector_A;df_A$vector_B;df_C", data.encoded = "E"))
 })
 
 
