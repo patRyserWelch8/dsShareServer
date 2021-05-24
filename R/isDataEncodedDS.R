@@ -261,6 +261,27 @@ idds.set.settings <- function(outcome = FALSE, data.encoded)
   }
 }
 
+
+idds.check.variables <- function(name.var, encoded, settings, env)
+{
+  outcome <- FALSE
+
+  # split to obtain name of data frame or lists
+  data.server.split    <- unlist(strsplit(name.var,"\\$"))
+
+  # get the data from the servers and limit for comparisons
+  server               <- get(data.server.split[1],  envir = env)
+  limit                <- settings$sharing.near.equal.limit
+
+  # complete checks
+  if(idds.check.dimension(server, encoded))
+  {
+    outcome <- idds.check.encoding.variable(server, encoded, limit)
+  }
+
+  return(outcome)
+}
+
 #'@name isDataEncodedDS
 #'@title check some R objects are suitably encoded
 #'@details This server function verifies the following rules are applied to the encoded data
@@ -288,39 +309,35 @@ isDataEncodedDS <- function(data.server = NULL, data.encoded = NULL)
 
   if(is.sharing.allowed())
   {
-    is.encoded.data      <- FALSE
-    is.encoded.variable  <- FALSE
+    suitable.encoding    <- FALSE
     outcome              <- FALSE
 
-
-    print(data.server)
-
+    # check validity of parameters
     param.correct        <- idds.are.params.correct(data.server, data.encoded)
 
     if(param.correct)
     {
       # get data from global environment
-      env            <- globalenv()
-      settings       <- get.settings()
-      data.server    <- create.vector(data.server)
-      data.server.split    <- unlist(strsplit(data.server,"\\$"))
-      print (data.server.split) --- HERE ISSUES  NEEDS TO BRING ALL THIS IN ONE NEW FUNCTION AND USE SAPPLY !
-      server         <- get(data.server.split[1],  envir = env)
-      encoded        <- get(data.encoded, envir = env)
-      limit          <- settings$sharing.near.equal.limit
+      env               <- globalenv()
+      settings          <- get.settings()
+      encoded           <- get(data.encoded, envir = env)
+      data.server       <- create.vector(data.server)
 
-      if(idds.check.dimension(server, encoded))
+      # check suitable encoding
+      suitable.encoding <- sapply(data.server,
+                                  function(var.name, encoded, settings, env){return(idds.check.variables(var.name,encoded, settings, env))},
+                                  settings = settings,
+                                  encoded = encoded,
+                                  env = env)
+
+      suitable.encoding <- all(TRUE == suitable.encoding)
+
+      # assign name of encoded data to a possible transfer
+      if (suitable.encoding)
       {
-
-        is.encoded.variable <- idds.check.encoding.variable(server, encoded, limit)
-
-        #if(is.encoded.variable)
-        #{
-        #  is.encoded.data <- idds.check.encoding.data.frames(encoded,limit)
-        #}
+        outcome <- param.correct & suitable.encoding
+        assignVariable(data.encoded, outcome)
       }
-      outcome <- is.encoded.variable
-      assignVariable(data.encoded, outcome)
     }
     else
     {
