@@ -55,7 +55,7 @@ test_that("define.no.rows",
 
   #correct range
   no.rows <- edds.define_no_rows(settings)
-  expect_equal((no.rows >= 11 & no.rows <= 21),TRUE)
+  expect_equal((no.rows >= 21 & no.rows <= 31),TRUE)
 
 })
 assignSharingSettingsDS()
@@ -71,7 +71,7 @@ test_that("numeric and odd number",
 test_that("correct range",
 {
   no.columns <- edds.define_no_columns(settings)
-  expect_equal((no.columns >= 13 & no.columns <= 23),TRUE)
+  expect_equal((no.columns >= 23 & no.columns <= 33),TRUE)
 })
 
 test_that("correct range",
@@ -100,32 +100,32 @@ test_that("no argument",
 test_that("no row",
 {
   createdMatrix <- edds.create.matrix.runif(settings, no.rows = 10)
-  expect_equal(nrow(createdMatrix) == 11, TRUE)
-  expect_equal(ncol(createdMatrix) == 13, TRUE)
+  expect_equal(nrow(createdMatrix) == 21, TRUE)
+  expect_equal(ncol(createdMatrix) == 23, TRUE)
   expect_equal(all(createdMatrix <= 1, TRUE),TRUE)
 })
 
 test_that("no row correct",
 {
   createdMatrix <- edds.create.matrix.runif(settings = settings, no.rows = 12)
-  expect_equal(nrow(createdMatrix) == 12, TRUE)
-  expect_equal(ncol(createdMatrix) == 13, TRUE)
+  expect_equal(nrow(createdMatrix) == 21, TRUE)
+  expect_equal(ncol(createdMatrix) == 23, TRUE)
   expect_equal(all(createdMatrix <= 1, TRUE),TRUE)
 })
 
 test_that("no column incorrect",
 {
   createdMatrix <- edds.create.matrix.runif(settings, no.rows = 13, no.columns = 11)
-  expect_equal(nrow(createdMatrix) == 13, TRUE)
-  expect_equal(ncol(createdMatrix) == 13, TRUE)
+  expect_equal(nrow(createdMatrix) == 21, TRUE)
+  expect_equal(ncol(createdMatrix) == 23, TRUE)
   expect_equal(all(createdMatrix <= 1, TRUE),TRUE)
 })
 
 test_that("no row  and columns correct",
 {
   createdMatrix <- edds.create.matrix.runif(settings, no.rows = 15, no.columns = 17)
-  expect_equal(nrow(createdMatrix) == 15, TRUE)
-  expect_equal(ncol(createdMatrix) == 17, TRUE)
+  expect_equal(nrow(createdMatrix) == 21, TRUE)
+  expect_equal(ncol(createdMatrix) == 23, TRUE)
   expect_equal(all(createdMatrix <= 1, TRUE),TRUE)
 })
 
@@ -149,8 +149,8 @@ test_that("no row  and columns, min value incorrect",
 test_that("no row  and columns, min value, max value correct",
 {
   createdMatrix <- edds.create.matrix.runif(settings, no.rows = 15, no.columns = 17, min.value = -12, max.value = 298)
-  expect_equal(nrow(createdMatrix) == 15, TRUE)
-  expect_equal(ncol(createdMatrix) == 17, TRUE)
+  expect_equal(nrow(createdMatrix) == 21, TRUE)
+  expect_equal(ncol(createdMatrix) == 23, TRUE)
   expect_equal(all(createdMatrix >= -12 & createdMatrix <= 298, TRUE),TRUE)
 })
 

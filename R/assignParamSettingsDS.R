@@ -3,12 +3,19 @@
 apds.generate.ratios <- function(settings, no.elements = 0, coordinate = 0)
 {
   stop    <-  (no.elements == 0) & (coordinate == 0)
-
   while(!stop)
   {
+     repeat
+     {
+       seed <- generate.secure.seed(settings)
+       if(seed < .Machine$integer.max)
+       {
+         break()
+       }
+     }
      # generate a vector of random numbers.
-     set.seed(generate.secure.seed(settings))
-     outcome   <- as.vector(stats::runif(no.elements, min = 0.01, max = 0.99))
+     set.seed(seed)
+     outcome   <- as.vector(stats::runif(no.elements, min = 0.05, max = 0.90))
 
      # find the rows or columns index for the coordinates.
      values    <- ceiling(outcome * coordinate)
@@ -31,8 +38,12 @@ apds.init.coordinates.ratios <- function(settings, sharing, param_names)
     # set the ratio in the coordinates. x becomes uses the columns and y the rows. Some transpose
     # in latter steps will set x as column and y as row. Some checks are in place
     # to prevent issues with indices out of bounds.
-    sharing[[settings$index_x]]     <- apds.generate.ratios(settings, no.elements = length(param_names), coordinate = sharing[[settings$no_columns]] - 2)
-    sharing[[settings$index_y]]     <- apds.generate.ratios(settings, no.elements = length(param_names), coordinate = sharing[[settings$no_rows]] - 2)
+    diff <- abs(sharing[[settings$no_columns]] - sharing[[settings$no_rows]]) + 2
+    print(diff)
+    print(sharing[[settings$no_columns]])
+    print(sharing[[settings$no_rows]])
+    sharing[[settings$index_x]]     <- apds.generate.ratios(settings, no.elements = length(param_names), coordinate = sharing[[settings$no_columns]] - diff)
+    sharing[[settings$index_y]]     <- apds.generate.ratios(settings, no.elements = length(param_names), coordinate = sharing[[settings$no_rows]] - diff)
     sharing[[settings$param_names]] <- param_names
 
 

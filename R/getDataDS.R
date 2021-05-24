@@ -21,7 +21,16 @@ encode.encrypted.data <- function(settings, master_mode = TRUE)
         no.rows    >= settings$min_rows)
     {
       encrypted.data <- as.numeric(sharing[[settings$encrypted]])
-      set.seed(generate.secure.seed(settings))
+
+      repeat
+      {
+        seed <- generate.secure.seed(settings)
+        if(seed < .Machine$integer.max)
+        {
+          break()
+        }
+      }
+      set.seed(seed)
       index <- stats::runif(1, min =settings$min_rows, max= settings$max_rows)
       return(encode.data.with.sharing(encrypted.data, no.columns, index))
     }

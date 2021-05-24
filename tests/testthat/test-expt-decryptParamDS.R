@@ -134,7 +134,9 @@ test_that("data has been encrypted correctly",
    expect_equal(exists(settings$name.struct.sharing, where = 1), TRUE)
    #expect_equal(get("outcome", pos = 1), TRUE)
    list.var <- ls(pos = 1)
+   print(list.var)
    param <- get("pi_value_1_a",pos = 1)
+
    expect_equal("pi_value_1_a" %in% list.var, TRUE)
    expect_equal(param, get("pi_value_1_a", pos = 1))
 })

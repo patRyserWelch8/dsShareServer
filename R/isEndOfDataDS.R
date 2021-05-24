@@ -28,7 +28,7 @@ isEndOfDataDS <- function(data.encoded = NULL)
       transfer <- get.transfer(envir = env)
 
       # outcome becomes FALSE, if any rows remains untransferred.
-      outcome  <- transfer[[settings$current_row]] >= nrow(get(data.encoded,envir = env))
+      outcome  <-  transfer[[settings$current_row]] >= nrow(get(data.encoded,envir = env))
 
     }
 

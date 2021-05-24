@@ -1,21 +1,39 @@
 # Boolean function that checks whether the arguments of the functions are suitable
 # for the comparison. Check the type and server variables have been created as data frame. Tibbles wrappes data frames.
-idds.are.params.correct <- function(data.server = NULL, data.encoded = NULL, data.held.in.server = NULL, env = globalenv())
+idds.are.params.correct <- function(data.server = NULL, data.encoded = NULL,  env = globalenv())
 {
   outcome <- FALSE
   if(is.null(.Options$dsSS_sharing.near.equal.limit) || is.null(.Options$dsSS_sharing.allowed))
   {
     stop("SERVER::ERR:SHARE::003")
   }
-  else if(is.character(data.server) & is.character(data.encoded) & is.character(data.held.in.server))
+
+  if(is.character(data.server) &
+     is.character(data.encoded))
   {
-    if(exists(data.server, where = env) &
-       exists(data.encoded, where = env) &
-       exists(data.held.in.server, where = env))
+    # format as a vector as a vector of characters
+    server.variables <- create.vector(data.server)
+    indices          <- grep(pattern= "\\$",server.variables)
+
+    if(!identical(indices, integer(0)))
     {
-       server         <- get(data.server, pos = env)
+      variables        <- unlist(strsplit(server.variables[indices],"\\$"))
+      variables        <- levels(factor(variables[seq_along(variables) %% 2 > 0]))
+      server.variables <- c(variables, server.variables[!seq_along(server.variables) %in% indices])
+    }
+
+    # check all the server variables exists
+    variables.created <- sapply(server.variables, function(name, env){exists(name, where = env)},env = env)
+    variables.created <- all(TRUE == variables.created)
+
+    # check data.encoded.exists
+    encoded.created   <- exists(data.encoded, where = env)
+
+    if(variables.created &
+       encoded.created)
+    {
+
        encoded        <- get(data.encoded, pos = env)
-       held.in.server <- get(data.held.in.server, pos = env)
 
 
        if (!is.data.frame(encoded))
@@ -23,13 +41,18 @@ idds.are.params.correct <- function(data.server = NULL, data.encoded = NULL, dat
          stop("SERVER::ERR:SHARE::005")
        }
 
+       correct.format <- sapply(server.variables,
+                                function(var){data.server    <- get(var, pos = env);
+                                              return( is.data.frame(data.server) ||
+                                                               is.list(data.server) ||
+                                                               is.matrix(data.server) ||
+                                                               length(data.server) > 1)})
+       print(correct.format)
 
-       if (!is.data.frame(held.in.server))
-       {
-         stop("SERVER::ERR:SHARE::006")
-       }
+       correct.format <- all(TRUE == correct.format)
+       print("UUUUUUUUU")
+       print(correct.format)
 
-       correct.format <- is.data.frame(server) || is.list(server) || is.matrix(server) || (length(server) > 1)
        if(!correct.format)
        {
          stop("SERVER::ERR:SHARE::007")
@@ -37,9 +60,13 @@ idds.are.params.correct <- function(data.server = NULL, data.encoded = NULL, dat
 
 
        outcome        <- correct.format &
-                         is.data.frame(encoded) &
-                         is.data.frame(held.in.server)
+                         is.data.frame(encoded)
 
+
+    }
+    else
+    {
+      stop("SERVER::ERR:SHARE::040")
     }
   }
   else
@@ -212,8 +239,8 @@ idds.check.dimension <- function(server, encoded)
   }
   else if (is.data.frame(server))
   {
-
     outcome <- ncol(encoded) > ncol(server) & nrow(encoded) == nrow(server)
+
   }
 
   return(outcome)
@@ -232,6 +259,27 @@ idds.set.settings <- function(outcome = FALSE, data.encoded)
     settings$encoded.data.name <- data.encoded
     assign(get.settings.name(), settings, envir = env)
   }
+}
+
+
+idds.check.variables <- function(name.var, encoded, settings, env)
+{
+  outcome <- FALSE
+
+  # split to obtain name of data frame or lists
+  data.server.split    <- unlist(strsplit(name.var,"\\$"))
+
+  # get the data from the servers and limit for comparisons
+  server               <- get(data.server.split[1],  envir = env)
+  limit                <- settings$sharing.near.equal.limit
+
+  # complete checks
+  if(idds.check.dimension(server, encoded))
+  {
+    outcome <- idds.check.encoding.variable(server, encoded, limit)
+  }
+
+  return(outcome)
 }
 
 #'@name isDataEncodedDS
@@ -256,46 +304,46 @@ idds.set.settings <- function(outcome = FALSE, data.encoded)
 #'@return TRUE if the encoding is suitable. Otherwise false.
 #'@export
 #'
-isDataEncodedDS <- function(data.server = NULL, data.encoded = NULL, data.held.in.server = NULL)
+isDataEncodedDS <- function(data.server = NULL, data.encoded = NULL)
 {
 
   if(is.sharing.allowed())
   {
-    is.encoded.data      <- FALSE
-    is.encoded.variable  <- FALSE
+    suitable.encoding    <- FALSE
     outcome              <- FALSE
-    param.correct        <- idds.are.params.correct(data.server, data.encoded, data.held.in.server)
 
-
+    # check validity of parameters
+    param.correct        <- idds.are.params.correct(data.server, data.encoded)
 
     if(param.correct)
     {
       # get data from global environment
-      env            <- globalenv()
-      settings       <- get.settings()
-      server         <- get(data.server,  envir = env)
-      encoded        <- get(data.encoded, envir = env)
-      held.in.server <- get(data.held.in.server, envir = env)
-      limit          <- settings$sharing.near.equal.limit
+      env               <- globalenv()
+      settings          <- get.settings()
+      encoded           <- get(data.encoded, envir = env)
+      data.server       <- create.vector(data.server)
 
+      # check suitable encoding
+      suitable.encoding <- sapply(data.server,
+                                  function(var.name, encoded, settings, env){return(idds.check.variables(var.name,encoded, settings, env))},
+                                  settings = settings,
+                                  encoded = encoded,
+                                  env = env)
 
-      if(idds.check.dimension(server, encoded))
+      suitable.encoding <- all(TRUE == suitable.encoding)
+
+      # assign name of encoded data to a possible transfer
+      if (suitable.encoding)
       {
-
-        is.encoded.variable <- idds.check.encoding.variable(server, encoded, limit)
-
-        if(is.encoded.variable)
-        {
-          is.encoded.data <- idds.check.encoding.data.frames(held.in.server,encoded,limit)
-        }
+        outcome <- param.correct & suitable.encoding
+        assignVariable(data.encoded, outcome)
       }
-      outcome <- is.encoded.data & is.encoded.variable
-      assignVariable(data.encoded, outcome)
     }
     else
     {
-      stop("SERVER::ERR::SHARING::002")
+      stop("SERVER::SHARING::ERR:002")
     }
+
   }
   else
   {
