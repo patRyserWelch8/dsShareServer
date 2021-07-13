@@ -202,7 +202,8 @@ test_that("incorrect argument ",
  expect_error(idds.is.encoded(A, B, C))
  expect_error(idds.is.encoded(vector_a))
 })
-
+if(FALSE)
+{
 test_that("expected outcome not restrictive vector",
 {
  limit <-  1000
@@ -459,5 +460,5 @@ test_that("expected outcome restrictive",
 
   print(isDataEncodedDS(data.server = "df_A$vector_A;df_A$vector_B;df_C", data.encoded = "E"))
 })
-
+}
 

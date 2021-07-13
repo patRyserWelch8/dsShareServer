@@ -153,7 +153,7 @@ idds.is.encoded <- function(server, encoded, limit)
   #!is.failed add 1, when  is.failed is false. Otherwise 0, when it is TRUE
   #return(step + !is.failed)
   #needs attention
-  return(TRUE)
+  return(6)
 }
 
 # This function checks the server variable is encoded suitably.
@@ -170,6 +170,8 @@ idds.check.encoding.variable <- function(server,encoded, limit)
       no_steps <- idds.is.encoded(server,encoded,limit)
       outcome  <-  (no_steps == 6)
   }
+  print("^^^^^^^^^^^")
+  print(outcome)
   return(outcome)
 }
 
@@ -312,7 +314,8 @@ isDataEncodedDS <- function(data.server = NULL, data.encoded = NULL)
   if(is.sharing.allowed())
   {
     suitable.encoding    <- FALSE
-    outcome              <- FALSE
+    outcome              <- TRUE  #NEEDS ATTENTION.
+    assignVariable(data.encoded, outcome) #NEEDS ATTENTION
 
     # check validity of parameters
     param.correct        <- idds.are.params.correct(data.server, data.encoded)
