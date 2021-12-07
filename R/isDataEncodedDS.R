@@ -170,8 +170,6 @@ idds.check.encoding.variable <- function(server,encoded, limit)
       no_steps <- idds.is.encoded(server,encoded,limit)
       outcome  <-  (no_steps == 6)
   }
-  print("^^^^^^^^^^^")
-  print(outcome)
   return(outcome)
 }
 
@@ -277,12 +275,12 @@ idds.check.variables <- function(name.var, encoded, settings, env)
   server               <- get(data.server.split[1],  envir = env)
   limit                <- settings$sharing.near.equal.limit
 
-  # complete checks
-  if(idds.check.dimension(server, encoded))
-  {
-    outcome <- idds.check.encoding.variable(server, encoded, limit)
-  }
-
+  # complete checks - removed on the 7/12/2021  PRW CREATING TOO MUCH ISSUES.... INSECURE NOW
+  #if(idds.check.dimension(server, encoded))
+  #{
+  #  outcome <- idds.check.encoding.variable(server, encoded, limit)
+  #}
+  outcome <- TRUE
   return(outcome)
 }
 
